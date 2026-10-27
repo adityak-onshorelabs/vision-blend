@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Vision Blend website
 
-## Getting Started
+Marketing site for Vision Blend, a marketing studio (branding, film and production, content). Built from the approved homepage concept in `../concept/`.
 
-First, run the development server:
+## Stack
+
+Next.js 16 (App Router, Turbopack, Cache Components), React 19, Tailwind CSS 4, shadcn (base-nova), Motion (`motion/react`), zod. Two components adapted from Watermelon UI. No GSAP, no smooth-scroll library.
+
+Design docs: `PRODUCT.md` (who it is for, principles) and `DESIGN.md` (tokens, type, components, motion).
+
+## Run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+cp .env.example .env.local   # fill in to deliver enquiries
+npm run dev                  # http://localhost:3000 -> redirects to /en
+npm run build && npm start   # production
+npx tsc --noEmit && npm run lint
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Where things live
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Path | What |
+|---|---|
+| `src/content/en.ts` | All copy and facts, with sources and TBC notes at the top |
+| `src/content/types.ts` | Content types |
+| `src/app/globals.css` | Tokens (OKLCH), shadcn mapping, type roles, buttons, bands, illustration hover rules |
+| `src/app/[lang]/` | Layout and pages: home, `work`, `services`, `about`, `contact` |
+| `src/app/api/enquiry/route.ts` | Brief form endpoint (zod validation, honeypot, Resend delivery) |
+| `src/components/site/` | Site components (header, footer, work index, service cards, beliefs, process rail, series embeds, enquiry form) |
+| `reference/watermelon/` | Untouched Watermelon sources the adapted components came from |
+| `public/images/` | Wordmarks, copper key visual, OG image |
+| `src/proxy.ts` | Redirects `/` and unprefixed paths to `/en` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment
 
-## Learn More
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL, sitemap, OG (defaults to https://www.visionblend.in) |
+| `RESEND_API_KEY` | Resend API key for enquiry emails |
+| `ENQUIRY_TO` | Recipient(s), comma-separated |
+| `ENQUIRY_FROM` | Verified sender address |
 
-To learn more about Next.js, take a look at the following resources:
+Without the Resend variables, development logs each brief to the console and production answers 503 so no brief is silently lost.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Before launch (needs the client)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Studio email and city/address for the contact block (currently TBC).
+- [ ] Confirm service lists and process steps (drafted from Instagram captions and hashtags).
+- [ ] Confirm "Six people" for the team line.
+- [ ] Stills for each project (project images are copper placeholder crops; reel previews come from Instagram) and permission to show FIFA x Paradise and Delta Palm Beach work.
+- [ ] Case study slots: real projects for "Identity system" and "Content retainer", or remove them.
+- [ ] Domain and hosting for visionblend.in, Resend account with a verified sending domain.
+- [ ] Privacy note for the form and Instagram embeds if required.
