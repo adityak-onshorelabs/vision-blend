@@ -120,8 +120,6 @@ export type Content = {
       name: string;
       brand: string;
       brandPlaceholder: string;
-      company: string;
-      companyPlaceholder: string;
       email: string;
       phone: string;
       next: string;
@@ -131,7 +129,7 @@ export type Content = {
       edit: string;
       sent: string;
       failed: string;
-      errors: { needs: string; brand: string; company: string; about: string; name: string; email: string; phone: string };
+      errors: { needs: string; brand: string; about: string; name: string; email: string; phone: string };
     };
   };
 };

@@ -17,15 +17,15 @@ import { NEEDS, WHENS, isPhone } from "@/lib/enquiry";
 import { cn } from "@/lib/utils";
 
 type FormCopy = Content["contactPage"]["form"];
-type Data = { needs: string[]; when: string; about: string; name: string; brand: string; company: string; email: string; phone: string; website: string };
-type Errors = Partial<Record<"needs" | "brand" | "company" | "about" | "name" | "email" | "phone", string>>;
+type Data = { needs: string[]; when: string; about: string; name: string; brand: string; email: string; phone: string; website: string };
+type Errors = Partial<Record<"needs" | "brand" | "about" | "name" | "email" | "phone", string>>;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: ReactNode }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<Data>({ needs: [], when: WHENS[1], about: "", name: "", brand: "", company: "", email: "", phone: "", website: "" });
+  const [data, setData] = useState<Data>({ needs: [], when: WHENS[1], about: "", name: "", brand: "", email: "", phone: "", website: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
   const headingRefs = useRef<(HTMLHeadingElement | null)[]>([]);
@@ -45,7 +45,6 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
     if (s === 0 && data.needs.length === 0) e.needs = copy.errors.needs;
     if (s === 1) {
       if (!data.brand.trim()) e.brand = copy.errors.brand;
-      if (!data.company.trim()) e.company = copy.errors.company;
       if (!data.about.trim()) e.about = copy.errors.about;
     }
     if (s === 2) {
@@ -79,7 +78,7 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
 
   const summaries = [
     `${data.needs.join(", ")} · ${data.when}`,
-    [data.brand, data.company, data.about].filter(Boolean).join(" · "),
+    [data.brand, data.about].filter(Boolean).join(" · "),
   ];
 
   if (status === "sent") {
@@ -195,10 +194,7 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
 
             {i === 1 && (
               <>
-                <div className="grid gap-7 sm:grid-cols-2 sm:gap-x-6">
-                  <Field id="f-brand" required label={copy.brand} error={errors.brand} value={data.brand} onChange={(v) => set("brand", v)} placeholder={copy.brandPlaceholder} />
-                  <Field id="f-company" required label={copy.company} error={errors.company} value={data.company} onChange={(v) => set("company", v)} autoComplete="organization" placeholder={copy.companyPlaceholder} />
-                </div>
+                <Field id="f-brand" required label={copy.brand} error={errors.brand} value={data.brand} onChange={(v) => set("brand", v)} autoComplete="organization" placeholder={copy.brandPlaceholder} />
                 <div className="grid gap-1">
                   <label htmlFor="f-about" className="t-label">{copy.aboutLabel}</label>
                   <textarea

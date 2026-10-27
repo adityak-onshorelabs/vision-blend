@@ -9,8 +9,7 @@ function emailHtml(e: Enquiry) {
     ["Needs", e.needs.join(", ")],
     ["Start", e.when],
     ["Name", e.name],
-    ["Brand", e.brand],
-    ["Company", e.company],
+    ["Brand or company", e.brand],
     ["Email", e.email],
     ["Phone", e.phone],
     ["About the brand", e.about],
@@ -57,7 +56,7 @@ export async function POST(request: Request) {
       from: ENQUIRY_FROM,
       to: ENQUIRY_TO.split(",").map((s) => s.trim()),
       reply_to: enquiry.email,
-      subject: `New brief: ${enquiry.brand} (${enquiry.company}), ${enquiry.needs.join(", ")}`,
+      subject: `New brief: ${enquiry.brand}, ${enquiry.needs.join(", ")}`,
       html: emailHtml(enquiry),
     }),
   });
