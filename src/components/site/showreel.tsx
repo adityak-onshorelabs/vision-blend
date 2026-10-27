@@ -9,9 +9,10 @@
   - If the video file is missing or fails, the poster stays and the click opens the film on
     Instagram instead. Reduced motion: no opening animation and no autoplay.
 */
-import { motion, useMotionTemplate, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
+import { motion, useMotionTemplate, useMotionValue, useMotionValueEvent, useReducedMotion, useScroll, useSpring, useTransform } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { PointerEvent as ReactPointerEvent } from "react";
+import { ShowreelCard, type CardCopy } from "./showreel-card";
 
 export type ShowreelCopy = {
   label: string;
@@ -24,6 +25,8 @@ export type ShowreelCopy = {
   soundOn: string;
   soundOff: string;
   watch: string;
+  pressPlay: string;
+  card: CardCopy;
 };
 
 export function Showreel({ copy }: { copy: ShowreelCopy }) {
@@ -41,8 +44,12 @@ export function Showreel({ copy }: { copy: ShowreelCopy }) {
   const inset = useTransform(scrollYProgress, [0, 0.55], reduce ? [0, 0] : [16, 0]);
   const insetX = useTransform(inset, (v) => v * 1.35);
   const clipPath = useMotionTemplate`inset(${inset}% ${insetX}% ${inset}% ${insetX}%)`;
-  const titleScale = useTransform(scrollYProgress, [0, 0.55], reduce ? [1, 1] : [0.82, 1]);
-  const titleY = useTransform(scrollYProgress, [0, 0.55], reduce ? [0, 0] : [40, 0]);
+  // The film stays hidden behind the title card until the frame is fully open, then plays.
+  const [open, setOpen] = useState(!!reduce);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (reduce) return;
+    setOpen((o) => (o ? v > 0.49 : v >= 0.55));
+  });
   // Top labels never go under the sticky header (about 72px tall).
   const labelTop = useMotionTemplate`max(calc(${inset}% + 20px), 92px)`;
   const labelBottom = useMotionTemplate`calc(${inset}% + 20px)`;
@@ -80,14 +87,19 @@ export function Showreel({ copy }: { copy: ShowreelCopy }) {
       v.pause();
       return;
     }
-    // Only play while the section is on screen.
+    // Play from the moment the frame is fully open; pause when it closes or leaves the screen.
+    if (!open || missing) {
+      v.pause();
+      return;
+    }
+    v.play().catch(() => undefined);
     const io = new IntersectionObserver(([e]) => {
       if (e.isIntersecting) v.play().catch(() => undefined);
       else v.pause();
     });
     io.observe(v);
     return () => io.disconnect();
-  }, [reduce, missing]);
+  }, [reduce, missing, open]);
 
   const toggle = () => {
     if (missing) {
@@ -122,7 +134,7 @@ export function Showreel({ copy }: { copy: ShowreelCopy }) {
         >
           <video
             ref={video}
-            className="absolute inset-0 size-full object-cover"
+            className={`absolute inset-0 size-full object-cover transition-opacity duration-700 ${open && !missing ? "opacity-100" : "opacity-0"}`}
             src={copy.src}
             poster={copy.poster}
             muted
@@ -147,15 +159,10 @@ export function Showreel({ copy }: { copy: ShowreelCopy }) {
             {copy.date}
           </motion.div>
 
-          <motion.div className="pointer-events-none absolute inset-0 grid place-items-center px-6 text-center text-white" style={{ scale: titleScale, y: titleY }}>
-            <div className="grid justify-items-center gap-3">
-              <h2 id="reel-title" className="t-display text-white">
-                {copy.title}
-                <span className="text-[var(--brand-soft)]">.</span>
-              </h2>
-              <p className="t-lead text-white/80">{copy.sub}</p>
-            </div>
-          </motion.div>
+          <h2 id="reel-title" className="sr-only">
+            {copy.title}, {copy.sub}
+          </h2>
+          <ShowreelCard copy={copy.card} progress={scrollYProgress} visible={!open || missing} reduce={reduce} />
 
           <motion.div className="absolute flex flex-wrap items-center gap-3" style={{ bottom: labelBottom, left: labelSide }}>
             <button

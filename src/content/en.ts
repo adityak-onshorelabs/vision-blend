@@ -69,6 +69,16 @@ export const en: Content = {
       soundOn: "Sound on",
       soundOff: "Sound off",
       watch: "Watch on Instagram",
+      pressPlay: "Press play",
+      // Typographic take on the film's opening card (FIFA | Paradise Group over the pitch at
+      // Sai World Empire, Kharghar). No logos reproduced.
+      card: {
+        left: "FIFA",
+        right: "Sai World Empire",
+        place: "Paradise Group, Kharghar",
+        line: "A Vision Blend film for FIFA x Paradise.",
+        hint: "Scroll to open the film",
+      },
     },
     work: {
       label: "Selected work",

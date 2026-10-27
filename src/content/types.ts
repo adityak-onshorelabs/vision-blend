@@ -86,6 +86,8 @@ export type Content = {
       soundOn: string;
       soundOff: string;
       watch: string;
+      pressPlay: string;
+      card: { left: string; right: string; place: string; line: string; hint: string };
     };
     work: { label: string; title: string; text: string };
     services: { label: string; title: string; text: string };
