@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProcessRail } from "@/components/site/process-rail";
-import { SectionHead, Tbc } from "@/components/site/section-head";
+import { SectionHead } from "@/components/site/section-head";
 import { ServiceIllustration } from "@/components/site/service-illustration";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
@@ -61,15 +61,12 @@ export default async function ServicesPage({ params }: PageProps<"/[lang]/servic
               </article>
             ))}
           </div>
-          <p className="mt-7 text-[0.88rem] text-muted-foreground">
-            {c.servicesNote} <Tbc />
-          </p>
         </div>
       </section>
 
       <section className="band band-tint" aria-labelledby="process-title">
         <div className="frame">
-          <SectionHead id="process-title" label={c.home.process.label} title={c.home.process.title} text={<>{c.home.process.text} <Tbc /></>} />
+          <SectionHead id="process-title" label={c.home.process.label} title={c.home.process.title} text={c.home.process.text} />
           <ProcessRail steps={c.process} />
           <Link href={`/${lang}/contact`} className="cta mt-16">
             {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>

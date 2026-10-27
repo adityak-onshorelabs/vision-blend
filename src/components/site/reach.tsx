@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 import type { Content } from "@/content/types";
-import { Tbc } from "./section-head";
 
-/** Ways to reach the studio. Unknown details render as TBC until the client confirms them. */
+/** Ways to reach the studio. Email and studio rows appear once the client supplies them in content. */
 export function Reach({ content: c }: { content: Content }) {
   return (
     <div className="grid gap-6">
@@ -11,8 +10,12 @@ export function Reach({ content: c }: { content: Content }) {
           <a className="u" href={c.company.instagram} target="_blank" rel="noopener noreferrer">{c.company.instagramHandle}</a>
         </Row>
         <Row k="Website">{c.company.website}</Row>
-        <Row k="Email">{c.company.email ?? <>Studio email <Tbc /></>}</Row>
-        <Row k="Studio">{c.company.location ?? <>City and address <Tbc /></>}</Row>
+        {c.company.email && (
+          <Row k="Email">
+            <a className="u" href={`mailto:${c.company.email}`}>{c.company.email}</a>
+          </Row>
+        )}
+        {c.company.location && <Row k="Studio">{c.company.location}</Row>}
       </dl>
       <p className="text-[0.95rem] text-muted-foreground">{c.contactPage.collaborate}</p>
     </div>

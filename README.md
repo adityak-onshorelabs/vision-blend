@@ -45,7 +45,7 @@ Without the Resend variables, development logs each brief to the console and pro
 
 ## Before launch (needs the client)
 
-- [ ] Studio email and city/address for the contact block (currently TBC).
+- [ ] Studio email and city/address (rows stay hidden until `company.email` / `company.location` are set in `src/content/en.ts`).
 - [ ] Confirm service lists and process steps (drafted from Instagram captions and hashtags).
 - [ ] Confirm "Six people" for the team line.
 - [ ] Stills for each project (project images are copper placeholder crops; reel previews come from Instagram) and permission to show FIFA x Paradise and Delta Palm Beach work.

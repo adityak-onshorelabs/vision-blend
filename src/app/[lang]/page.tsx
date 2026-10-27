@@ -7,7 +7,7 @@ import { ProcessRail } from "@/components/site/process-rail";
 import { Reach } from "@/components/site/reach";
 import { SeriesLinks } from "@/components/site/series-links";
 import { Reveal } from "@/components/site/reveal";
-import { SectionHead, Tbc } from "@/components/site/section-head";
+import { SectionHead } from "@/components/site/section-head";
 import { ServiceCards } from "@/components/site/service-cards";
 import { WorkIndex } from "@/components/site/work-index";
 import { getContent } from "@/content";
@@ -57,15 +57,21 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             </dl>
           </div>
           <figure className="group grid min-w-0 content-start gap-3 lg:col-span-5 lg:col-start-8">
+            {/* Moving key visual: two copies of the copper gradient drift on different cycles and
+                blend (lighten), with the wordmark held still on top. Static with reduced motion. */}
             <div className="relative aspect-[3/2] overflow-hidden bg-night lg:aspect-[4/5]">
-              <Image
-                src="/images/key-visual.jpg"
-                alt="Vision Blend wordmark on the copper key visual"
-                fill
-                priority
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover transition-transform duration-[1200ms] ease-[var(--ease)] group-hover:scale-[1.03]"
-              />
+              <Image src="/images/key-bg.jpg" alt="" fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="hero-blend-a object-cover" />
+              <Image src="/images/key-bg.jpg" alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="hero-blend-b object-cover" />
+              <div className="absolute inset-0 grid place-items-center">
+                <Image
+                  src="/images/logo-white.png"
+                  alt="Vision Blend wordmark on the copper key visual"
+                  width={900}
+                  height={180}
+                  priority
+                  className="h-auto w-[62%] lg:w-[72%]"
+                />
+              </div>
             </div>
             <figcaption className="flex justify-between gap-4 text-[0.78rem] text-muted-foreground">
               <span>{h.visualCaption[0]}</span>
@@ -84,7 +90,6 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           />
           <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.88rem] text-muted-foreground">
             <span className="inline-flex items-center gap-2"><span className="size-1.5 rounded-full bg-brand" /> {c.ui.realProject}</span>
-            <span>{c.ui.conceptNote} <Tbc /></span>
             <Link href={`/${lang}/work`} className="u ms-auto text-ink">All work &rarr;</Link>
           </div>
         </div>
@@ -96,7 +101,6 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <Reveal>
             <ServiceCards services={c.services} lang={lang} linkLabel="More on this" />
           </Reveal>
-          <p className="mt-7 text-[0.88rem] text-muted-foreground">{c.servicesNote} <Tbc /></p>
         </div>
       </section>
 
@@ -109,7 +113,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
       <section className="band band-tint" aria-labelledby="process-title">
         <div className="frame">
-          <SectionHead id="process-title" label={h.process.label} index={4} total={TOTAL} title={h.process.title} text={<>{h.process.text} <Tbc /></>} />
+          <SectionHead id="process-title" label={h.process.label} index={4} total={TOTAL} title={h.process.title} text={h.process.text} />
           <ProcessRail steps={c.process} />
         </div>
       </section>

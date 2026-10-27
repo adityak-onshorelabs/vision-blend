@@ -12,9 +12,10 @@ export const WHENS = ["This month", "In 1 to 3 months", "Just exploring"] as con
 export const enquirySchema = z.object({
   needs: z.array(z.enum(NEEDS)).min(1).max(NEEDS.length),
   when: z.enum(WHENS),
-  about: z.string().trim().max(4000).default(""),
+  about: z.string().trim().min(1).max(4000),
   name: z.string().trim().min(1).max(120),
-  brand: z.string().trim().max(160).default(""),
+  brand: z.string().trim().min(1).max(160),
+  company: z.string().trim().min(1).max(160),
   email: z.email().max(200),
   phone: z.string().trim().max(40).refine(isPhone),
   website: z.string().max(0).optional(), // honeypot, must stay empty

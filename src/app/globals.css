@@ -250,6 +250,25 @@
 
 @keyframes rec { 50% { opacity: 0.15; } }
 
+/* Hero key visual: the copper gradient moves like liquid. Two layers of the same image on
+   different, slow cycles; the top one is mirrored and overlaid to keep the deep blacks. */
+.hero-blend-a { transform-origin: 40% 60%; animation: blend-a 18s ease-in-out infinite alternate; will-change: transform; }
+.hero-blend-b { transform-origin: 60% 40%; mix-blend-mode: overlay; opacity: 0.7; animation: blend-b 24s ease-in-out infinite alternate; will-change: transform; }
+@keyframes blend-a {
+  0%   { transform: scale(1.6) translate(0%, 0%) rotate(0deg); }
+  50%  { transform: scale(1.75) translate(-5%, 4%) rotate(5deg); }
+  100% { transform: scale(1.65) translate(4%, -4%) rotate(-4deg); }
+}
+@keyframes blend-b {
+  0%   { transform: scaleX(-1) scale(1.7) translate(3%, 4%) rotate(0deg); }
+  50%  { transform: scaleX(-1) scale(1.85) translate(-4%, -3%) rotate(-6deg); }
+  100% { transform: scaleX(-1) scale(1.7) translate(-2%, 5%) rotate(4deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-blend-a { transform: scale(1.6); }
+  .hero-blend-b { transform: scaleX(-1) scale(1.7); }
+}
+
 /* Project illustrations draw in each time they mount; at rest (and with reduced motion) fully drawn. */
 /* non-scaling strokes measure dashes in screen px and ignore pathLength, so turn them off here */
 .ill-draw .s { vector-effect: none; stroke-width: 1.1; stroke-dasharray: 1 1; animation: ill-draw 1.1s cubic-bezier(0.65, 0, 0.35, 1) both; }

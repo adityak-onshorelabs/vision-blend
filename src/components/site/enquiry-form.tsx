@@ -17,15 +17,15 @@ import { NEEDS, WHENS, isPhone } from "@/lib/enquiry";
 import { cn } from "@/lib/utils";
 
 type FormCopy = Content["contactPage"]["form"];
-type Data = { needs: string[]; when: string; about: string; name: string; brand: string; email: string; phone: string; website: string };
-type Errors = Partial<Record<"needs" | "name" | "email" | "phone", string>>;
+type Data = { needs: string[]; when: string; about: string; name: string; brand: string; company: string; email: string; phone: string; website: string };
+type Errors = Partial<Record<"needs" | "brand" | "company" | "about" | "name" | "email" | "phone", string>>;
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: ReactNode }) {
   const reduce = useReducedMotion();
   const [step, setStep] = useState(0);
-  const [data, setData] = useState<Data>({ needs: [], when: WHENS[1], about: "", name: "", brand: "", email: "", phone: "", website: "" });
+  const [data, setData] = useState<Data>({ needs: [], when: WHENS[1], about: "", name: "", brand: "", company: "", email: "", phone: "", website: "" });
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
   const headingRefs = useRef<(HTMLHeadingElement | null)[]>([]);
@@ -43,6 +43,11 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
   const validate = (s: number): Errors => {
     const e: Errors = {};
     if (s === 0 && data.needs.length === 0) e.needs = copy.errors.needs;
+    if (s === 1) {
+      if (!data.brand.trim()) e.brand = copy.errors.brand;
+      if (!data.company.trim()) e.company = copy.errors.company;
+      if (!data.about.trim()) e.about = copy.errors.about;
+    }
     if (s === 2) {
       if (!data.name.trim()) e.name = copy.errors.name;
       if (!EMAIL.test(data.email.trim())) e.email = copy.errors.email;
@@ -74,7 +79,7 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
 
   const summaries = [
     `${data.needs.join(", ")} · ${data.when}`,
-    data.brand || data.about ? [data.brand, data.about].filter(Boolean).join(" · ") : "No brand details yet",
+    [data.brand, data.company, data.about].filter(Boolean).join(" · "),
   ];
 
   if (status === "sent") {
@@ -190,13 +195,24 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
 
             {i === 1 && (
               <>
-                <div className="grid gap-1">
-                  <label htmlFor="f-brand" className="t-label">{copy.brand}</label>
-                  <input id="f-brand" className="field-input" autoComplete="organization" value={data.brand} onChange={(e) => set("brand", e.target.value)} />
+                <div className="grid gap-7 sm:grid-cols-2 sm:gap-x-6">
+                  <Field id="f-brand" required label={copy.brand} error={errors.brand} value={data.brand} onChange={(v) => set("brand", v)} placeholder={copy.brandPlaceholder} />
+                  <Field id="f-company" required label={copy.company} error={errors.company} value={data.company} onChange={(v) => set("company", v)} autoComplete="organization" placeholder={copy.companyPlaceholder} />
                 </div>
                 <div className="grid gap-1">
                   <label htmlFor="f-about" className="t-label">{copy.aboutLabel}</label>
-                  <textarea id="f-about" className="field-input" placeholder={copy.aboutPlaceholder} value={data.about} onChange={(e) => set("about", e.target.value)} />
+                  <textarea
+                    id="f-about"
+                    className="field-input"
+                    required
+                    aria-required
+                    aria-invalid={errors.about ? true : undefined}
+                    aria-describedby={errors.about ? "f-about-err" : undefined}
+                    placeholder={copy.aboutPlaceholder}
+                    value={data.about}
+                    onChange={(e) => set("about", e.target.value)}
+                  />
+                  {errors.about && <span id="f-about-err" className="text-[0.82rem] text-destructive">{errors.about}</span>}
                 </div>
               </>
             )}
@@ -243,8 +259,8 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
 }
 
 function Field({
-  id, label, value, onChange, error, type = "text", autoComplete, required,
-}: { id: string; label: string; value: string; onChange: (v: string) => void; error?: string; type?: string; autoComplete?: string; required?: boolean }) {
+  id, label, value, onChange, error, type = "text", autoComplete, required, placeholder,
+}: { id: string; label: string; value: string; onChange: (v: string) => void; error?: string; type?: string; autoComplete?: string; required?: boolean; placeholder?: string }) {
   return (
     <div className={cn("grid min-w-0 gap-1")}>
       <label htmlFor={id} className="t-label">{label}</label>
@@ -254,6 +270,7 @@ function Field({
         className="field-input"
         autoComplete={autoComplete}
         required={required}
+        placeholder={placeholder}
         aria-required={required || undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}

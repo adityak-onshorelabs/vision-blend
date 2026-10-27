@@ -66,9 +66,6 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
               </Reveal>
             ))}
           </ol>
-          <p className="mt-12 text-[0.88rem] text-muted-foreground">
-            {c.ui.conceptNote} <Tbc />
-          </p>
         </div>
       </section>
 

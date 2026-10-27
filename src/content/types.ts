@@ -63,11 +63,9 @@ export type Content = {
     startProject: string;
     seeWork: string;
     viewOnInstagram: string;
-    tbc: string;
     placeholderImage: string;
     realProject: string;
     skip: string;
-    conceptNote: string;
   };
   home: {
     metaTitle: string;
@@ -84,7 +82,6 @@ export type Content = {
   };
   projects: Project[];
   services: Service[];
-  servicesNote: string;
   beliefs: Belief[];
   process: Step[];
   episodes: Episode[];
@@ -122,6 +119,9 @@ export type Content = {
       aboutPlaceholder: string;
       name: string;
       brand: string;
+      brandPlaceholder: string;
+      company: string;
+      companyPlaceholder: string;
       email: string;
       phone: string;
       next: string;
@@ -131,7 +131,7 @@ export type Content = {
       edit: string;
       sent: string;
       failed: string;
-      errors: { needs: string; name: string; email: string; phone: string };
+      errors: { needs: string; brand: string; company: string; about: string; name: string; email: string; phone: string };
     };
   };
 };

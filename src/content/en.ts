@@ -7,7 +7,7 @@
     "Six people... one year" from People Files Edit 001, collaboration and hiring notes).
   - Brand assets supplied by the studio: wordmark (brown and white) and the copper key visual.
 
-  Needs client confirmation (marked TBC on the page)
+  Needs client confirmation (not marked on the page; tracked in README "Before launch")
   - Service deliverable lists (drafted from captions and hashtags).
   - Process steps.
   - Studio email and city/address (not public).
@@ -41,11 +41,9 @@ export const en: Content = {
     startProject: "Start a project",
     seeWork: "See the work",
     viewOnInstagram: "View on Instagram",
-    tbc: "TBC",
     placeholderImage: "Illustration",
     realProject: "Published project",
     skip: "Skip to content",
-    conceptNote: "Illustrations stand in until the studio shares stills",
   },
   home: {
     metaTitle: "Vision Blend. Building brands with taste.",
@@ -190,7 +188,6 @@ export const en: Content = {
       outcome: "A feed people recognise before they read the handle.",
     },
   ],
-  servicesNote: "Service lists drafted from the Instagram feed and hashtags",
   beliefs: [
     { text: "Good creative doesn't ask for attention. It earns it.", date: "Sep 2026", url: `${ig}p/DdosU14Eu4Z/` },
     { text: "Attention is temporary. Recognition compounds.", date: "Aug 2026", url: `${ig}p/DcA9_fKqHeb/` },
@@ -282,7 +279,10 @@ export const en: Content = {
       aboutLabel: "About the brand",
       aboutPlaceholder: "What you sell, who buys it, and what feels off about the brand today.",
       name: "Name",
-      brand: "Brand or company",
+      brand: "Brand name",
+      brandPlaceholder: "The name customers know",
+      company: "Company name",
+      companyPlaceholder: "The registered business",
       email: "Email",
       phone: "Phone",
       next: "Next",
@@ -294,6 +294,9 @@ export const en: Content = {
       failed: "The brief could not be sent. Please try again, or message us on Instagram.",
       errors: {
         needs: "Pick at least one option.",
+        brand: "Add the brand name.",
+        company: "Add the company name.",
+        about: "Tell us a little about the brand.",
         name: "Add your name so we know who to reply to.",
         email: "Add an email address like you@brand.com.",
         phone: "Add a phone number with at least 7 digits, like +91 98765 43210.",
