@@ -8,6 +8,7 @@ import { Reach } from "@/components/site/reach";
 import { SeriesLinks } from "@/components/site/series-links";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
+import { Showreel } from "@/components/site/showreel";
 import { ServiceCards } from "@/components/site/service-cards";
 import { WorkIndex } from "@/components/site/work-index";
 import { getContent } from "@/content";
@@ -79,6 +80,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           </figure>
         </div>
       </section>
+
+      <Showreel copy={h.showreel} />
 
       <section className="band" aria-labelledby="work-title">
         <div className="frame">

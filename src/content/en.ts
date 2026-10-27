@@ -56,6 +56,20 @@ export const en: Content = {
       { label: "Practice", value: "Brand, film, content" },
     ],
     visualCaption: ["Key visual, copper blend", "Est. 2023"],
+    showreel: {
+      label: "Production Files 001",
+      title: "FIFA x Paradise",
+      sub: "From concept to final cut.",
+      date: "Aug 2026",
+      // Drop the exported film at public/videos/fifa-x-paradise.mp4 (H.264, 1080p, under ~15 MB).
+      // Until it exists the poster shows and the film opens on Instagram.
+      src: "/videos/fifa-x-paradise.mp4",
+      poster: "/images/key-bg.jpg",
+      instagram: `${ig}p/DcGpzAIiJyo/`,
+      soundOn: "Sound on",
+      soundOff: "Sound off",
+      watch: "Watch on Instagram",
+    },
     work: {
       label: "Selected work",
       title: "Production files",

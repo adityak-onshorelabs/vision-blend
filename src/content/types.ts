@@ -73,6 +73,18 @@ export type Content = {
     lead: string;
     facts: { label: string; value: string }[];
     visualCaption: [string, string];
+    showreel: {
+      label: string;
+      title: string;
+      sub: string;
+      date: string;
+      src: string;
+      poster: string;
+      instagram: string;
+      soundOn: string;
+      soundOff: string;
+      watch: string;
+    };
     work: { label: string; title: string; text: string };
     services: { label: string; title: string; text: string };
     beliefs: { label: string; title: string; text: string };
