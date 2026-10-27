@@ -57,11 +57,10 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
             </dl>
           </div>
           <figure className="group grid min-w-0 content-start gap-3 lg:col-span-5 lg:col-start-8">
-            {/* Moving key visual: two copies of the copper gradient drift on different cycles and
-                blend (lighten), with the wordmark held still on top. Static with reduced motion. */}
+            {/* Key visual: the original copper background with a slow, gentle drift; the wordmark
+                stays still on top. Static with reduced motion. */}
             <div className="relative aspect-[3/2] overflow-hidden bg-night lg:aspect-[4/5]">
               <Image src="/images/key-bg.jpg" alt="" fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="hero-blend-a object-cover" />
-              <Image src="/images/key-bg.jpg" alt="" fill sizes="(min-width: 1024px) 40vw, 100vw" className="hero-blend-b object-cover" />
               <div className="absolute inset-0 grid place-items-center">
                 <Image
                   src="/images/logo-white.png"
@@ -69,7 +68,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
                   width={900}
                   height={180}
                   priority
-                  className="h-auto w-[62%] lg:w-[72%]"
+                  className="h-auto w-[38%] lg:w-[72%]"
                 />
               </div>
             </div>
