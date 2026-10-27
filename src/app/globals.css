@@ -82,6 +82,10 @@
 @layer base {
   * { border-color: var(--border); }
   html { -webkit-text-size-adjust: 100%; }
+  /* Native smooth scrolling (CSS only, no library). Next's data-scroll-behavior keeps route
+     changes instant; reduced-motion users get normal jumps. scroll-padding clears the sticky header. */
+  html { scroll-padding-top: 88px; }
+  @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   body {
     background: var(--paper);
     color: var(--ink);

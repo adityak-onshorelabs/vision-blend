@@ -65,7 +65,7 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 
 ## 6. Motion
 
-Library: Motion (`motion/react`) plus CSS transitions. Native browser scroll only.
+Library: Motion (`motion/react`) plus CSS transitions. Scrolling is the browser's own: CSS `scroll-behavior: smooth` for in-page jumps (with `data-scroll-behavior="smooth"` on `<html>` so route changes stay instant), no scroll library, no scroll hijacking.
 
 - Hero: no entrance animation, it paints immediately.
 - Sections: `Reveal` (fade + 16px rise, once) on below-the-fold groups.
