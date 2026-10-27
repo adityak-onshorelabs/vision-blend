@@ -1,3 +1,5 @@
+import { existsSync } from "node:fs";
+import path from "node:path";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,6 +11,7 @@ import { SeriesLinks } from "@/components/site/series-links";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
 import { Showreel } from "@/components/site/showreel";
+import { ShowreelEmbed } from "@/components/site/showreel-embed";
 import { ServiceCards } from "@/components/site/service-cards";
 import { WorkIndex } from "@/components/site/work-index";
 import { getContent } from "@/content";
@@ -27,6 +30,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
   if (!hasLocale(lang)) notFound();
   const c = getContent(lang);
   const h = c.home;
+  // Self-hosted film plays silently on loop; until the file exists, use Instagram's player.
+  const hasFilm = existsSync(path.join(process.cwd(), "public", h.showreel.src.replace(/^\//, "")));
 
   return (
     <>
@@ -81,7 +86,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         </div>
       </section>
 
-      <Showreel copy={h.showreel} />
+      {hasFilm ? <Showreel copy={h.showreel} /> : <ShowreelEmbed copy={h.showreel} />}
 
       <section className="band" aria-labelledby="work-title">
         <div className="frame">

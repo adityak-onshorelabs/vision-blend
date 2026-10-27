@@ -20,8 +20,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/work">): P
 }
 
 /*
-  Layout rhythm (top to bottom): header with a project index, one full-width featured film,
-  a split (story left, film right), a staggered two-up of studio work in its native shapes,
+  Layout rhythm (top to bottom): the featured film as the hero, the project index on its own
+  band, a split (story left, film right), a staggered two-up of studio work in its native shapes,
   a quieter pair of case-study slots, the series band, then a closing call to action.
 */
 export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
@@ -40,70 +40,94 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
 
   return (
     <>
-      {/* Header: title and lead left, the file's index right. */}
-      <section className="band" aria-labelledby="work-title">
+      {/* Hero: the featured film. FIFA x Paradise is the studio's headline project. */}
+      <section id={featured.slug} aria-labelledby="work-title" className="band scroll-mt-20">
+        <div className="frame grid gap-[clamp(28px,3.5vw,48px)]">
+          <div className="index-row !mb-0">
+            <span className="t-label marker">Featured film</span>
+            <span className="count">
+              <b>{number(featured)}</b> / {String(total).padStart(2, "0")}
+            </span>
+          </div>
+          <div className="grid items-end gap-6 lg:grid-cols-12">
+            <div className="grid gap-4 lg:col-span-8">
+              <span className="t-label">{featured.sub}</span>
+              <h1 id="work-title" className="t-display">
+                {featured.name}
+                <span className="stop">.</span>
+              </h1>
+            </div>
+            <p className="t-lead text-muted-foreground lg:col-span-4">{featured.summary}</p>
+          </div>
+          <InstagramMedia url={featured.instagram!.url} kind={featured.embed!} title={featured.name} priority />
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-6">
+            <dl className="grid grid-cols-3 gap-5 border-t border-border pt-4 lg:col-span-5">
+              {[
+                ["Type", featured.category],
+                ["Series", featured.sub],
+                ["Released", featured.date],
+              ].map(([k, v]) => (
+                <div key={k} className="grid content-start gap-1">
+                  <dt className="t-label">{k}</dt>
+                  <dd className="text-[0.96rem]">{v}</dd>
+                </div>
+              ))}
+            </dl>
+            <div className="grid content-start gap-5 lg:col-span-5 lg:col-start-8">
+              {(featured.body ?? [featured.summary]).map((t) => (
+                <p key={t}>{t}</p>
+              ))}
+              <div className="flex flex-wrap gap-2.5">
+                <InstagramLink url={featured.instagram!.url} label={c.ui.viewOnInstagram} />
+                <a href="#index-title" className="cta cta-line cta-sm self-center border-transparent">
+                  All projects <span className="arr" aria-hidden="true">&darr;</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The file's index, moved out of the hero: every project, numbered, as jump links. */}
+      <section className="band band-tint" aria-labelledby="index-title">
         <div className="frame">
           <div className="index-row">
-            <span className="t-label marker">Work</span>
+            <span className="t-label marker">{w.indexLabel}</span>
             <span className="count">
               <b>{String(total).padStart(2, "0")}</b> projects
             </span>
           </div>
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
-            <div className="grid content-start gap-6 lg:col-span-7">
-              <h1 id="work-title" className="t-display max-w-[9ch]">
+          <div className="grid gap-10 lg:grid-cols-12 lg:gap-6">
+            <div className="grid content-start gap-5 lg:col-span-5">
+              <h2 id="index-title" className="t-h2 scroll-mt-24">
                 {w.title}
                 <span className="stop">.</span>
-              </h1>
-              <p className="t-lead max-w-[36ch] text-muted-foreground">{w.lead}</p>
+              </h2>
+              <p className="max-w-[36ch] text-muted-foreground">{w.lead}</p>
             </div>
-            <nav aria-label={w.indexLabel} className="grid content-end gap-3 lg:col-span-4 lg:col-start-9">
-              <span className="t-label">{w.indexLabel}</span>
-              <ol className="border-t border-border">
-                {c.projects.map((p) => (
-                  <li key={p.slug}>
-                    <a
-                      href={`#${p.slug}`}
-                      className="group flex min-h-11 items-baseline gap-4 border-b border-border py-2.5 text-[0.98rem] transition-colors hover:text-brand"
-                    >
-                      <span className="w-6 text-[0.78rem] font-medium text-[var(--faint)] transition-colors group-hover:text-brand">{number(p)}</span>
-                      <span className="flex-1">{p.name}</span>
-                      <span className="text-[0.86rem] text-muted-foreground">{p.category}</span>
-                      <span aria-hidden="true" className="translate-x-[-4px] opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100">
-                        &darr;
-                      </span>
-                    </a>
-                  </li>
-                ))}
-              </ol>
-            </nav>
-          </div>
-        </div>
-      </section>
-
-      {/* 01 Featured: the film full width, meta underneath. */}
-      <section id={featured.slug} aria-labelledby={`${featured.slug}-t`} className="band scroll-mt-20">
-        <div className="frame grid gap-7">
-          <ProjectMeta p={featured} n={number(featured)} total={total} />
-          <InstagramMedia url={featured.instagram!.url} kind={featured.embed!} title={featured.name} priority />
-          <div className="grid gap-6 lg:grid-cols-12 lg:gap-6">
-            <h2 id={`${featured.slug}-t`} className="t-h1 lg:col-span-6">
-              {featured.name}
-              <span className="stop">.</span>
-            </h2>
-            <div className="grid content-start gap-5 lg:col-span-5 lg:col-start-8">
-              <p className="text-muted-foreground">{featured.sub}</p>
-              {(featured.body ?? [featured.summary]).map((t) => (
-                <p key={t}>{t}</p>
+            <ol className="border-t border-border lg:col-span-6 lg:col-start-7">
+              {c.projects.map((p) => (
+                <li key={p.slug}>
+                  <a
+                    href={`#${p.slug}`}
+                    className="group grid min-h-14 grid-cols-[36px_minmax(0,1fr)_auto_16px] items-baseline gap-4 border-b border-border py-3.5 transition-colors hover:text-brand"
+                  >
+                    <span className="text-[0.78rem] font-medium text-[var(--faint)] transition-colors group-hover:text-brand">{number(p)}</span>
+                    <span className="t-h3 !text-[1.25rem] transition-transform duration-500 ease-[var(--ease)] group-hover:translate-x-1.5">{p.name}</span>
+                    <span className="text-[0.86rem] text-muted-foreground">{p.real ? p.category : "Slot"}</span>
+                    <span aria-hidden="true" className="translate-y-[-3px] opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                      &darr;
+                    </span>
+                  </a>
+                </li>
               ))}
-              <InstagramLink url={featured.instagram!.url} label={c.ui.viewOnInstagram} />
-            </div>
+            </ol>
           </div>
         </div>
       </section>
 
-      {/* 02 Split: story left, film right, on the tint band for a change of pace. */}
-      <section id={second.slug} aria-labelledby={`${second.slug}-t`} className="band band-tint scroll-mt-20">
+      {/* 02 Split: story left, film right. */}
+      <section id={second.slug} aria-labelledby={`${second.slug}-t`} className="band scroll-mt-20">
         <div className="frame grid gap-7">
           <ProjectMeta p={second} n={number(second)} total={total} />
           <div className="grid items-end gap-8 lg:grid-cols-12 lg:gap-6">
@@ -126,7 +150,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
       </section>
 
       {/* 03 + 04 Studio: two pieces in their native shapes, staggered. */}
-      <section className="band" aria-labelledby="studio-title">
+      <section className="band band-tint" aria-labelledby="studio-title">
         <div className="frame">
           <div className="index-row">
             <span className="t-label marker">{w.studioTitle}</span>
@@ -169,7 +193,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
 
       {/* 05 + 06 Slots: quieter, smaller, clearly marked. */}
       {slots.length > 0 && (
-        <section className="band band-tint" aria-labelledby="next-title">
+        <section className="band" aria-labelledby="next-title">
           <div className="frame">
             <div className="index-row">
               <span className="t-label marker">{w.nextTitle}</span>
@@ -185,7 +209,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
               <ul className="grid gap-6 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
                 {slots.map((p) => (
                   <li key={p.slug} id={p.slug} className="group grid scroll-mt-24 content-start gap-4">
-                    <div className="grid aspect-[4/3] place-items-center bg-paper text-ink">
+                    <div className="grid aspect-[4/3] place-items-center bg-tint text-ink">
                       <ProjectArt slug={p.slug} className="h-[78%] w-auto" label={`${c.ui.placeholderImage}: ${p.name}`} />
                     </div>
                     <div className="grid gap-1">

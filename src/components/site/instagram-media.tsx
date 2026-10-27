@@ -40,15 +40,18 @@ export function InstagramMedia({
   return (
     <div className={cn("relative w-full overflow-hidden bg-[var(--well)]", g.aspect, className)}>
       <span aria-hidden="true" className="crop crop-bw absolute inset-0 opacity-60" style={{ backgroundSize: "260%" }} />
-      <iframe
-        src={src}
-        title={`Instagram: ${title}`}
-        loading={priority ? "eager" : "lazy"}
-        scrolling="no"
-        allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
-        className="absolute border-0"
-        style={{ width: g.width, left: g.left, top: -HEADER, height: g.height }}
-      />
+      {/* Scaled 1.5% around the window's centre to hide the 1px white edge Instagram leaves. */}
+      <div className="absolute inset-0 scale-[1.015]">
+        <iframe
+          src={src}
+          title={`Instagram: ${title}`}
+          loading={priority ? "eager" : "lazy"}
+          scrolling="no"
+          allow="autoplay; encrypted-media; picture-in-picture; fullscreen"
+          className="absolute border-0"
+          style={{ width: g.width, left: g.left, top: -HEADER, height: g.height }}
+        />
+      </div>
     </div>
   );
 }
