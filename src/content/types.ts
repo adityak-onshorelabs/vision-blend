@@ -18,6 +18,8 @@ export type Project = {
   body?: string[];
   credits?: string[];
   instagram?: { url: string; kind: "post" | "reel" };
+  /** How the Instagram media is shaped, so the embed can be cropped to it. */
+  embed?: "landscape" | "portrait" | "reel";
   crop: Crop;
 };
 
@@ -107,7 +109,19 @@ export type Content = {
     team: { title: string; text: string; url: string; reel: string };
     join: { title: string; text: string };
   };
-  workPage: { metaTitle: string; metaDescription: string; title: string; lead: string };
+  workPage: {
+    metaTitle: string;
+    metaDescription: string;
+    title: string;
+    lead: string;
+    indexLabel: string;
+    studioTitle: string;
+    studioText: string;
+    nextTitle: string;
+    nextText: string;
+    ctaTitle: string;
+    ctaText: string;
+  };
   servicesPage: { metaTitle: string; metaDescription: string; title: string; lead: string };
   contactPage: {
     metaTitle: string;

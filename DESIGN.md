@@ -54,6 +54,9 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 - **Enquiry form** (`EnquiryForm`): adapted from Watermelon `progressive-input-stack`; three steps, finished steps collapse into editable summary strips, underline fields, square chips.
 - **Page transition** (`PageTransition`): on internal link clicks a night panel wipes up, the destination's line illustration draws in with the page name and the brown full stop (Home: two circles blend; Work: viewfinder; Services: three circles; About: six tiles; Contact: a line ending in a full stop), the route changes underneath, then the panel wipes away upward. Back/forward, new-tab, external, same-page links and reduced motion skip it.
 - **Project illustrations** (`ProjectArt`): one line drawing per project (film strip and football, palm and horizon, six portrait frames, seven-day strip, VB construction grid, phone feed) on the tint well, drawn in on mount. Placeholders until the studio shares stills.
+- **Instagram media** (`InstagramMedia`): the official embed cropped to just the media (landscape 16:9, portrait 4:5, or reel), still interactive so films play inline. Used on the Work page.
+- **Showreel** (`Showreel`): below the hero; sticky film frame opens to full bleed with scroll, muted loop, pointer sound label. Plays `public/videos/fifa-x-paradise.mp4` when present.
+- **Work page layout**: header with project index, full-width featured film, split story/film, staggered studio two-up, quieter case-study slots, series band, closing CTA.
 - Radii: 0 everywhere except the dot. Shadows: none; depth comes from bands and rules.
 
 ## 5. Layout

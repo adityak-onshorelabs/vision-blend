@@ -114,6 +114,7 @@ export const en: Content = {
         "Production is where the idea meets reality. For FIFA x Paradise the team took the film from concept to final cut, and shared how it was made as the first entry in our Production Files series.",
       ],
       instagram: { url: `${ig}p/DcGpzAIiJyo/`, kind: "post" },
+      embed: "landscape",
       crop: { pos: "18% 30%", sz: "300%" },
     },
     {
@@ -128,6 +129,7 @@ export const en: Content = {
         "Every project has a story beyond what meets the eye. Hands Behind The Brand turns the camera on the people building Delta Palm Beach, so the brand is seen through the work and the hands that make it.",
       ],
       instagram: { url: `${ig}p/Dc8S6nAiLmp/`, kind: "post" },
+      embed: "landscape",
       crop: { pos: "92% 45%", sz: "280%" },
     },
     {
@@ -139,6 +141,7 @@ export const en: Content = {
       real: true,
       summary: "Six people, six personalities, one year at Vision Blend. A portrait edit of the team.",
       instagram: { url: `${ig}p/DerceBciGd5/`, kind: "post" },
+      embed: "portrait",
       crop: { pos: "62% 78%", sz: "320%", bw: true },
     },
     {
@@ -150,6 +153,7 @@ export const en: Content = {
       real: true,
       summary: "Weekly behind-the-scenes reels: branding, production reviews and client alignments.",
       instagram: { url: `${ig}reel/Dcqo2EsIWcu/`, kind: "reel" },
+      embed: "reel",
       crop: { pos: "76% 98%", sz: "240%", bw: true },
     },
     {
@@ -246,7 +250,14 @@ export const en: Content = {
     metaTitle: "Work",
     metaDescription: "Films, studio projects and series from Vision Blend: FIFA x Paradise, Hands Behind The Brand and more.",
     title: "Production files",
-    lead: "Films and studio projects, filed the way we post them.",
+    lead: "Films and studio projects, filed the way we post them. Press play on any of them.",
+    indexLabel: "In this file",
+    studioTitle: "From the studio",
+    studioText: "Our own work: the people behind Vision Blend and the week-to-week of making it.",
+    nextTitle: "Next in the file",
+    nextText: "Case studies we are writing up now.",
+    ctaTitle: "Have a brief like these",
+    ctaText: "Tell us about the brand and what it needs. We read every brief and reply with next steps.",
   },
   servicesPage: {
     metaTitle: "Services",
