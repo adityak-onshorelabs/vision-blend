@@ -4,13 +4,16 @@ import type { Content } from "@/content/types";
 export function ContactCard({ content: c }: { content: Content }) {
   const e = c.contactPage.email;
   if (!c.company.email) return null;
+  const [user, domain] = c.company.email.split("@");
 
   return (
     <div className="grid gap-7">
       <div className="grid gap-3">
         <span className="t-label marker">{e.label}</span>
-        <a href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer" className="t-h2 u justify-self-start break-all">
-          {c.company.email}
+        <a href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer" className="t-h2 u justify-self-start [overflow-wrap:anywhere]">
+          {/* On narrow screens the address wraps at the @, not mid-word */}
+          {user}
+          <wbr />@{domain}
         </a>
         {c.company.emailCc && (
           <p className="text-[0.94rem] text-muted-foreground">

@@ -13,7 +13,7 @@ export function ServiceCards({ services, lang, linkLabel }: { services: Service[
       {services.map((s) => (
         <article
           key={s.slug}
-          className="group relative grid min-w-0 content-start gap-3.5 surface px-7 pb-8 pt-7 lg:row-span-5 lg:grid-rows-subgrid lg:content-stretch before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] before:ease-[var(--ease)] hover:before:scale-x-100 focus-within:before:scale-x-100"
+          className="group relative grid min-w-0 content-start gap-3.5 surface pb-8 pt-7 lg:row-span-5 lg:grid-rows-subgrid lg:content-stretch before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] before:ease-[var(--ease)] hover:before:scale-x-100 focus-within:before:scale-x-100"
         >
           <ServiceIllustration slug={s.slug} className="mb-3 aspect-[3/2] h-auto w-full well text-ink" />
           <h3 className="t-h3">{s.name}</h3>
