@@ -30,9 +30,10 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
       siteName: c.company.name,
       title: c.home.metaTitle,
       description: c.home.metaDescription,
-      images: [{ url: "/images/og.jpg", width: 1200, height: 630, alt: "Vision Blend wordmark on the copper key visual" }],
+      // Link previews (WhatsApp, LinkedIn, iMessage): white wordmark on the copper gradient
+      images: [{ url: "/images/og-copper.jpg", width: 1200, height: 630, type: "image/jpeg", alt: "Vision Blend wordmark on the copper key visual" }],
     },
-    twitter: { card: "summary_large_image" },
+    twitter: { card: "summary_large_image", images: ["/images/og-copper.jpg"] },
   };
 }
 

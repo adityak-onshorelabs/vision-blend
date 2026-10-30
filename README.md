@@ -36,7 +36,7 @@ npx tsc --noEmit && npm run lint
 
 | Variable | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SITE_URL` | Canonical URL, sitemap, OG (defaults to https://www.visionblend.in) |
+| `NEXT_PUBLIC_SITE_URL` | Canonical URL, sitemap, OG link previews (`public/images/og-copper.jpg`). Set it once visionblend.in is connected; unset, Vercel's production URL is used so WhatsApp previews work |
 | `RESEND_API_KEY` | Resend API key for enquiry emails |
 | `ENQUIRY_TO` | Recipient(s), comma-separated |
 | `ENQUIRY_FROM` | Verified sender address |
