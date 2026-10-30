@@ -10,13 +10,33 @@
   Needs client confirmation (not marked on the page; tracked in README "Before launch")
   - Service deliverable lists (drafted from captions and hashtags).
   - Process steps.
-  - Studio email and city/address (not public).
+  - Studio city/address (not public).
   - Whether "Six people" is the full team.
   - Real project stills (project images are copper crops until then; reel previews load from Instagram).
 */
+import { gmailCompose } from "@/lib/mail";
 import type { Content } from "./types";
 
 const ig = "https://www.instagram.com/";
+
+// Addresses from the studio, 30 Oct 2026 (typed as "visionblend@gmail.comm" and "gursimar@visionblend"; confirm both)
+const EMAIL = "visionblend@gmail.com";
+const EMAIL_CC = "gursimar@visionblend.in";
+const DRAFT = {
+  to: EMAIL,
+  cc: EMAIL_CC,
+  subject: "New project enquiry",
+  body: [
+    "Hi Vision Blend,",
+    "",
+    "Brand or company:",
+    "What we need (branding, film, content):",
+    "Timeline:",
+    "A little about the project:",
+    "",
+    "Thanks,",
+  ].join("\n"),
+};
 
 export const en: Content = {
   company: {
@@ -28,7 +48,9 @@ export const en: Content = {
     instagram: `${ig}vision.blend/`,
     instagramHandle: "@vision.blend",
     website: "visionblend.in",
-    email: null,
+    email: EMAIL,
+    emailCc: EMAIL_CC,
+    enquiryGmail: gmailCompose(DRAFT),
     location: null,
   },
   nav: [
@@ -49,6 +71,7 @@ export const en: Content = {
     metaTitle: "Vision Blend. Building brands with taste.",
     metaDescription:
       "Vision Blend is a marketing studio for brands that want to be remembered, not just seen. Branding, film and production, and content, made by one team since 2023.",
+    eyebrow: "Marketing studio · Est. 2023",
     lead: "Vision Blend is a marketing studio for brands that want to be remembered, not just seen. Identity, production and content, made by one team.",
     facts: [
       { label: "Since", value: "2023" },
@@ -281,10 +304,16 @@ export const en: Content = {
     title: "Start a project",
     lead: "Tell us about the brand and what it needs. We read every brief and reply with next steps.",
     collaborate: "Creatives looking to collaborate on future projects can DM us on Instagram.",
+    email: {
+      label: "Email the studio",
+      ccNote: "Briefs also reach",
+      gmail: "Send us a message",
+      hint: "Opens Gmail with a short brief ready to fill in.",
+    },
     next: {
       title: "What happens next",
       steps: [
-        { title: "Send the brief", text: "Three short steps: what you need, the brand, and how to reach you." },
+        { title: "Send the brief", text: "Email us the brand, what it needs and when. The draft has the questions ready." },
         { title: "We read it", text: "The team reads every brief before anyone replies." },
         { title: "We reply with next steps", text: "Starting with a call to understand the brand and what it needs." },
       ],
@@ -322,6 +351,14 @@ export const en: Content = {
       back: "Back",
       submit: "Send the brief",
       sending: "Sending",
+      verifying: "Verifying",
+      verify: {
+        checking: "Checking you're human",
+        interactive: "One quick check before we send",
+        verified: "Verified",
+        error: "We couldn't verify this browser.",
+        retry: "Try again",
+      },
       edit: "Edit",
       sent: "Thanks. Your brief is with the studio and we will reply with next steps.",
       failed: "The brief could not be sent. Please try again, or message us on Instagram.",

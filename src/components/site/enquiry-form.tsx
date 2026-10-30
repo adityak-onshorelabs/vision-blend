@@ -15,6 +15,7 @@ import type { FormEvent, ReactNode } from "react";
 import type { Content } from "@/content/types";
 import { NEEDS, WHENS, isPhone } from "@/lib/enquiry";
 import { cn } from "@/lib/utils";
+import { HumanCheck, TURNSTILE_SITE_KEY } from "./human-check";
 
 type FormCopy = Content["contactPage"]["form"];
 type Data = { needs: string[]; when: string; about: string; name: string; brand: string; email: string; phone: string; website: string };
@@ -27,9 +28,16 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
   const [step, setStep] = useState(0);
   const [data, setData] = useState<Data>({ needs: [], when: WHENS[1], about: "", name: "", brand: "", email: "", phone: "", website: "" });
   const [errors, setErrors] = useState<Errors>({});
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "failed">("idle");
+  const [status, setStatus] = useState<"idle" | "verifying" | "sending" | "sent" | "failed">("idle");
+  const [token, setToken] = useState<string | null>(null);
+  const [checkKey, setCheckKey] = useState(0);
   const headingRefs = useRef<(HTMLHeadingElement | null)[]>([]);
   const prevStep = useRef(step);
+  const startedAt = useRef(0);
+
+  useEffect(() => {
+    startedAt.current = Date.now();
+  }, []);
 
   useEffect(() => {
     if (prevStep.current !== step) headingRefs.current[step]?.focus();
@@ -67,13 +75,32 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
     const e = validate(2);
     setErrors(e);
     if (Object.keys(e).length) return;
+    // Turnstile is still working: send as soon as its token arrives (see onToken)
+    if (TURNSTILE_SITE_KEY && !token) return setStatus("verifying");
+    send(token);
+  };
+
+  const send = async (turnstile: string | null) => {
     setStatus("sending");
+    let ok = false;
     try {
-      const res = await fetch("/api/enquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
-      setStatus(res.ok ? "sent" : "failed");
-    } catch {
-      setStatus("failed");
-    }
+      const body = JSON.stringify({ ...data, turnstile, elapsed: Date.now() - startedAt.current });
+      const res = await fetch("/api/enquiry", { method: "POST", headers: { "Content-Type": "application/json" }, body });
+      ok = res.ok;
+    } catch {}
+    setStatus(ok ? "sent" : "failed");
+    // Tokens are single use, so a failed send needs a fresh check
+    if (!ok) setCheckKey((k) => k + 1);
+  };
+
+  const onToken = (t: string | null) => {
+    setToken(t);
+    if (t && status === "verifying") send(t);
+  };
+
+  const retryCheck = () => {
+    if (status === "verifying") setStatus("idle");
+    setCheckKey((k) => k + 1);
   };
 
   const summaries = [
@@ -225,22 +252,24 @@ export function EnquiryForm({ copy, children }: { copy: FormCopy; children?: Rea
               </div>
             )}
 
+            {i === 2 && TURNSTILE_SITE_KEY && <HumanCheck key={checkKey} copy={copy.verify} onToken={onToken} onRetry={retryCheck} />}
+
             <div className="flex flex-wrap items-center gap-4">
               {i > 0 && (
                 <button type="button" className="cta cta-line" onClick={() => setStep(i - 1)}>
                   {copy.back}
                 </button>
               )}
-              <button type="submit" className="cta" disabled={status === "sending"}>
+              <button type="submit" className="cta" disabled={status === "sending" || status === "verifying"}>
                 <AnimatePresence mode="popLayout" initial={false}>
                   <motion.span
-                    key={i === 2 ? (status === "sending" ? "sending" : "submit") : "next"}
+                    key={i === 2 ? (status === "sending" || status === "verifying" ? status : "submit") : "next"}
                     initial={reduce ? false : { y: 14, opacity: 0 }}
                     animate={{ y: 0, opacity: 1 }}
                     exit={reduce ? undefined : { y: -14, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    {i === 2 ? (status === "sending" ? copy.sending : copy.submit) : copy.next}
+                    {i === 2 ? (status === "sending" ? copy.sending : status === "verifying" ? copy.verifying : copy.submit) : copy.next}
                   </motion.span>
                 </AnimatePresence>
                 <span className="arr" aria-hidden="true">&rarr;</span>

@@ -2,7 +2,7 @@
 
 ## 1. Visual Theme & Atmosphere
 
-"The full stop." The wordmark ends in a period: "Vision Blend." The site takes that one detail and uses it as its only ornament, a small brown dot that ends every headline and marks section labels, active states, buttons and published projects. Everything else is quiet: a neutral off-white page, near-black type in one geometric family close to the wordmark, hairline rules, sharp corners, and generous space. Sections alternate light, tint and dark bands, each opened by a numbered index row ("02 / 06") so the page reads as clearly separated chapters. The copper key visual from the brand assets appears once, large, in the hero.
+"The full stop." The wordmark ends in a period: "Vision Blend." The site takes that one detail and uses it as its only ornament, a small brown dot that ends every headline and marks section labels, active states, buttons and published projects. Everything else is quiet: a neutral off-white page, near-black type in one geometric family close to the wordmark, hairline rules, sharp corners, and generous space. Sections alternate light, tint and dark bands, each opened by a numbered index row ("02 / 06") so the page reads as clearly separated chapters. The copper key visual from the brand assets fills the hero once.
 
 Scene: a founder or brand manager on a laptop in a bright studio, judging taste in the first ten seconds, then reopening the link on a phone. Light theme, with one dark band for the film series and the footer.
 
@@ -24,7 +24,7 @@ Strategy: **Restrained.** Neutrals carry the page; the logo brown appears only a
 | `--night` | `oklch(0.17 0.006 40)` | Dark band, footer |
 | `--on-night` / `--on-night-muted` | `oklch(0.95 ...)` / `oklch(0.68 ...)` | Text on night |
 
-Rules: no gradients except the client's own key visual. Contrast verified with `contrast.py`; lowest text pair is faint on tint at 4.51.
+Rules: no gradients except the client's own key visual (in the hero, as `hero-copper.jpg`). The logo brown is the highlight colour: section labels, the current index number, link underlines, the current page and key words (the hero's "taste") use `--brand`, which dark bands switch to `--brand-soft`. Contrast verified with `contrast.py`; lowest text pair is faint on tint at 4.51.
 
 ## 3. Typography
 
@@ -51,10 +51,11 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 - **Beliefs** (`Beliefs`): the studio's own lines set large; hover darkens the line and shows the dot.
 - **Process rail** (`ProcessRail`): adapted from Watermelon `step-indicator`; a brown bar slides between segments on hover/focus.
 - **Series embeds** (`SeriesEmbeds`): Instagram's own embed markup in a horizontal snap row; embed.js loads when the row nears the viewport; link cards until then.
-- **Enquiry form** (`EnquiryForm`): adapted from Watermelon `progressive-input-stack`; three steps, finished steps collapse into editable summary strips, underline fields, square chips.
+- **Enquiry form** (`EnquiryForm`): adapted from Watermelon `progressive-input-stack`; three steps, finished steps collapse into editable summary strips, underline fields, square chips. Human check (`HumanCheck`): Cloudflare Turnstile runs invisibly on step 3; a hairline scans and ends in the full stop, which turns brown once verified. Cloudflare's own box appears, between hairlines, only when it asks for an interaction.
 - **Page transition** (`PageTransition`): on internal link clicks a night panel wipes up, the destination's line illustration draws in with the page name and the brown full stop (Home: two circles blend; Work: viewfinder; Services: three circles; About: six tiles; Contact: a line ending in a full stop), the route changes underneath, then the panel wipes away upward. Back/forward, new-tab, external, same-page links and reduced motion skip it.
 - **Project illustrations** (`ProjectArt`): one line drawing per project (film strip and football, palm and horizon, six portrait frames, seven-day strip, VB construction grid, phone feed) on the tint well, drawn in on mount. Placeholders until the studio shares stills.
 - **Instagram media** (`InstagramMedia`): the official embed cropped to just the media (landscape 16:9, portrait 4:5, or reel), still interactive so films play inline. Used on the Work page.
+- **Home hero** (`Hero`, `HeroMotion`): full screen on the copper, with a soft dark pool behind the type, laid out as a centred statement: label, "Building brands / with taste." on two lines, lead and the two buttons in one centred column, with the services (and Production Files 001) spread along a hairline at the foot, each with the brand dot. The header over it is transparent with light type and the white logo at the top, frosted night while scrolling over the hero, and paper once past it. Every load of the home page (reloads and navigating back to it included) plays a 3s intro on the copper itself; links to home skip the page-transition panel so the intro is the transition: the key visual fades up from dark while the white wordmark wipes in and its full stop pings, the wordmark lifts away, then "Building brands with taste" rises word by word and the brand dot lands as its full stop; label, lead, buttons, services and header follow. Any input skips it; reduced motion shows the finished hero. A soft light follows the pointer on the copper.
 - **Showreel** (`Showreel`): below the hero; sticky film frame opens to full bleed with scroll, muted loop, pointer sound label. Plays `public/videos/fifa-x-paradise.mp4` when present.
 - **Work page layout**: header with project index, full-width featured film, split story/film, staggered studio two-up, quieter case-study slots, series band, closing CTA.
 - Radii: 0 everywhere except the dot. Shadows: none; depth comes from bands and rules.
@@ -62,7 +63,7 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 ## 5. Layout
 
 - 12 columns, max width 1360px, gutters 20px mobile and 40px from 760px.
-- Asymmetric, left-aligned. Hero copy spans 7 columns with the key visual in 5.
+- Asymmetric, left-aligned, except the home hero, which is a full-screen centred statement.
 - Sections use `--section` (80 to 152px) bottom padding and a short top pad above the index row.
 - Mobile first; no horizontal page scroll; the reel row scrolls inside its own track.
 
@@ -78,4 +79,4 @@ Library: Motion (`motion/react`) plus CSS transitions. Scrolling is the browser'
 
 ## 7. Imagery
 
-The copper key visual (`public/images/key-visual.jpg`) is the client's own asset. Project images are line illustrations (`ProjectArt`), labelled "Illustration", until the studio shares stills. Reel covers are Instagram's own previews, cropped from the official embed.
+The copper key visual (`public/images/key-visual.jpg`) is the client's own asset; the hero uses `hero-copper.jpg`, a clean 3840px rebuild of it (smoothed, with a fine grain against banding). Project images are line illustrations (`ProjectArt`), labelled "Illustration", until the studio shares stills. Reel covers are Instagram's own previews, cropped from the official embed.

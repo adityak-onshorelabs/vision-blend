@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EnquiryForm } from "@/components/site/enquiry-form";
+import { ContactCard } from "@/components/site/contact-card";
 import { ProjectArt } from "@/components/site/project-art";
 import { Reach } from "@/components/site/reach";
 import { ServiceIllustration } from "@/components/site/service-illustration";
@@ -29,7 +29,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
 
   return (
     <>
-      {/* 1. The brief: what happens next on the left, the stepped form on a card on the right. */}
+      {/* 1. The brief: what happens next on the left, the email card on the right. */}
       <section className="band" aria-labelledby="contact-title">
         <div className="frame">
           <div className="index-row">
@@ -66,16 +66,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
 
             <div className="lg:col-span-7 lg:col-start-6">
               <div className="relative bg-tint px-5 pb-8 pt-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-brand sm:px-9 sm:pb-10 sm:pt-8">
-                <EnquiryForm copy={cp.form}>
-                  <div className="flex flex-wrap gap-2.5">
-                    <Link href={`/${lang}/work`} className="cta cta-line">
-                      {c.ui.seeWork} <span className="arr" aria-hidden="true">&rarr;</span>
-                    </Link>
-                    <a href={c.company.instagram} target="_blank" rel="noopener noreferrer" className="cta cta-line">
-                      Follow {c.company.instagramHandle} <span className="arr" aria-hidden="true">↗</span>
-                    </a>
-                  </div>
-                </EnquiryForm>
+                <ContactCard content={c} />
               </div>
             </div>
           </div>

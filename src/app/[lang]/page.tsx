@@ -1,10 +1,10 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Beliefs } from "@/components/site/beliefs";
-import { EnquiryForm } from "@/components/site/enquiry-form";
+import { ContactCard } from "@/components/site/contact-card";
+import { Hero } from "@/components/site/hero";
 import { ProcessRail } from "@/components/site/process-rail";
 import { Reach } from "@/components/site/reach";
 import { SeriesLinks } from "@/components/site/series-links";
@@ -35,56 +35,13 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
   return (
     <>
-      {/* Hero: copy left, key visual right. No entrance animation so it paints immediately. */}
-      <section aria-labelledby="hero-title">
-        <div className="frame grid gap-12 pb-[var(--section)] pt-12 md:pt-[clamp(48px,7vw,104px)] lg:grid-cols-12 lg:gap-6">
-          <div className="grid min-w-0 content-between gap-[clamp(36px,5vw,64px)] lg:col-span-7">
-            <h1 id="hero-title" className="t-display max-w-[10ch]">
-              Building brands with taste<span className="stop">.</span>
-            </h1>
-            <div className="grid max-w-[30rem] gap-7">
-              <p className="t-lead">{h.lead}</p>
-              <div className="flex flex-wrap gap-2.5">
-                <Link href={`/${lang}/contact`} className="cta">
-                  {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
-                </Link>
-                <Link href={`/${lang}/work`} className="cta cta-line">
-                  {c.ui.seeWork} <span className="arr" aria-hidden="true">&rarr;</span>
-                </Link>
-              </div>
-            </div>
-            <dl className="grid max-w-[34rem] gap-5 border-t border-border pt-4 sm:grid-cols-3">
-              {h.facts.map((f) => (
-                <div key={f.label} className="grid gap-1">
-                  <dt className="t-label">{f.label}</dt>
-                  <dd className="text-[0.98rem]">{f.value}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-          <figure className="group grid min-w-0 content-start gap-3 lg:col-span-5 lg:col-start-8">
-            {/* Key visual: the original copper background with a slow, gentle drift; the wordmark
-                stays still on top. Static with reduced motion. */}
-            <div className="relative aspect-[3/2] overflow-hidden bg-night lg:aspect-[4/5]">
-              <Image src="/images/key-bg.jpg" alt="" fill priority sizes="(min-width: 1024px) 40vw, 100vw" className="hero-blend-a object-cover" />
-              <div className="absolute inset-0 grid place-items-center">
-                <Image
-                  src="/images/logo-white.png"
-                  alt="Vision Blend wordmark on the copper key visual"
-                  width={900}
-                  height={180}
-                  priority
-                  className="h-auto w-[38%] lg:w-[72%]"
-                />
-              </div>
-            </div>
-            <figcaption className="flex justify-between gap-4 text-[0.78rem] text-muted-foreground">
-              <span>{h.visualCaption[0]}</span>
-              <span>{h.visualCaption[1]}</span>
-            </figcaption>
-          </figure>
-        </div>
-      </section>
+      <Hero
+        lang={lang}
+        tagline={c.company.tagline}
+        copy={h}
+        services={c.services}
+        labels={{ startProject: c.ui.startProject, seeWork: c.ui.seeWork }}
+      />
 
       {hasFilm ? <Showreel copy={h.showreel} /> : <ShowreelEmbed copy={h.showreel} />}
 
@@ -147,7 +104,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
               <Reach content={c} />
             </div>
             <div className="lg:col-span-7 lg:col-start-6">
-              <EnquiryForm copy={c.contactPage.form} />
+              <ContactCard content={c} />
             </div>
           </div>
         </div>

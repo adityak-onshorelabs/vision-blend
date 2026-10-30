@@ -53,6 +53,7 @@ export function PageTransition({ lang, labels }: { lang: string; labels: Record<
       const url = new URL(a.href, window.location.href);
       if (url.origin !== window.location.origin || url.pathname.startsWith("/api")) return;
       if (url.pathname === window.location.pathname) return; // same page, let hashes scroll normally
+      if (sceneFor(url.pathname, lang) === "home") return; // the home hero's intro is the transition
       if (phase !== "idle") {
         e.preventDefault();
         return;

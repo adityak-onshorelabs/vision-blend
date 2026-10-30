@@ -12,7 +12,7 @@ export function Reach({ content: c }: { content: Content }) {
         <Row k="Website">{c.company.website}</Row>
         {c.company.email && (
           <Row k="Email">
-            <a className="u" href={`mailto:${c.company.email}`}>{c.company.email}</a>
+            <a className="u" href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer">{c.company.email}</a>
           </Row>
         )}
         {c.company.location && <Row k="Studio">{c.company.location}</Row>}

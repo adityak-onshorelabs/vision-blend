@@ -45,7 +45,8 @@ Without the Resend variables, development logs each brief to the console and pro
 
 ## Before launch (needs the client)
 
-- [ ] Studio email and city/address (rows stay hidden until `company.email` / `company.location` are set in `src/content/en.ts`).
+- [ ] Confirm the enquiry addresses in `src/content/en.ts` (to visionblend@gmail.com, cc gursimar@visionblend.in; both were typed with typos). Contact and Start a project go to `/contact`, which offers a pre-filled draft (mail app or Gmail) and a copy button; the home page's contact section has the same card.
+- [ ] Studio city/address (the row stays hidden until `company.location` is set in `src/content/en.ts`).
 - [ ] Confirm service lists and process steps (drafted from Instagram captions and hashtags).
 - [ ] Confirm "Six people" for the team line.
 - [ ] Stills for each project (project images are copper placeholder crops; reel previews come from Instagram) and permission to show FIFA x Paradise and Delta Palm Beach work.

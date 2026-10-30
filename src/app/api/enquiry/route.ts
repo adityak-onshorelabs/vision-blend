@@ -20,6 +20,33 @@ function emailHtml(e: Enquiry) {
     .join("")}</table>`;
 }
 
+// Development falls back to Cloudflare's always-pass test secret. Without a secret the check is
+// skipped and the honeypot and timing checks carry on alone.
+const TURNSTILE_SECRET =
+  process.env.TURNSTILE_SECRET_KEY || (process.env.NODE_ENV === "development" ? "1x0000000000000000000000000000000AA" : "");
+
+/** No one fills three steps in under three seconds. */
+const MIN_ELAPSED_MS = 3000;
+
+async function isHuman(token: unknown, ip: string | null) {
+  if (!TURNSTILE_SECRET) {
+    console.warn("[enquiry] TURNSTILE_SECRET_KEY missing, skipping the human check");
+    return true;
+  }
+  if (typeof token !== "string" || !token || token.length > 2048) return false;
+  const body = new URLSearchParams({ secret: TURNSTILE_SECRET, response: token });
+  if (ip) body.set("remoteip", ip);
+  try {
+    const res = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", { method: "POST", body });
+    const out = (await res.json()) as { success?: boolean; "error-codes"?: string[] };
+    if (!out.success) console.warn("[enquiry] Turnstile rejected", out["error-codes"]);
+    return out.success === true;
+  } catch (err) {
+    console.error("[enquiry] Turnstile siteverify failed", err);
+    return false;
+  }
+}
+
 export async function POST(request: Request) {
   let json: unknown;
   try {
@@ -27,10 +54,16 @@ export async function POST(request: Request) {
   } catch {
     return NextResponse.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
   }
+  const raw = (json && typeof json === "object" ? json : {}) as { website?: unknown; elapsed?: unknown; turnstile?: unknown };
 
-  // Honeypot: bots fill every field. Pretend success and drop it.
-  if (json && typeof json === "object" && "website" in json && (json as { website?: unknown }).website) {
+  // Honeypot and timing: bots fill every field, and fast. Pretend success and drop it.
+  if (raw.website || !(typeof raw.elapsed === "number" && raw.elapsed >= MIN_ELAPSED_MS)) {
     return NextResponse.json({ ok: true });
+  }
+
+  const ip = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for")?.split(",")[0].trim() ?? null;
+  if (!(await isHuman(raw.turnstile, ip))) {
+    return NextResponse.json({ ok: false, error: "Human check failed" }, { status: 403 });
   }
 
   const parsed = enquirySchema.safeParse(json);

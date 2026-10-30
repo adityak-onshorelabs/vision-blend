@@ -58,6 +58,9 @@ export type Content = {
     instagramHandle: string;
     website: string;
     email: string | null;
+    emailCc: string | null;
+    /** Gmail web compose link with the pre-filled project enquiry; every email link opens it */
+    enquiryGmail: string;
     location: string | null;
   };
   nav: NavItem[];
@@ -72,6 +75,7 @@ export type Content = {
   home: {
     metaTitle: string;
     metaDescription: string;
+    eyebrow: string;
     lead: string;
     facts: { label: string; value: string }[];
     visualCaption: [string, string];
@@ -131,6 +135,7 @@ export type Content = {
     title: string;
     lead: string;
     collaborate: string;
+    email: { label: string; ccNote: string; gmail: string; hint: string };
     next: { title: string; steps: { title: string; text: string }[] };
     talk: { title: string; text: string; cta: string };
     explore: { title: string; links: { href: string; title: string; text: string }[] };
@@ -154,6 +159,8 @@ export type Content = {
       back: string;
       submit: string;
       sending: string;
+      verifying: string;
+      verify: { checking: string; interactive: string; verified: string; error: string; retry: string };
       edit: string;
       sent: string;
       failed: string;
