@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 /*
-  What the Vision Blend team can edit in /admin. These schemas validate every save, and their
+  What the Vision Blend team can edit in the admin. These schemas validate every save, and their
   limits are the design's limits: the hero only works with a short label, a two-line tagline and
   a lead of two or three lines, so longer text is refused rather than left to break the layout.
 */

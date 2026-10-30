@@ -23,7 +23,7 @@ npx tsc --noEmit && npm run lint
 | Path | What |
 |---|---|
 | `src/content/en.ts` | All copy and facts, with sources and TBC notes at the top; the defaults the admin edits over |
-| `src/app/admin/`, `src/lib/cms/` | The admin (`/admin`): login, screens, Server Actions, schemas and limits, storage, cached reads |
+| `src/lib/cms/`, `src/app/api/cms/route.ts` | Reading what the admin saved: schemas and limits, Neon reads, cached merge; the endpoint the admin calls |
 | `src/content/types.ts` | Content types |
 | `src/app/globals.css` | Tokens (OKLCH), shadcn mapping, type roles, buttons, bands, illustration hover rules |
 | `src/app/[lang]/` | Layout and pages: home, `work`, `services`, `about`, `contact` |
@@ -31,7 +31,7 @@ npx tsc --noEmit && npm run lint
 | `src/components/site/` | Site components (header, footer, work index, service cards, beliefs, process rail, series embeds, enquiry form) |
 | `reference/watermelon/` | Untouched Watermelon sources the adapted components came from |
 | `public/images/` | Wordmarks, copper key visual, OG image |
-| `src/proxy.ts` | Redirects `/` and unprefixed paths to `/en`; sends signed-out `/admin` visits to the login |
+| `src/proxy.ts` | Redirects `/` and unprefixed paths to `/en` |
 
 ## Environment
 
@@ -41,19 +41,19 @@ npx tsc --noEmit && npm run lint
 | `RESEND_API_KEY` | Resend API key for enquiry emails |
 | `ENQUIRY_TO` | Recipient(s), comma-separated |
 | `ENQUIRY_FROM` | Verified sender address |
-| `DATABASE_URL` | Neon Postgres for the admin (Vercel → Storage → Neon). Unset locally, the admin uses `.cms-dev.json` (gitignored) |
-| `SESSION_SECRET` | 32+ random characters signing admin sessions (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`) |
-| `BLOB_READ_WRITE_TOKEN` | Vercel Blob for project cover uploads (Vercel → Storage → Blob). Unset locally, uploads go to `public/uploads/` (gitignored) |
+| `DATABASE_URL` | Neon Postgres the admin writes (Vercel → Storage → Neon), read-only here. Unset locally, the site reads `.cms-dev.json` (gitignored), written by a local admin |
+| `CMS_SECRET` | 32+ random characters, the same value as the admin's, authorising `/api/cms` (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`). Unset, the endpoint refuses every call |
 
 Without the Resend variables, development logs each brief to the console and production answers 503 so no brief is silently lost.
 
-## Admin (`/admin`)
+## Admin (separate deployment)
 
-The Vision Blend team edits the hero (label, tagline, intro, with length limits), Work projects (add, edit, reorder, feature, cover image), series episodes (from 5 the row scrolls sideways), and studio details (team size, email, CC, phone). Long-form copy stays in `src/content/en.ts`; saved values are merged over it, and every save refreshes the public pages through `updateTag("cms")`, so no redeploy is needed.
+The admin is its own app and Vercel project (`../admin`, see its README). The Vision Blend team edits the hero (label, tagline, intro, with length limits), Work projects (add, edit, reorder, feature, cover image), series episodes (from 5 the row scrolls sideways), and studio details (team size, email, CC, phone). Long-form copy stays in `src/content/en.ts`; saved values are merged over it.
 
-1. Add `DATABASE_URL`, `SESSION_SECRET` and `BLOB_READ_WRITE_TOKEN` in Vercel (tables are created on first use).
-2. Create the first owner: `node --env-file=.env.local scripts/cms-setup.mjs --email you@onshorelabs.co.in --name "Your Name"` (password from `CMS_PASSWORD` or a prompt).
-3. Sign in at `/admin`; owners add the client's editors under **Editors & account**.
+- Both apps share the Neon database; this site only reads the `content` table.
+- `GET /api/cms` gives the admin the defaults from code; `POST /api/cms`, sent after every save, revalidates the `cms` cache tag, so no redeploy is needed. Both need `Authorization: Bearer CMS_SECRET`.
+- Covers are on Vercel Blob (`*.public.blob.vercel-storage.com`, allowed in `next.config.ts`).
+- `src/lib/cms/schema.ts` and `team.ts` are copied in the admin: change both together.
 
 Services and industries editing comes once the client sends those lists.
 

@@ -41,6 +41,5 @@ yarn-error.log*
 next-env.d.ts
 !.env.example
 
-# local admin storage when DATABASE_URL is not set
+# local admin storage when DATABASE_URL is not set (written by ../admin)
 .cms-dev.json
-public/uploads/

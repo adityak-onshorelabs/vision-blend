@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/work">): P
   band, a split (story left, film right), a staggered two-up of more work in its native shapes
   (any further published projects in a row of three below it), a quieter set of case-study
   slots, the series band, then a closing call to action. Everything follows the order and the
-  featured project set in /admin.
+  featured project set in the admin.
 */
 export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
   const { lang } = await params;
@@ -46,7 +46,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
 
   return (
     <>
-      {/* Hero: the featured film, chosen in /admin. */}
+      {/* Hero: the featured film, chosen in the admin. */}
       <section id={featured.slug} aria-labelledby="work-title" className="band scroll-mt-20">
         <div className="frame grid gap-[clamp(28px,3.5vw,48px)]">
           <div className="index-row !mb-0">

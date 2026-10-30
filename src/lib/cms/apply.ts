@@ -5,7 +5,7 @@ import { docSchemas, type DocKey, type Docs } from "./schema";
 import { NUMBER_WORDS as WORDS, teamLine } from "./team";
 
 /*
-  Merges what the team saved in /admin over the defaults in src/content/en.ts. Anything not
+  Merges what the team saved in the admin over the defaults in src/content/en.ts. Anything not
   saved yet (or saved in an older shape that no longer validates) falls back to the default.
 */
 
@@ -22,7 +22,7 @@ export function parseDocs(raw: Partial<Record<DocKey, unknown>>): Partial<Docs> 
   return out as Partial<Docs>;
 }
 
-/** The admin forms start from these when nothing has been saved yet. */
+/** The admin forms start from these when nothing has been saved yet (served by /api/cms). */
 export function cmsDefaults(c: Content): Docs {
   return {
     studio: { teamSize: c.company.teamSize, email: c.company.email ?? "", emailCc: c.company.emailCc ?? undefined, phone: c.company.phone ?? undefined },

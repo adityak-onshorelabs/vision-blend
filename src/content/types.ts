@@ -22,7 +22,7 @@ export type Project = {
   embed?: "landscape" | "portrait" | "reel";
   /** The Work page's hero film (exactly one project) */
   featured?: boolean;
-  /** Uploaded still (from /admin), shown where the line drawing would be */
+  /** Uploaded still (from the admin), shown where the line drawing would be */
   cover?: string;
   crop: Crop;
 };

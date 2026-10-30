@@ -6,7 +6,7 @@ import type { Content } from "./types";
 
 const dictionaries: Record<Locale, Content> = { en };
 
-/** Site content: the copy in code, with what the team saved in /admin merged over it. */
+/** Site content: the copy in code, with what the team saved in the admin merged over it. */
 export async function getContent(lang: Locale): Promise<Content> {
   return applyCms(dictionaries[lang], await getCmsDocs());
 }
