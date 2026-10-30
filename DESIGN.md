@@ -24,7 +24,7 @@ Strategy: **Restrained.** Neutrals carry the page; the logo brown appears only a
 | `--night` | `oklch(0.17 0.006 40)` | Dark band, footer |
 | `--on-night` / `--on-night-muted` | `oklch(0.95 ...)` / `oklch(0.68 ...)` | Text on night |
 
-Rules: no gradients except the client's own key visual (in the hero, as `hero-copper.jpg`). The logo brown is the highlight colour: section labels, the current index number, link underlines, the current page and key words (the hero's "taste") use `--brand`, which dark bands switch to `--brand-soft`. Contrast verified with `contrast.py`; lowest text pair is faint on tint at 4.51.
+Rules: no gradients except the client's own key visual (in the hero, as `hero-copper.jpg`). The logo brown is the highlight colour: section labels, the current index number, link underlines, the current page and key words use `--brand`, which dark bands and the footer switch to `--brand-soft`. Key words: one per title, marked `*like this*` in `src/content/en.ts` and rendered by `hl()` (`src/lib/highlight.tsx`, `.hl`); `plain()` strips the markers where a title doubles as a label. The hero's key word is its last word, "taste". Contrast verified with `contrast.py`; lowest text pair is faint on tint at 4.51.
 
 ## 3. Typography
 

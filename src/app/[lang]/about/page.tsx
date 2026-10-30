@@ -8,6 +8,7 @@ import { ProjectArt } from "@/components/site/project-art";
 import { SeriesLinks } from "@/components/site/series-links";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
+import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/about">): Promise<Metadata> {
@@ -71,7 +72,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
             </div>
             <div className="grid content-start gap-9 lg:col-span-7 lg:col-start-6">
               <h2 id="team-title" className="t-h1">
-                {a.team.title.replace(/\.$/, "")}
+                {hl(a.team.title.replace(/\.$/, ""))}
                 <span className="stop">.</span>
               </h2>
               <p className="t-lead max-w-[38ch] text-muted-foreground">{a.team.text}</p>

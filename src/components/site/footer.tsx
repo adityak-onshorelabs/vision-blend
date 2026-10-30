@@ -5,7 +5,8 @@ import type { Content } from "@/content/types";
 export function Footer({ lang, content }: { lang: string; content: Content }) {
   const { company, nav } = content;
   return (
-    <footer className="bg-night text-[var(--on-night)]">
+    // brand-soft: the brown link underlines need the lighter brown on night
+    <footer className="bg-night text-[var(--on-night)] [--brand:var(--brand-soft)]">
       <div className="frame grid gap-14 pb-7 pt-16 md:gap-28 md:pt-28">
         <div className="grid items-end gap-10 md:grid-cols-12">
           <div className="grid gap-5 md:col-span-7">

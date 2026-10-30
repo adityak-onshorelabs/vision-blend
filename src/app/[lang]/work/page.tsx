@@ -9,6 +9,7 @@ import { SeriesLinks } from "@/components/site/series-links";
 import { getContent } from "@/content";
 import type { Project } from "@/content/types";
 import { hasLocale } from "@/i18n/config";
+import { hl, plain } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -100,7 +101,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
           <div className="grid gap-10 lg:grid-cols-12 lg:gap-6">
             <div className="grid content-start gap-5 lg:col-span-5">
               <h2 id="index-title" className="t-h2 scroll-mt-24">
-                {w.title}
+                {hl(w.title)}
                 <span className="stop">.</span>
               </h2>
               <p className="max-w-[36ch] text-muted-foreground">{w.lead}</p>
@@ -153,11 +154,11 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
       <section className="band band-tint" aria-labelledby="studio-title">
         <div className="frame">
           <div className="index-row">
-            <span className="t-label marker">{w.studioTitle}</span>
+            <span className="t-label marker">{plain(w.studioTitle)}</span>
           </div>
           <div className="s-head">
             <h2 id="studio-title" className="t-h2">
-              {w.studioTitle}
+              {hl(w.studioTitle)}
               <span className="stop">.</span>
             </h2>
             <p>{w.studioText}</p>
@@ -237,7 +238,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
           </div>
           <div className="s-head">
             <h2 id="series-title" className="t-h2">
-              {c.home.series.title}
+              {hl(c.home.series.title)}
               <span className="stop">.</span>
             </h2>
             <p>{c.home.series.text}</p>
@@ -253,7 +254,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
       <section className="band" aria-labelledby="cta-title">
         <div className="frame grid items-end gap-8 lg:grid-cols-12 lg:gap-6">
           <h2 id="cta-title" className="t-h1 lg:col-span-7">
-            {w.ctaTitle}
+            {hl(w.ctaTitle)}
             <span className="stop">?</span>
           </h2>
           <div className="grid content-start gap-6 lg:col-span-4 lg:col-start-9">

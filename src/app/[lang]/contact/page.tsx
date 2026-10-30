@@ -7,6 +7,7 @@ import { Reach } from "@/components/site/reach";
 import { ServiceIllustration } from "@/components/site/service-illustration";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
+import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
@@ -40,7 +41,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
             <div className="grid content-start gap-10 lg:col-span-5">
               <div className="grid gap-6">
                 <h1 id="contact-title" className="t-display max-w-[9ch]">
-                  {cp.title}
+                  {hl(cp.title)}
                   <span className="stop">.</span>
                 </h1>
                 <p className="t-lead max-w-[30ch] text-muted-foreground">{cp.lead}</p>
@@ -83,7 +84,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
           <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
             <div className="grid content-start gap-6 lg:col-span-6">
               <h2 id="talk-title" className="t-h2">
-                {cp.talk.title.replace(/\?$/, "")}
+                {hl(cp.talk.title.replace(/\?$/, ""))}
                 <span className="stop">?</span>
               </h2>
               <p className="t-lead max-w-[32ch] text-muted-foreground">{cp.talk.text}</p>
@@ -105,7 +106,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
             <span className="t-label marker">Explore</span>
           </div>
           <h2 id="explore-title" className="t-h2 mb-[clamp(32px,4vw,56px)]">
-            {cp.explore.title.replace(/\?$/, "")}
+            {hl(cp.explore.title.replace(/\?$/, ""))}
             <span className="stop">?</span>
           </h2>
           <ul className="grid gap-4 md:grid-cols-3 md:gap-6">

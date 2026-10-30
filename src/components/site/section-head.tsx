@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { hl } from "@/lib/highlight";
 
 type Props = {
   label: string;
@@ -24,7 +25,7 @@ export function SectionHead({ label, index, total, title, text, id, as: Tag = "h
       </div>
       <div className="s-head">
         <Tag id={id} className={Tag === "h1" ? "t-h1" : "t-h2"}>
-          {title}
+          {typeof title === "string" ? hl(title) : title}
           <span className="stop">.</span>
         </Tag>
         {text && <p>{text}</p>}

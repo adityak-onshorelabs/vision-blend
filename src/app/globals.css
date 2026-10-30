@@ -124,6 +124,8 @@
   .t-lead { font-size: clamp(1.15rem, 1rem + 0.5vw, 1.4rem); line-height: 1.5; font-weight: 340; }
   .t-label { font-size: 0.78rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
   .stop { color: var(--brand); }
+  /* Key word in a title, marked *like this* in content (see lib/highlight.tsx). */
+  .hl { font-style: normal; color: var(--brand); }
 
   /* Brown highlights: section labels, link underlines, the current page and the index count use
      the logo brown (brand-soft on dark bands, via the band's --brand) */
