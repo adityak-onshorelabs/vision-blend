@@ -214,7 +214,7 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
               <ul className="grid gap-6 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
                 {slots.map((p) => (
                   <li key={p.slug} id={p.slug} className="group grid scroll-mt-24 content-start gap-4">
-                    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-tint text-ink">
+                    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden well text-ink">
                       <ProjectVisual project={p} artClassName="h-[78%] w-auto" label={p.cover ? p.name : `${c.ui.placeholderImage}: ${p.name}`} />
                     </div>
                     <div className="grid gap-1">

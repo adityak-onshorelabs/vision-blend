@@ -92,7 +92,7 @@ export function WorkIndex({ projects, labels }: Props) {
                 className={cn(
                   "absolute inset-0 grid place-items-center transition-opacity duration-500 ease-[var(--ease)]",
                   on ? "opacity-100" : "pointer-events-none opacity-0",
-                  !p.instagram && "bg-tint text-ink",
+                  !p.instagram && "well text-ink",
                 )}
               >
                 {p.instagram && p.embed ? (

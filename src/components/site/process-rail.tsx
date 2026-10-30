@@ -102,7 +102,7 @@ export function ProcessRail({ steps }: { steps: Step[] }) {
               viewBox="0 0 240 160"
               aria-hidden="true"
               className={cn(
-                "ill proc-ill mb-3 aspect-[3/2] h-auto w-full bg-paper text-ink transition-colors duration-500",
+                "ill proc-ill well mb-3 aspect-[3/2] h-auto w-full text-ink transition-colors duration-500",
                 inView && "ill-draw",
               )}
               style={{ "--d": `${i * 0.28}s` } as CSSProperties}

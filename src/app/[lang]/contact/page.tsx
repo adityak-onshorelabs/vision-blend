@@ -66,7 +66,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
             </div>
 
             <div className="lg:col-span-7 lg:col-start-6">
-              <div className="relative bg-tint px-5 pb-8 pt-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-brand sm:px-9 sm:pb-10 sm:pt-8">
+              <div className="relative surface px-5 pb-8 pt-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:bg-brand sm:px-9 sm:pb-10 sm:pt-8">
                 <ContactCard content={c} />
               </div>
             </div>
@@ -114,9 +114,9 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
               <li key={l.href}>
                 <Link
                   href={`/${lang}${l.href}`}
-                  className="group relative grid h-full content-start gap-4 bg-paper p-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] hover:before:scale-x-100 focus-visible:before:scale-x-100"
+                  className="group relative grid h-full content-start gap-4 surface p-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] hover:before:scale-x-100 focus-visible:before:scale-x-100"
                 >
-                  <span className="grid aspect-[3/2] place-items-center bg-tint p-3 text-ink">{exploreArt[i]}</span>
+                  <span className="grid aspect-[3/2] place-items-center well p-3 text-ink">{exploreArt[i]}</span>
                   <span className="flex items-baseline justify-between gap-3">
                     <span className="t-h3">{l.title}</span>
                     <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>

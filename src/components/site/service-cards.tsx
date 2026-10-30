@@ -13,9 +13,9 @@ export function ServiceCards({ services, lang, linkLabel }: { services: Service[
       {services.map((s) => (
         <article
           key={s.slug}
-          className="group relative grid min-w-0 content-start gap-3.5 bg-paper px-7 pb-8 pt-7 lg:row-span-5 lg:grid-rows-subgrid lg:content-stretch before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] before:ease-[var(--ease)] hover:before:scale-x-100 focus-within:before:scale-x-100"
+          className="group relative grid min-w-0 content-start gap-3.5 surface px-7 pb-8 pt-7 lg:row-span-5 lg:grid-rows-subgrid lg:content-stretch before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] before:ease-[var(--ease)] hover:before:scale-x-100 focus-within:before:scale-x-100"
         >
-          <ServiceIllustration slug={s.slug} className="mb-3 aspect-[3/2] h-auto w-full bg-tint text-ink" />
+          <ServiceIllustration slug={s.slug} className="mb-3 aspect-[3/2] h-auto w-full well text-ink" />
           <h3 className="t-h3">{s.name}</h3>
           <p className="max-w-[34ch] text-muted-foreground">{s.line}</p>
           <ul className="mt-2 grid gap-1.5 text-[0.98rem]">

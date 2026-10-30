@@ -44,7 +44,7 @@ export default async function ServicesPage({ params }: PageProps<"/[lang]/servic
                   <p className="t-lead text-muted-foreground">{s.line}</p>
                 </div>
                 <div className="grid content-start gap-6 lg:col-span-6 lg:col-start-7">
-                  <ServiceIllustration slug={s.slug} className="aspect-[3/2] h-auto w-full max-w-[480px] bg-tint text-ink" />
+                  <ServiceIllustration slug={s.slug} className="aspect-[3/2] h-auto w-full max-w-[480px] well text-ink" />
                   <p>{s.intro}</p>
                   <ul className="grid gap-x-6 border-t border-border sm:grid-cols-2">
                     {s.deliverables.map((d) => (
