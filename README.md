@@ -23,7 +23,7 @@ npx tsc --noEmit && npm run lint
 | Path | What |
 |---|---|
 | `src/content/en.ts` | All copy and facts, with sources and TBC notes at the top; the defaults the admin edits over |
-| `src/lib/cms/`, `src/app/api/cms/route.ts` | Reading what the admin saved: schemas and limits, Neon reads, cached merge; the endpoint the admin calls |
+| `src/lib/cms/`, `src/app/api/cms/route.ts` | Reading what the admin saved: schemas and limits, Postgres reads, cached merge; the endpoint the admin calls |
 | `src/content/types.ts` | Content types |
 | `src/app/globals.css` | Tokens (OKLCH), shadcn mapping, type roles, buttons, bands, illustration hover rules |
 | `src/app/[lang]/` | Layout and pages: home, `work`, `services`, `about`, `contact` |
@@ -41,7 +41,7 @@ npx tsc --noEmit && npm run lint
 | `RESEND_API_KEY` | Resend API key for enquiry emails |
 | `ENQUIRY_TO` | Recipient(s), comma-separated |
 | `ENQUIRY_FROM` | Verified sender address |
-| `DATABASE_URL` | Neon Postgres the admin writes (Vercel → Storage → Neon), read-only here. Unset locally, the site reads `.cms-dev.json` (gitignored), written by a local admin |
+| `DATABASE_URL` | Railway Postgres the admin writes (Railway → Postgres → Variables → `DATABASE_PUBLIC_URL`), read-only here. Unset locally, the site reads `.cms-dev.json` (gitignored), written by a local admin |
 | `CMS_SECRET` | 32+ random characters, the same value as the admin's, authorising `/api/cms` (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`). Unset, the endpoint refuses every call |
 
 Without the Resend variables, development logs each brief to the console and production answers 503 so no brief is silently lost.
@@ -50,7 +50,7 @@ Without the Resend variables, development logs each brief to the console and pro
 
 The admin is its own app and Vercel project (`../admin`, see its README). The Vision Blend team edits the hero (label, tagline, intro, with length limits), Work projects (add, edit, reorder, feature, cover image), series episodes (from 5 the row scrolls sideways), and studio details (team size, email, CC, phone). Long-form copy stays in `src/content/en.ts`; saved values are merged over it.
 
-- Both apps share the Neon database; this site only reads the `content` table.
+- Both apps share the Railway Postgres database; this site only reads the `content` table.
 - `GET /api/cms` gives the admin the defaults from code; `POST /api/cms`, sent after every save, revalidates the `cms` cache tag, so no redeploy is needed. Both need `Authorization: Bearer CMS_SECRET`.
 - Covers are on Vercel Blob (`*.public.blob.vercel-storage.com`, allowed in `next.config.ts`).
 - `src/lib/cms/schema.ts` and `team.ts` are copied in the admin: change both together.
