@@ -1,6 +1,7 @@
 import type { CSSProperties } from "react";
 import type { Episode } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { SeriesScroller } from "./series-scroller";
 
 /*
   Reel cards whose cover is Instagram's own preview frame. Each card holds the reel's official
@@ -13,48 +14,55 @@ import { cn } from "@/lib/utils";
 */
 const HEADER = 54;
 
+/** Up to four episodes sit in a grid row; from five on they become a horizontal scroll. Newest first. */
+const GRID_MAX = 4;
+
 export function SeriesLinks({ episodes, openLabel, className }: { episodes: Episode[]; openLabel: string; className?: string }) {
-  return (
-    <ul className={cn("grid grid-cols-2 gap-4 lg:grid-cols-4", className)}>
-      {episodes.map((e) => (
-        <li key={e.url} className="group relative grid content-start gap-3">
-          <div className="relative aspect-[7/10] overflow-hidden bg-[var(--well)]">
-            <span
-              aria-hidden="true"
-              className="crop crop-bw absolute inset-0"
-              style={{ "--pos": e.crop.pos, "--sz": e.crop.sz } as CSSProperties}
-            />
-            <iframe
-              src={`${e.url}embed/`}
-              title={`Instagram preview: ${e.title}`}
-              loading="lazy"
-              tabIndex={-1}
-              aria-hidden="true"
-              scrolling="no"
-              className="pointer-events-none absolute origin-center border-0 transition-transform duration-1000 ease-[var(--ease)] group-hover:scale-[1.03]"
-              style={{ width: `${100 / 0.7}%`, left: `${-(0.15 / 0.7) * 100}%`, top: -HEADER, height: `calc(200% + ${HEADER}px)` }}
-            />
-            {e.ep > 0 && (
-              <span className="absolute end-2.5 top-2.5 bg-black/70 px-2 py-1 text-[0.66rem] font-medium uppercase tracking-[0.16em] text-white">
-                Ep {e.ep}
-              </span>
-            )}
-          </div>
-          <div className="grid gap-0.5 text-[0.92rem]">
-            {/* Stretched link: its ::before covers the whole card (the li is the positioned parent). */}
-            <a
-              href={e.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="justify-self-start no-underline before:absolute before:inset-0 before:z-10 before:content-['']"
-            >
-              <span className="u">{e.title}</span>
-              <span className="sr-only">, {openLabel}</span>
-            </a>
-            <span className="text-[0.86rem] text-muted-foreground">{[e.date, e.by && `with ${e.by}`].filter(Boolean).join(", ")}</span>
-          </div>
-        </li>
-      ))}
-    </ul>
-  );
+  const sorted = [...episodes].sort((a, b) => b.ep - a.ep);
+  const scroll = sorted.length > GRID_MAX;
+  const cards = sorted.map((e) => (
+    <li
+      key={e.url}
+      className={cn("group relative grid content-start gap-3", scroll && "w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[calc((100%-48px)/4.3)]")}
+    >
+      <div className="relative aspect-[7/10] overflow-hidden bg-[var(--well)]">
+        <span
+          aria-hidden="true"
+          className="crop crop-bw absolute inset-0"
+          style={{ "--pos": e.crop.pos, "--sz": e.crop.sz } as CSSProperties}
+        />
+        <iframe
+          src={`${e.url}embed/`}
+          title={`Instagram preview: ${e.title}`}
+          loading="lazy"
+          tabIndex={-1}
+          aria-hidden="true"
+          scrolling="no"
+          className="pointer-events-none absolute origin-center border-0 transition-transform duration-1000 ease-[var(--ease)] group-hover:scale-[1.03]"
+          style={{ width: `${100 / 0.7}%`, left: `${-(0.15 / 0.7) * 100}%`, top: -HEADER, height: `calc(200% + ${HEADER}px)` }}
+        />
+        {e.ep > 0 && (
+          <span className="absolute end-2.5 top-2.5 bg-black/70 px-2 py-1 text-[0.66rem] font-medium uppercase tracking-[0.16em] text-white">
+            Ep {e.ep}
+          </span>
+        )}
+      </div>
+      <div className="grid gap-0.5 text-[0.92rem]">
+        {/* Stretched link: its ::before covers the whole card (the li is the positioned parent). */}
+        <a
+          href={e.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="justify-self-start no-underline before:absolute before:inset-0 before:z-10 before:content-['']"
+        >
+          <span className="u">{e.title}</span>
+          <span className="sr-only">, {openLabel}</span>
+        </a>
+        <span className="text-[0.86rem] text-muted-foreground">{[e.date, e.by && `with ${e.by}`].filter(Boolean).join(", ")}</span>
+      </div>
+    </li>
+  ));
+
+  if (scroll) return <SeriesScroller label="A Week at Vision Blend episodes">{cards}</SeriesScroller>;
+  return <ul className={cn("grid grid-cols-2 gap-4 lg:grid-cols-4", className)}>{cards}</ul>;
 }

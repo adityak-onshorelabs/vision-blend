@@ -28,7 +28,7 @@ const TOTAL = 6;
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const c = getContent(lang);
+  const c = await getContent(lang);
   const h = c.home;
   // Self-hosted film plays silently on loop; until the file exists, use Instagram's player.
   const hasFilm = existsSync(path.join(process.cwd(), "public", h.showreel.src.replace(/^\//, "")));

@@ -20,7 +20,7 @@ export const viewport: Viewport = { themeColor: "#F8F8F6", colorScheme: "light" 
 export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
-  const c = getContent(lang);
+  const c = await getContent(lang);
   return {
     metadataBase: new URL(siteUrl),
     title: { default: c.home.metaTitle, template: `%s | ${c.company.name}` },
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Prom
 export default async function LangLayout({ children, params }: LayoutProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const c = getContent(lang);
+  const c = await getContent(lang);
 
   const jsonLd = {
     "@context": "https://schema.org",

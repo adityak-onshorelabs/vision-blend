@@ -15,6 +15,11 @@ export function Reach({ content: c }: { content: Content }) {
             <a className="u" href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer">{c.company.email}</a>
           </Row>
         )}
+        {c.company.phone && (
+          <Row k="Phone">
+            <a className="u" href={`tel:${c.company.phone.replace(/[^\d+]/g, "")}`}>{c.company.phone}</a>
+          </Row>
+        )}
         {c.company.location && <Row k="Studio">{c.company.location}</Row>}
       </dl>
       <p className="text-[0.95rem] text-muted-foreground">{c.contactPage.collaborate}</p>

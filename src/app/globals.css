@@ -91,7 +91,14 @@
   html::-webkit-scrollbar { display: none; }
   @media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
   body {
-    background: var(--paper);
+    background-color: var(--paper);
+    background-image:
+      linear-gradient(oklch(0.975 0.003 85 / 0.32), oklch(0.975 0.003 85 / 0.32)),
+      url("/images/hero-cream.jpg");
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
     color: var(--ink);
     font-family: var(--font-jost), "Century Gothic", "Avenir Next", "Segoe UI", sans-serif;
     font-size: 1.0625rem;
@@ -104,6 +111,10 @@
   :focus-visible { outline: 1.5px solid var(--brand); outline-offset: 4px; }
   h1, h2, h3 { font-weight: 300; text-wrap: balance; }
   p { text-wrap: pretty; }
+}
+
+@media (max-width: 759px) {
+  body { background-attachment: scroll; }
 }
 
 @layer components {
@@ -154,7 +165,7 @@
   .cta {
     display: inline-flex; align-items: center; gap: 12px;
     min-height: 46px; padding: 0 22px;
-    border: 1px solid var(--ink); background: var(--ink); color: var(--paper);
+    border: 1px solid var(--ink); border-radius: 999px; background: var(--ink); color: var(--paper);
     font-size: 0.95rem; font-weight: 450; line-height: 1; text-decoration: none; cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
@@ -170,9 +181,15 @@
   .cta-line:hover::before { background: var(--brand-soft); }
   .cta-sm { min-height: 40px; padding: 0 18px; font-size: 0.9rem; }
 
-  /* Bands */
-  .band { background: var(--paper); color: var(--ink); }
-  .band-tint { background: var(--tint); }
+  /* Light sections share one page-wide background. Avoid restarting the warm gradient at every
+     section, which made the same color feel like a series of repeated blocks. */
+  .band { background: transparent; color: var(--ink); }
+  .band-tint { background: transparent; }
+  .band:not(.band-dark) {
+    --muted: oklch(0.34 0.01 50);
+    --faint: var(--muted);
+    --muted-foreground: var(--muted);
+  }
   .band-dark {
     --ink: var(--on-night); --paper: var(--night); --muted: var(--on-night-muted); --faint: oklch(0.6 0.01 50);
     --rule: oklch(0.95 0.004 60 / 0.14); --well: oklch(0.23 0.008 40); --brand: var(--brand-soft);
@@ -390,6 +407,14 @@ html[data-intro="done"] :is(.hero-bg, .hero-word > span, .hero-stop, .hero-fade)
    so data-intro="off" (set by HeroMotion on leaving) stops a hidden hero from styling the header.
    Unlayered so it beats the header's utility classes. */
 .site-header .logo-night { display: none; }
+/* Keep the nav clear at the top. Once it scrolls over page content, a cream blur restores contrast
+   while letting the page artwork show through. The hero-specific rules below switch this to night. */
+.site-header[data-top="false"], .site-header[data-open="true"] {
+  background: oklch(0.975 0.003 85 / 0.84);
+  border-color: var(--rule);
+  -webkit-backdrop-filter: blur(16px) saturate(1.15);
+  backdrop-filter: blur(16px) saturate(1.15);
+}
 html:has([data-hero]):not([data-intro="off"]) .site-header:not([data-past="true"]):not([data-open="true"]) {
   --brand: var(--brand-soft);
   background: transparent; border-color: transparent; color: var(--on-night);

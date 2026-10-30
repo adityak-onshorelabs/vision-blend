@@ -22,7 +22,8 @@ const ig = "https://www.instagram.com/";
 // Addresses from the studio, 30 Oct 2026 (typed as "visionblend@gmail.comm" and "gursimar@visionblend"; confirm both)
 const EMAIL = "visionblend@gmail.com";
 const EMAIL_CC = "gursimar@visionblend.in";
-const DRAFT = {
+/** The pre-filled project brief behind every email link (the admin can change the addresses) */
+export const enquiryDraft = {
   to: EMAIL,
   cc: EMAIL_CC,
   subject: "New project enquiry",
@@ -45,12 +46,14 @@ export const en: Content = {
     tagline: "Building brands with taste.",
     founded: 2023,
     team: "Six people",
+    teamSize: 6,
     instagram: `${ig}vision.blend/`,
     instagramHandle: "@vision.blend",
     website: "visionblend.in",
     email: EMAIL,
     emailCc: EMAIL_CC,
-    enquiryGmail: gmailCompose(DRAFT),
+    enquiryGmail: gmailCompose(enquiryDraft),
+    phone: null,
     location: null,
   },
   nav: [
@@ -137,6 +140,7 @@ export const en: Content = {
   projects: [
     {
       slug: "fifa-x-paradise",
+      featured: true,
       name: "FIFA x Paradise",
       sub: "Production Files 001",
       category: "Film",
@@ -307,6 +311,7 @@ export const en: Content = {
     email: {
       label: "Email the studio",
       ccNote: "Briefs also reach",
+      phone: "Or call",
       gmail: "Send us a message",
       hint: "Opens Gmail with a short brief ready to fill in.",
     },

@@ -3,7 +3,7 @@
 import { useState } from "react";
 import type { Project } from "@/content/types";
 import { InstagramMedia } from "./instagram-media";
-import { ProjectArt } from "./project-art";
+import { ProjectVisual } from "./project-visual";
 import { cn } from "@/lib/utils";
 
 type Props = {
@@ -98,7 +98,7 @@ export function WorkIndex({ projects, labels }: Props) {
                 {p.instagram && p.embed ? (
                   mounted.has(i) && <InstagramMedia url={p.instagram.url} kind={p.embed} title={p.name} />
                 ) : (
-                  <ProjectArt key={on ? `${p.slug}-on` : p.slug} slug={p.slug} className="w-[82%]" label={`${labels.placeholder}: ${p.name}`} />
+                  <ProjectVisual key={on ? `${p.slug}-on` : p.slug} project={p} artClassName="w-[82%]" label={p.cover ? p.name : `${labels.placeholder}: ${p.name}`} sizes="(min-width: 1024px) 30vw, 1px" />
                 )}
               </div>
             );

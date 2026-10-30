@@ -20,6 +20,10 @@ export type Project = {
   instagram?: { url: string; kind: "post" | "reel" };
   /** How the Instagram media is shaped, so the embed can be cropped to it. */
   embed?: "landscape" | "portrait" | "reel";
+  /** The Work page's hero film (exactly one project) */
+  featured?: boolean;
+  /** Uploaded still (from /admin), shown where the line drawing would be */
+  cover?: string;
   crop: Crop;
 };
 
@@ -54,6 +58,7 @@ export type Content = {
     tagline: string;
     founded: number;
     team: string;
+    teamSize: number;
     instagram: string;
     instagramHandle: string;
     website: string;
@@ -61,6 +66,7 @@ export type Content = {
     emailCc: string | null;
     /** Gmail web compose link with the pre-filled project enquiry; every email link opens it */
     enquiryGmail: string;
+    phone: string | null;
     location: string | null;
   };
   nav: NavItem[];
@@ -135,7 +141,7 @@ export type Content = {
     title: string;
     lead: string;
     collaborate: string;
-    email: { label: string; ccNote: string; gmail: string; hint: string };
+    email: { label: string; ccNote: string; phone: string; gmail: string; hint: string };
     next: { title: string; steps: { title: string; text: string }[] };
     talk: { title: string; text: string; cta: string };
     explore: { title: string; links: { href: string; title: string; text: string }[] };

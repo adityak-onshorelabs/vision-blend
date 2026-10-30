@@ -13,14 +13,14 @@ import { siteUrl } from "@/lib/site";
 export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
-  const c = getContent(lang);
+  const c = await getContent(lang);
   return { title: c.contactPage.metaTitle, description: c.contactPage.metaDescription, alternates: { canonical: `${siteUrl}/${lang}/contact` } };
 }
 
 export default async function ContactPage({ params }: PageProps<"/[lang]/contact">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const c = getContent(lang);
+  const c = await getContent(lang);
   const cp = c.contactPage;
   const exploreArt = [
     <ProjectArt key="work" slug="fifa-x-paradise" className="w-full" />,

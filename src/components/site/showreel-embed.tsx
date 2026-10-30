@@ -37,7 +37,7 @@ export function ShowreelEmbed({ copy }: { copy: ShowreelCopy }) {
   const labelSide = useMotionTemplate`calc(${insetX}% + 20px)`;
 
   return (
-    <section ref={wrap} aria-labelledby="reel-title" className="relative h-[200vh] bg-paper max-md:h-[150vh]">
+    <section ref={wrap} aria-labelledby="reel-title" className="relative h-[200vh] bg-transparent max-md:h-[150vh]">
       <h2 id="reel-title" className="sr-only">
         {copy.title}, {copy.sub}
       </h2>

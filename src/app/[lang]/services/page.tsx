@@ -11,14 +11,14 @@ import { siteUrl } from "@/lib/site";
 export async function generateMetadata({ params }: PageProps<"/[lang]/services">): Promise<Metadata> {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
-  const c = getContent(lang);
+  const c = await getContent(lang);
   return { title: c.servicesPage.metaTitle, description: c.servicesPage.metaDescription, alternates: { canonical: `${siteUrl}/${lang}/services` } };
 }
 
 export default async function ServicesPage({ params }: PageProps<"/[lang]/services">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const c = getContent(lang);
+  const c = await getContent(lang);
 
   return (
     <>

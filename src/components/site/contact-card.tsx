@@ -17,6 +17,14 @@ export function ContactCard({ content: c }: { content: Content }) {
             {e.ccNote} {c.company.emailCc}
           </p>
         )}
+        {c.company.phone && (
+          <p className="text-[0.94rem] text-muted-foreground">
+            {e.phone}{" "}
+            <a href={`tel:${c.company.phone.replace(/[^\d+]/g, "")}`} className="u text-ink">
+              {c.company.phone}
+            </a>
+          </p>
+        )}
       </div>
       <a href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer" className="cta justify-self-start">
         {e.gmail} <span className="arr" aria-hidden="true">↗</span>

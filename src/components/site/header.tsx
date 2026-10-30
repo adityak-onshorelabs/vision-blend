@@ -42,7 +42,7 @@ export function Header({ lang, nav, cta }: Props) {
       data-top={!scrolled}
       data-open={open}
       className={cn(
-        "site-header sticky top-0 z-30 border-b bg-paper transition-colors duration-300",
+        "site-header sticky top-0 z-30 border-b bg-transparent transition-[background-color,border-color,backdrop-filter] duration-300",
         scrolled || open ? "border-border" : "border-transparent",
       )}
     >

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { InstagramMedia } from "@/components/site/instagram-media";
-import { ProjectArt } from "@/components/site/project-art";
+import { ProjectVisual } from "@/components/site/project-visual";
 import { Reveal } from "@/components/site/reveal";
 import { Tbc } from "@/components/site/section-head";
 import { SeriesLinks } from "@/components/site/series-links";
@@ -16,32 +16,37 @@ import { cn } from "@/lib/utils";
 export async function generateMetadata({ params }: PageProps<"/[lang]/work">): Promise<Metadata> {
   const { lang } = await params;
   if (!hasLocale(lang)) return {};
-  const c = getContent(lang);
+  const c = await getContent(lang);
   return { title: c.workPage.metaTitle, description: c.workPage.metaDescription, alternates: { canonical: `${siteUrl}/${lang}/work` } };
 }
 
 /*
   Layout rhythm (top to bottom): the featured film as the hero, the project index on its own
-  band, a split (story left, film right), a staggered two-up of studio work in its native shapes,
-  a quieter pair of case-study slots, the series band, then a closing call to action.
+  band, a split (story left, film right), a staggered two-up of more work in its native shapes
+  (any further published projects in a row of three below it), a quieter set of case-study
+  slots, the series band, then a closing call to action. Everything follows the order and the
+  featured project set in /admin.
 */
 export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
-  const c = getContent(lang);
+  const c = await getContent(lang);
   const w = c.workPage;
   const total = c.projects.length;
-  const bySlug = (slug: string) => c.projects.find((p) => p.slug === slug)!;
   const number = (p: Project) => String(c.projects.indexOf(p) + 1).padStart(2, "0");
 
-  const featured = bySlug("fifa-x-paradise");
-  const second = bySlug("hands-behind-the-brand");
-  const studio = [bySlug("people-files"), bySlug("a-week-at-vision-blend")];
-  const slots = c.projects.filter((p) => !p.real);
+  const shown = (p: Project) => p.real && !!p.instagram && !!p.embed;
+  const featured = c.projects.find((p) => p.featured && shown(p)) ?? c.projects.find(shown);
+  if (!featured) notFound();
+  const published = c.projects.filter((p) => p !== featured && shown(p));
+  const second = published[0];
+  const studio = published.slice(1, 3);
+  const more = published.slice(3);
+  const slots = c.projects.filter((p) => !shown(p));
 
   return (
     <>
-      {/* Hero: the featured film. FIFA x Paradise is the studio's headline project. */}
+      {/* Hero: the featured film, chosen in /admin. */}
       <section id={featured.slug} aria-labelledby="work-title" className="band scroll-mt-20">
         <div className="frame grid gap-[clamp(28px,3.5vw,48px)]">
           <div className="index-row !mb-0">
@@ -127,72 +132,71 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
         </div>
       </section>
 
-      {/* 02 Split: story left, film right. */}
-      <section id={second.slug} aria-labelledby={`${second.slug}-t`} className="band scroll-mt-20">
-        <div className="frame grid gap-7">
-          <ProjectMeta p={second} n={number(second)} total={total} />
-          <div className="grid items-end gap-8 lg:grid-cols-12 lg:gap-6">
-            <Reveal className="order-2 grid content-start gap-5 lg:order-1 lg:col-span-4">
-              <h2 id={`${second.slug}-t`} className="t-h2">
-                {second.name}
-                <span className="stop">.</span>
-              </h2>
-              <p className="text-muted-foreground">{second.sub}</p>
-              {(second.body ?? [second.summary]).map((t) => (
-                <p key={t}>{t}</p>
-              ))}
-              <InstagramLink url={second.instagram!.url} label={c.ui.viewOnInstagram} />
-            </Reveal>
-            <div className="order-1 lg:order-2 lg:col-span-7 lg:col-start-6">
-              <InstagramMedia url={second.instagram!.url} kind={second.embed!} title={second.name} />
+      {/* Split: story left, film right. */}
+      {second && (
+        <section id={second.slug} aria-labelledby={`${second.slug}-t`} className="band scroll-mt-20">
+          <div className="frame grid gap-7">
+            <ProjectMeta p={second} n={number(second)} total={total} />
+            <div className="grid items-end gap-8 lg:grid-cols-12 lg:gap-6">
+              <Reveal className="order-2 grid content-start gap-5 lg:order-1 lg:col-span-4">
+                <h2 id={`${second.slug}-t`} className="t-h2">
+                  {second.name}
+                  <span className="stop">.</span>
+                </h2>
+                <p className="text-muted-foreground">{second.sub}</p>
+                {(second.body ?? [second.summary]).map((t) => (
+                  <p key={t}>{t}</p>
+                ))}
+                <InstagramLink url={second.instagram!.url} label={c.ui.viewOnInstagram} />
+              </Reveal>
+              <div className="order-1 lg:order-2 lg:col-span-7 lg:col-start-6">
+                <InstagramMedia url={second.instagram!.url} kind={second.embed!} title={second.name} />
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* 03 + 04 Studio: two pieces in their native shapes, staggered. */}
-      <section className="band band-tint" aria-labelledby="studio-title">
-        <div className="frame">
-          <div className="index-row">
-            <span className="t-label marker">{plain(w.studioTitle)}</span>
+      {/* More work: two pieces in their native shapes, staggered, then any others in a row of three. */}
+      {studio.length > 0 && (
+        <section className="band band-tint" aria-labelledby="studio-title">
+          <div className="frame">
+            <div className="index-row">
+              <span className="t-label marker">{plain(w.studioTitle)}</span>
+            </div>
+            <div className="s-head">
+              <h2 id="studio-title" className="t-h2">
+                {hl(w.studioTitle)}
+                <span className="stop">.</span>
+              </h2>
+              <p>{w.studioText}</p>
+            </div>
+            <div className="grid items-start gap-14 md:grid-cols-12 md:gap-6">
+              {studio.map((p, i) => (
+                <article
+                  key={p.slug}
+                  id={p.slug}
+                  aria-labelledby={`${p.slug}-t`}
+                  className={cn("grid scroll-mt-24 content-start gap-5", i === 0 ? "md:col-span-6" : "md:col-span-4 md:col-start-8 md:mt-32")}
+                >
+                  <WorkCard p={p} n={number(p)} total={total} label={c.ui.viewOnInstagram} />
+                </article>
+              ))}
+            </div>
+            {more.length > 0 && (
+              <div className="mt-[clamp(56px,7vw,96px)] grid items-start gap-14 md:grid-cols-3 md:gap-6">
+                {more.map((p) => (
+                  <article key={p.slug} id={p.slug} aria-labelledby={`${p.slug}-t`} className="grid scroll-mt-24 content-start gap-5">
+                    <WorkCard p={p} n={number(p)} total={total} label={c.ui.viewOnInstagram} />
+                  </article>
+                ))}
+              </div>
+            )}
           </div>
-          <div className="s-head">
-            <h2 id="studio-title" className="t-h2">
-              {hl(w.studioTitle)}
-              <span className="stop">.</span>
-            </h2>
-            <p>{w.studioText}</p>
-          </div>
-          <div className="grid items-start gap-14 md:grid-cols-12 md:gap-6">
-            {studio.map((p, i) => (
-              <article
-                key={p.slug}
-                id={p.slug}
-                aria-labelledby={`${p.slug}-t`}
-                className={cn("grid scroll-mt-24 content-start gap-5", i === 0 ? "md:col-span-6" : "md:col-span-4 md:col-start-8 md:mt-32")}
-              >
-                <InstagramMedia url={p.instagram!.url} kind={p.embed!} title={p.name} />
-                <div className="grid gap-2">
-                  <div className="flex items-baseline justify-between gap-4">
-                    <span className="t-label">
-                      <b className="font-medium text-ink">{number(p)}</b> / {String(total).padStart(2, "0")} &nbsp; {p.category}
-                    </span>
-                    <span className="text-[0.86rem] text-muted-foreground">{p.date}</span>
-                  </div>
-                  <h3 id={`${p.slug}-t`} className="t-h3">
-                    {p.name}
-                    <span className="stop">.</span>
-                  </h3>
-                  <p className="text-[0.96rem] text-muted-foreground">{p.summary}</p>
-                  <InstagramLink url={p.instagram!.url} label={c.ui.viewOnInstagram} small />
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* 05 + 06 Slots: quieter, smaller, clearly marked. */}
+      {/* Slots: quieter, smaller, clearly marked. */}
       {slots.length > 0 && (
         <section className="band" aria-labelledby="next-title">
           <div className="frame">
@@ -210,8 +214,8 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
               <ul className="grid gap-6 sm:grid-cols-2 lg:col-span-7 lg:col-start-6">
                 {slots.map((p) => (
                   <li key={p.slug} id={p.slug} className="group grid scroll-mt-24 content-start gap-4">
-                    <div className="grid aspect-[4/3] place-items-center bg-tint text-ink">
-                      <ProjectArt slug={p.slug} className="h-[78%] w-auto" label={`${c.ui.placeholderImage}: ${p.name}`} />
+                    <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-tint text-ink">
+                      <ProjectVisual project={p} artClassName="h-[78%] w-auto" label={p.cover ? p.name : `${c.ui.placeholderImage}: ${p.name}`} />
                     </div>
                     <div className="grid gap-1">
                       <span className="t-label">
@@ -265,6 +269,28 @@ export default async function WorkPage({ params }: PageProps<"/[lang]/work">) {
           </div>
         </div>
       </section>
+    </>
+  );
+}
+
+function WorkCard({ p, n, total, label }: { p: Project; n: string; total: number; label: string }) {
+  return (
+    <>
+      <InstagramMedia url={p.instagram!.url} kind={p.embed!} title={p.name} />
+      <div className="grid gap-2">
+        <div className="flex items-baseline justify-between gap-4">
+          <span className="t-label">
+            <b className="font-medium text-ink">{n}</b> / {String(total).padStart(2, "0")} &nbsp; {p.category}
+          </span>
+          <span className="text-[0.86rem] text-muted-foreground">{p.date}</span>
+        </div>
+        <h3 id={`${p.slug}-t`} className="t-h3">
+          {p.name}
+          <span className="stop">.</span>
+        </h3>
+        <p className="text-[0.96rem] text-muted-foreground">{p.summary}</p>
+        <InstagramLink url={p.instagram!.url} label={label} small />
+      </div>
     </>
   );
 }

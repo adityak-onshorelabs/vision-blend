@@ -40,3 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# local admin storage when DATABASE_URL is not set
+.cms-dev.json
+public/uploads/

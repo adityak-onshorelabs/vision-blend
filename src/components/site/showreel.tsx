@@ -122,7 +122,7 @@ export function Showreel({ copy }: { copy: ShowreelCopy }) {
   const cursorLabel = missing ? copy.watch : muted ? copy.soundOn : copy.soundOff;
 
   return (
-    <section ref={wrap} aria-labelledby="reel-title" className="relative h-[200vh] bg-paper max-md:h-[150vh]">
+    <section ref={wrap} aria-labelledby="reel-title" className="relative h-[200vh] bg-transparent max-md:h-[150vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         <motion.div
           className={finePointer ? "absolute inset-0 cursor-none bg-night" : "absolute inset-0 bg-night"}

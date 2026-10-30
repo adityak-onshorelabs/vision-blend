@@ -2,7 +2,7 @@
 
 ## 1. Visual Theme & Atmosphere
 
-"The full stop." The wordmark ends in a period: "Vision Blend." The site takes that one detail and uses it as its only ornament, a small brown dot that ends every headline and marks section labels, active states, buttons and published projects. Everything else is quiet: a neutral off-white page, near-black type in one geometric family close to the wordmark, hairline rules, sharp corners, and generous space. Sections alternate light, tint and dark bands, each opened by a numbered index row ("02 / 06") so the page reads as clearly separated chapters. The copper key visual from the brand assets fills the hero once.
+"The full stop." The wordmark ends in a period: "Vision Blend." The site takes that one detail and uses it as its only ornament, a small brown dot that ends every headline and marks section labels, active states, buttons and published projects. Everything else is quiet: the cream-and-copper key visual runs as one softly veiled background across the light sections, with near-black type in one geometric family close to the wordmark, hairline rules, sharp corners, and generous space. Numbered index rows ("02 / 06") and occasional dark bands separate chapters without restarting the background. The hero keeps its own copper treatment.
 
 Scene: a founder or brand manager on a laptop in a bright studio, judging taste in the first ten seconds, then reopening the link on a phone. Light theme, with one dark band for the film series and the footer.
 
@@ -24,7 +24,7 @@ Strategy: **Restrained.** Neutrals carry the page; the logo brown appears only a
 | `--night` | `oklch(0.17 0.006 40)` | Dark band, footer |
 | `--on-night` / `--on-night-muted` | `oklch(0.95 ...)` / `oklch(0.68 ...)` | Text on night |
 
-Rules: no gradients except the client's own key visual (in the hero, as `hero-copper.jpg`). The logo brown is the highlight colour: section labels, the current index number, link underlines, the current page and key words use `--brand`, which dark bands and the footer switch to `--brand-soft`. Key words: one per title, marked `*like this*` in `src/content/en.ts` and rendered by `hl()` (`src/lib/highlight.tsx`, `.hl`); `plain()` strips the markers where a title doubles as a label. The hero's key word is its last word, "taste". Contrast verified with `contrast.py`; lowest text pair is faint on tint at 4.51.
+Rules: the light page background uses `hero-cream.jpg` with a cream veil in `src/app/globals.css`; light sections stay transparent so this image is painted once across the page. Dark bands and the footer keep their solid night fill. The logo brown is the highlight colour: section labels, the current index number, link underlines, the current page and key words use `--brand`, which dark bands and the footer switch to `--brand-soft`. Key words: one per title, marked `*like this*` in `src/content/en.ts` and rendered by `hl()` (`src/lib/highlight.tsx`, `.hl`); `plain()` strips the markers where a title doubles as a label. The hero's key word is its last word, "taste".
 
 ## 3. Typography
 
@@ -44,7 +44,7 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 ## 4. Components
 
 - **Index row + section head** (`SectionHead`): marker label left, "NN / NN" right over a hairline; title (ends with the brown full stop) spans 7 columns, side note sits in columns 9 to 12.
-- **Buttons** (`.cta`, `.cta-line`, `.cta-sm`): square, 46px tall (40px small), dot before the label grows on hover, arrow slides in.
+- **Buttons** (`.cta`, `.cta-line`, `.cta-sm`): fully rounded pills (client request), 46px tall (40px small), dot before the label grows on hover, arrow slides in.
 - **Link underline** (`.u`): hairline draws in from the left on hover, focus and current page.
 - **Work index** (`WorkIndex`): numbered rows; hover or focus shifts the name, draws the row rule and updates the sticky preview. Published projects carry the dot, slots carry a "Slot" tag.
 - **Service cards** (`ServiceCards`, `ServiceIllustration`): line drawings with the brown dot. Hover draws a brown top rule, list items step in, the drawing animates (circles blend, viewfinder zooms, feed tiles lift).
@@ -58,7 +58,7 @@ Family: **Jost** (variable weight), a geometric sans in the same family of shape
 - **Home hero** (`Hero`, `HeroMotion`): full screen on the copper, with a soft dark pool behind the type, laid out as a centred statement: label, "Building brands / with taste." on two lines, lead and the two buttons in one centred column, with the services (and Production Files 001) spread along a hairline at the foot, each with the brand dot. The header over it is transparent with light type and the white logo at the top, frosted night while scrolling over the hero, and paper once past it. Every load of the home page (reloads and navigating back to it included) plays a 3s intro on the copper itself; links to home skip the page-transition panel so the intro is the transition: the key visual fades up from dark while the white wordmark wipes in and its full stop pings, the wordmark lifts away, then "Building brands with taste" rises word by word and the brand dot lands as its full stop; label, lead, buttons, services and header follow. Any input skips it; reduced motion shows the finished hero. A soft light follows the pointer on the copper.
 - **Showreel** (`Showreel`): below the hero; sticky film frame opens to full bleed with scroll, muted loop, pointer sound label. Plays `public/videos/fifa-x-paradise.mp4` when present.
 - **Work page layout**: header with project index, full-width featured film, split story/film, staggered studio two-up, quieter case-study slots, series band, closing CTA.
-- Radii: 0 everywhere except the dot. Shadows: none; depth comes from bands and rules.
+- Radii: 0 everywhere except the dot and the pill buttons. Shadows: none; depth comes from bands and rules.
 
 ## 5. Layout
 
