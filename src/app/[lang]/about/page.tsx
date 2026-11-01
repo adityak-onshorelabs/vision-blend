@@ -6,6 +6,7 @@ import { Beliefs } from "@/components/site/beliefs";
 import { SectionHead } from "@/components/site/section-head";
 import { ProjectArt } from "@/components/site/project-art";
 import { SeriesLinks } from "@/components/site/series-links";
+import { TeamList } from "@/components/site/team-list";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
 import { hl } from "@/lib/highlight";
@@ -87,7 +88,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
               <div className="grid items-center gap-8 border-t border-border pt-8 sm:grid-cols-[180px_minmax(0,1fr)]">
                 <ProjectArt slug="people-files" className="w-[180px] max-w-full text-ink" />
                 <div className="grid gap-4">
-                  <p className="text-[0.95rem] text-muted-foreground">Six different personalities. One studio, one brief at a time.</p>
+                  <p className="text-[0.95rem] text-muted-foreground">Different personalities. One studio, one brief at a time.</p>
                   <div className="flex flex-wrap gap-2.5">
                     <a className="cta" href={a.team.reel} target="_blank" rel="noopener noreferrer">
                       Meet the core team <span className="arr" aria-hidden="true">↗</span>
@@ -99,6 +100,14 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-[clamp(56px,7vw,104px)]">
+            <div className="index-row">
+              <h3 className="t-label marker">The team</h3>
+              <span className="count">{c.company.team}</span>
+            </div>
+            <TeamList members={a.team.members} />
           </div>
         </div>
       </section>

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Beliefs } from "@/components/site/beliefs";
 import { ContactCard } from "@/components/site/contact-card";
+import { IndustryCards } from "@/components/site/industry-cards";
 import { Hero } from "@/components/site/hero";
 import { ProcessRail } from "@/components/site/process-rail";
 import { Reach } from "@/components/site/reach";
@@ -12,7 +13,6 @@ import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
 import { Showreel } from "@/components/site/showreel";
 import { ShowreelEmbed } from "@/components/site/showreel-embed";
-import { ServiceCards } from "@/components/site/service-cards";
 import { WorkIndex } from "@/components/site/work-index";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
@@ -39,7 +39,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         lang={lang}
         tagline={c.company.tagline}
         copy={h}
-        services={c.services}
+        services={c.industries}
         labels={{ startProject: c.ui.startProject, seeWork: c.ui.seeWork }}
       />
 
@@ -63,7 +63,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <div className="frame">
           <SectionHead id="services-title" label={h.services.label} index={2} total={TOTAL} title={h.services.title} text={h.services.text} />
           <Reveal>
-            <ServiceCards services={c.services} lang={lang} linkLabel="More on this" />
+            <IndustryCards industries={c.industries} lang={lang} linkLabel="More on this" />
           </Reveal>
         </div>
       </section>

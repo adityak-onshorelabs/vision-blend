@@ -27,14 +27,19 @@ export type Project = {
   crop: Crop;
 };
 
-export type Service = {
-  slug: "branding" | "production" | "content";
+/** An industry the studio works in, with the services it offers that industry. */
+export type Industry = {
+  slug: string;
   name: string;
-  line: string;
-  intro: string;
-  deliverables: string[];
-  outcome: string;
+  /** Short clarification under the name, when the name alone is ambiguous */
+  note?: string;
+  services: string[];
 };
+
+export type Phone = { name: string; number: string };
+
+/** A team member. Photos show on the site only once everyone has one. */
+export type Member = { name: string; role: string; photo?: string };
 
 export type Belief = { text: string; date: string; url: string };
 
@@ -66,7 +71,7 @@ export type Content = {
     emailCc: string | null;
     /** Gmail web compose link with the pre-filled project enquiry; every email link opens it */
     enquiryGmail: string;
-    phone: string | null;
+    phones: Phone[];
     location: string | null;
   };
   nav: NavItem[];
@@ -107,7 +112,7 @@ export type Content = {
     contact: { label: string; title: string; text: string };
   };
   projects: Project[];
-  services: Service[];
+  industries: Industry[];
   beliefs: Belief[];
   process: Step[];
   episodes: Episode[];
@@ -118,7 +123,7 @@ export type Content = {
     title: string;
     lead: string;
     paragraphs: string[];
-    team: { title: string; text: string; url: string; reel: string };
+    team: { title: string; text: string; url: string; reel: string; members: Member[] };
     join: { title: string; text: string };
   };
   workPage: {

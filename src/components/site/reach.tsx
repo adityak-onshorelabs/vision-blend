@@ -15,9 +15,16 @@ export function Reach({ content: c }: { content: Content }) {
             <a className="u" href={c.company.enquiryGmail} target="_blank" rel="noopener noreferrer">{c.company.email}</a>
           </Row>
         )}
-        {c.company.phone && (
+        {c.company.phones.length > 0 && (
           <Row k="Phone">
-            <a className="u" href={`tel:${c.company.phone.replace(/[^\d+]/g, "")}`}>{c.company.phone}</a>
+            <span className="grid gap-1">
+              {c.company.phones.map((p) => (
+                <span key={p.number}>
+                  <a className="u whitespace-nowrap" href={`tel:${p.number.replace(/[^\d+]/g, "")}`}>{p.number}</a>
+                  <span className="text-muted-foreground">, {p.name}</span>
+                </span>
+              ))}
+            </span>
           </Row>
         )}
         {c.company.location && <Row k="Studio">{c.company.location}</Row>}

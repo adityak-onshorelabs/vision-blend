@@ -25,7 +25,8 @@ export function parseDocs(raw: Partial<Record<DocKey, unknown>>): Partial<Docs> 
 /** The admin forms start from these when nothing has been saved yet (served by /api/cms). */
 export function cmsDefaults(c: Content): Docs {
   return {
-    studio: { teamSize: c.company.teamSize, email: c.company.email ?? "", emailCc: c.company.emailCc ?? undefined, phone: c.company.phone ?? undefined },
+    studio: { email: c.company.email ?? "", emailCc: c.company.emailCc ?? undefined, phones: c.company.phones, location: c.company.location ?? undefined },
+    team: c.about.team.members,
     hero: { eyebrow: c.home.eyebrow, tagline: c.company.tagline.replace(/\.$/, ""), lead: c.home.lead },
     projects: c.projects.map((p) => ({
       slug: p.slug,
@@ -48,9 +49,9 @@ export function cmsDefaults(c: Content): Docs {
 export function applyCms(base: Content, docs: Partial<Docs>): Content {
   const c: Content = structuredClone(base);
 
-  if (docs.studio) {
-    const { teamSize, email, emailCc, phone } = docs.studio;
-    // Swap the team count wherever the copy states it ("Six people", "six people")
+  if (docs.team) {
+    const teamSize = docs.team.length;
+    // Swap the team count wherever the copy states it ("Seven people", "seven people")
     const from = WORDS[base.company.teamSize] ?? String(base.company.teamSize);
     const [word, noun] = teamLine(teamSize).split(" ");
     const count = new RegExp(`\\b${from} (people|person)\\b`, "gi");
@@ -60,11 +61,16 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
     c.home.facts = c.home.facts.map((f) => ({ ...f, value: swap(f.value) }));
     c.about.metaDescription = swap(c.about.metaDescription);
     c.about.team.title = swap(c.about.team.title);
+    c.about.team.members = docs.team;
     c.contactPage.explore.links = c.contactPage.explore.links.map((l) => ({ ...l, text: swap(l.text) }));
+  }
 
+  if (docs.studio) {
+    const { email, emailCc, phones, location } = docs.studio;
     c.company.email = email;
     c.company.emailCc = emailCc ?? null;
-    c.company.phone = phone ?? null;
+    c.company.phones = phones;
+    c.company.location = location ?? null;
     c.company.enquiryGmail = gmailCompose({ ...enquiryDraft, to: email, cc: emailCc });
   }
 

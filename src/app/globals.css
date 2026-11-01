@@ -248,6 +248,18 @@
   .group:hover .ill-feed .tile:nth-child(5) { transition-delay: 0.16s; fill: var(--brand); fill-opacity: 1; stroke-opacity: 0; }
   .group:hover .ill-feed .tile:nth-child(6) { transition-delay: 0.2s; }
 
+  /* Industry drawings (Services page) */
+  .group:hover .re-a { transform: translateY(-8px); }
+  .group:hover .re-b { transform: translateY(-4px); transition-delay: 0.08s; }
+  .group:hover .d2c-lid { transform: translateY(-10px) rotate(-6deg); }
+  .group:hover .sv-a { transform: translateX(-6px); }
+  .group:hover .sv-b { transform: translateX(6px); }
+  .group:hover .ho-lid { transform: translate(-6px, -16px) rotate(-8deg); }
+  .group:hover .au-car { transform: translateX(10px); }
+  @media (prefers-reduced-motion: reduce) {
+    .group:hover :is(.re-a, .re-b, .d2c-lid, .sv-a, .sv-b, .ho-lid, .au-car) { transform: none; }
+  }
+
   /* Underlined form fields */
   .field-input {
     width: 100%; min-height: 48px; padding: 10px 0;

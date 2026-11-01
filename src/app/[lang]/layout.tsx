@@ -51,7 +51,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
     slogan: c.company.tagline,
     foundingDate: String(c.company.founded),
     sameAs: [c.company.instagram],
-    knowsAbout: c.services.map((s) => s.name),
+    knowsAbout: [...new Set(c.industries.flatMap((s) => s.services))],
   };
 
   return (

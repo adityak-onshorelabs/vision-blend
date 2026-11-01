@@ -7,21 +7,34 @@
     "Six people... one year" from People Files Edit 001, collaboration and hiring notes).
   - Brand assets supplied by the studio: wordmark (brown and white) and the copper key visual.
 
-  Needs client confirmation (not marked on the page; tracked in README "Before launch")
-  - Service deliverable lists (drafted from captions and hashtags).
-  - Process steps.
-  - Studio city/address (not public).
-  - Whether "Six people" is the full team.
+  - Project tracker sheet, filled in by the studio 1 Nov 2026: contact details, team, the five
+    industries and the services under each.
+
+  Still to come (tracked in README "Before launch")
+  - Team photos (added in the admin; they show once everyone has one).
   - Real project stills (project images are copper crops until then; reel previews load from Instagram).
 */
 import { gmailCompose } from "@/lib/mail";
-import type { Content } from "./types";
+import { teamLine } from "@/lib/cms/team";
+import type { Content, Member } from "./types";
 
 const ig = "https://www.instagram.com/";
 
-// Addresses from the studio, 30 Oct 2026 (typed as "visionblend@gmail.comm" and "gursimar@visionblend"; confirm both)
-const EMAIL = "visionblend@gmail.com";
-const EMAIL_CC = "gursimar@visionblend.in";
+// Addresses from the studio's sheet, 1 Nov 2026: briefs go to Aquib, copied to Gursimar
+const EMAIL = "aquib@visionblend.com";
+const EMAIL_CC = "gursimar@visionblend.com";
+
+const MEMBERS: Member[] = [
+  { name: "Aquib Shaikh", role: "CEO and co-founder" },
+  { name: "Gursimar Anand", role: "Creative director and co-founder" },
+  { name: "Sheena Dave", role: "Design and post-production head" },
+  { name: "Rohit Pathania", role: "Head of production" },
+  { name: "Rupesh Bhawar", role: "Head of cinematography" },
+  { name: "Aditya Rajput", role: "Senior editor" },
+  { name: "Shazia Shaikh", role: "Head of CRM and operations" },
+];
+/** "Seven people": the count follows the team list (the admin swaps it wherever it appears) */
+const TEAM = teamLine(MEMBERS.length);
 /** The pre-filled project brief behind every email link (the admin can change the addresses) */
 export const enquiryDraft = {
   to: EMAIL,
@@ -31,7 +44,8 @@ export const enquiryDraft = {
     "Hi Vision Blend,",
     "",
     "Brand or company:",
-    "What we need (branding, film, content):",
+    "Industry:",
+    "What we need (films, social media, ads, branding, launches):",
     "Timeline:",
     "A little about the project:",
     "",
@@ -45,16 +59,19 @@ export const en: Content = {
     legalName: "Vision Blend™",
     tagline: "Building brands with taste.",
     founded: 2023,
-    team: "Six people",
-    teamSize: 6,
+    team: TEAM,
+    teamSize: MEMBERS.length,
     instagram: `${ig}vision.blend/`,
     instagramHandle: "@vision.blend",
     website: "visionblend.in",
     email: EMAIL,
     emailCc: EMAIL_CC,
     enquiryGmail: gmailCompose(enquiryDraft),
-    phone: null,
-    location: null,
+    phones: [
+      { name: "Aquib", number: "+91 90045 01607" },
+      { name: "Gursimar", number: "+91 89282 79852" },
+    ],
+    location: "Mumbai",
   },
   nav: [
     { href: "/work", label: "Work" },
@@ -78,8 +95,8 @@ export const en: Content = {
     lead: "Vision Blend is a marketing studio for brands that want to be remembered, not just seen. Identity, production and content, made by one team.",
     facts: [
       { label: "Since", value: "2023" },
-      { label: "Team", value: "Six people" },
-      { label: "Practice", value: "Brand, film, content" },
+      { label: "Team", value: TEAM },
+      { label: "Industries", value: "Five" },
     ],
     visualCaption: ["Key visual, copper blend", "Est. 2023"],
     showreel: {
@@ -113,8 +130,8 @@ export const en: Content = {
     },
     services: {
       label: "Services",
-      title: "Three practices, *one brief*",
-      text: "The identity, the film and the feed come from the same team, so they read as one brand.",
+      title: "Five industries, *one team*",
+      text: "Real estate, D2C, service businesses, hospitality and automobile. Each gets the services it needs, made by the same team.",
     },
     beliefs: {
       label: "Beliefs",
@@ -214,34 +231,12 @@ export const en: Content = {
       crop: { pos: "96% 22%", sz: "260%" },
     },
   ],
-  services: [
-    {
-      slug: "branding",
-      name: "Branding & identity",
-      line: "Names, marks and the rules that keep a brand recognisable before anyone reads the name.",
-      intro:
-        "Real brand building happens when people recognise you before they read your name. We shape the voice, the visuals and what the brand stands for, then write it down so it stays consistent.",
-      deliverables: ["Logo and wordmark", "Colour and type system", "Brand guidelines", "Packaging and print", "Brand refresh"],
-      outcome: "A brand that looks like itself everywhere it shows up.",
-    },
-    {
-      slug: "production",
-      name: "Film & production",
-      line: "Production is where the idea meets reality. Films and shoots planned from the concept to the final cut.",
-      intro:
-        "Brand films, shoots and short-form, made by the same team that knows the brand. Our Production Files series shows how the work gets made.",
-      deliverables: ["Brand films", "Product and lifestyle shoots", "Reels and short-form", "Behind-the-scenes series", "Editing and colour"],
-      outcome: "Footage that feels like the brand, not like a template.",
-    },
-    {
-      slug: "content",
-      name: "Content & social",
-      line: "Reach gets you seen. Consistent, well-made content makes you recognisable.",
-      intro:
-        "Virality isn't the enemy, chasing it is. We plan content that earns attention and builds recognition over time, and we take reach and quality together, never one at the cost of the other.",
-      deliverables: ["Content strategy", "Monthly calendars", "Post and reel design", "Content marketing", "Community and reporting"],
-      outcome: "A feed people recognise before they read the handle.",
-    },
+  industries: [
+    { slug: "real-estate", name: "Real Estate", services: ["AV films", "Social media", "Ads", "Branding", "Event launches"] },
+    { slug: "d2c", name: "D2C", note: "Direct-to-consumer brands", services: ["Social media", "Ads", "Product shoots", "Brand films", "Event launches"] },
+    { slug: "services", name: "Services", note: "Service businesses", services: ["Social media and ads", "Brand films", "Events and launches"] },
+    { slug: "hospitality", name: "Hospitality", services: ["Social media and ads", "Brand films", "Events and launches"] },
+    { slug: "automobile", name: "Automobile", services: ["Social media and ads", "Brand films", "Events and launches"] },
   ],
   beliefs: [
     { text: "Good creative doesn't ask for attention. It earns it.", date: "Sep 2026", url: `${ig}p/DdosU14Eu4Z/` },
@@ -265,18 +260,19 @@ export const en: Content = {
   seriesUrl: `${ig}vision.blend/reels/`,
   about: {
     metaTitle: "About Vision Blend",
-    metaDescription: "A marketing studio of six people, building brands with taste since 2023.",
+    metaDescription: `A marketing studio of ${TEAM.toLowerCase()}, building brands with taste since 2023.`,
     title: "A small studio that builds brands to be *remembered*",
     lead: "Vision Blend started in 2023 with one idea: good creative doesn't ask for attention, it earns it.",
     paragraphs: [
-      "We work across identity, film and content, so a brand's logo, its films and its feed come from the same brief and the same people.",
+      "We work with real estate, D2C, service, hospitality and automobile brands, so a brand's films, its feed and its launches come from the same brief and the same people.",
       "We care about reach, but more about recognition. A million views mean very little if nobody remembers who made the work.",
     ],
     team: {
-      title: "Six people. *One year*.",
-      text: "Six different personalities, one year of showing up, figuring things out and making good work together. People Files, Edit 001.",
+      title: `${TEAM}. *One studio*.`,
+      text: "Different personalities, showing up, figuring things out and making good work together. Meet them in People Files, Edit 001.",
       url: `${ig}p/DerceBciGd5/`,
       reel: `${ig}reel/DbvYEMToEz0/`,
+      members: MEMBERS,
     },
     join: {
       title: "Work *with us*",
@@ -298,9 +294,9 @@ export const en: Content = {
   },
   servicesPage: {
     metaTitle: "Services",
-    metaDescription: "Branding and identity, film and production, and content and social, from one studio.",
-    title: "Three practices, *one brief*",
-    lead: "The identity, the film and the feed come from the same team, so they read as one brand.",
+    metaDescription: "Films, social media, ads, branding and launches for real estate, D2C, service businesses, hospitality and automobile brands.",
+    title: "Five industries, *one team*",
+    lead: "Find your industry to see what we make for it. Every service is planned and made by the same team.",
   },
   contactPage: {
     metaTitle: "Start a project",
@@ -332,8 +328,8 @@ export const en: Content = {
       title: "Not *ready* yet?",
       links: [
         { href: "/work", title: "See the work", text: "Films and studio projects, filed the way we post them." },
-        { href: "/services", title: "What we make", text: "Branding, film and production, content and social." },
-        { href: "/about", title: "Who we are", text: "Six people building brands to be remembered." },
+        { href: "/services", title: "What we make", text: "Films, social, ads and launches for five industries." },
+        { href: "/about", title: "Who we are", text: `${TEAM} building brands to be remembered.` },
       ],
     },
     form: {

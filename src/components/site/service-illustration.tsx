@@ -1,10 +1,8 @@
-import type { Service } from "@/content/types";
-
 /**
- * Line illustrations for the three practices. They animate on hover of the nearest `.group`
+ * Line illustrations for branding, film and content (the Contact page's "What we make" card uses one). They animate on hover of the nearest `.group`
  * (rules in globals.css): branding circles blend together, the viewfinder zooms, feed tiles lift.
  */
-export function ServiceIllustration({ slug, className }: { slug: Service["slug"]; className?: string }) {
+export function ServiceIllustration({ slug, className }: { slug: "branding" | "production" | "content"; className?: string }) {
   if (slug === "branding") {
     return (
       <svg className={`ill ill-brand ${className ?? ""}`} viewBox="0 0 240 160" aria-hidden="true">

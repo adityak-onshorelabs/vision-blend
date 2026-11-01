@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import type { Content } from "@/content/types";
 
 /** How to reach the studio by email: the address and a pre-filled brief in Gmail's web composer. */
@@ -20,12 +21,18 @@ export function ContactCard({ content: c }: { content: Content }) {
             {e.ccNote} {c.company.emailCc}
           </p>
         )}
-        {c.company.phone && (
+        {c.company.phones.length > 0 && (
           <p className="text-[0.94rem] text-muted-foreground">
             {e.phone}{" "}
-            <a href={`tel:${c.company.phone.replace(/[^\d+]/g, "")}`} className="u text-ink">
-              {c.company.phone}
-            </a>
+            {c.company.phones.map((p, i) => (
+              <Fragment key={p.number}>
+                {i > 0 && " or "}
+                {p.name} on{" "}
+                <a href={`tel:${p.number.replace(/[^\d+]/g, "")}`} className="u whitespace-nowrap text-ink">
+                  {p.number}
+                </a>
+              </Fragment>
+            ))}
           </p>
         )}
       </div>

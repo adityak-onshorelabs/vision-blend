@@ -59,10 +59,10 @@ Services and industries editing comes once the client sends those lists.
 
 ## Before launch (needs the client)
 
-- [ ] Confirm the enquiry addresses in `src/content/en.ts` (to visionblend@gmail.com, cc gursimar@visionblend.in; both were typed with typos). Contact and Start a project go to `/contact`, which offers a pre-filled draft (mail app or Gmail) and a copy button; the home page's contact section has the same card.
-- [ ] Studio city/address (the row stays hidden until `company.location` is set in `src/content/en.ts`).
-- [ ] Confirm service lists and process steps (drafted from Instagram captions and hashtags).
-- [ ] Confirm "Six people" for the team line.
+- [x] Enquiry addresses (aquib@visionblend.com, cc gursimar@visionblend.com), phones (Aquib, Gursimar) and city (Mumbai), from the studio's sheet, 1 Nov 2026. Editable under Studio details in the admin.
+- [x] Five industries in order (Real Estate, D2C, Services, Hospitality, Automobile) with the services under each, from the sheet.
+- [x] Team of seven, names and roles. The team size is counted from the list (Team in the admin).
+- [ ] Team photos: upload in the admin. They show on About only once everyone has one; until then the team is listed by name and role.
 - [ ] Stills for each project (project images are copper placeholder crops; reel previews come from Instagram) and permission to show FIFA x Paradise and Delta Palm Beach work.
 - [ ] Case study slots: real projects for "Identity system" and "Content retainer", or remove them.
 - [ ] Domain and hosting for visionblend.in, Resend account with a verified sending domain.
