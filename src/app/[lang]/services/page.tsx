@@ -26,20 +26,17 @@ export default async function ServicesPage({ params }: PageProps<"/[lang]/servic
     <>
       <section className="band" aria-labelledby="services-title">
         <div className="frame">
-          {/* Own head, not SectionHead: the lead lines up with the industry column below the rail */}
+          {/* Own head, not SectionHead: a full-width title with no side note */}
           <div className="index-row">
             <span className="t-label marker">Services</span>
             <span className="count">
               <b>{String(c.industries.length).padStart(2, "0")}</b> Industries
             </span>
           </div>
-          <div className="mb-[clamp(48px,6vw,88px)] grid gap-6 lg:grid-cols-12 lg:gap-x-6 lg:gap-y-8">
-            <h1 id="services-title" className="t-h1 lg:col-span-12">
-              {hl(c.servicesPage.title)}
-              <span className="stop">.</span>
-            </h1>
-            <p className="t-lead max-w-[42ch] text-muted-foreground lg:col-span-6 lg:col-start-4">{c.servicesPage.lead}</p>
-          </div>
+          <h1 id="services-title" className="t-h1 mb-[clamp(48px,6vw,88px)]">
+            {hl(c.servicesPage.title)}
+            <span className="stop">.</span>
+          </h1>
 
           {/* Small screens: the industries as a jump list (the sticky rail takes over from lg) */}
           <nav aria-label="Industries" className="mb-[clamp(40px,6vw,64px)] grid grid-cols-2 gap-x-6 border-t border-border sm:grid-cols-3 lg:hidden">

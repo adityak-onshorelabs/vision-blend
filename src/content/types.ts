@@ -139,7 +139,7 @@ export type Content = {
     ctaTitle: string;
     ctaText: string;
   };
-  servicesPage: { metaTitle: string; metaDescription: string; title: string; lead: string };
+  servicesPage: { metaTitle: string; metaDescription: string; title: string };
   contactPage: {
     metaTitle: string;
     metaDescription: string;

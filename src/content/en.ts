@@ -296,7 +296,6 @@ export const en: Content = {
     metaTitle: "Services",
     metaDescription: "Films, social media, ads, branding and launches for real estate, D2C, service businesses, hospitality and automobile brands.",
     title: "Five industries, *one team*",
-    lead: "Find your industry to see what we make for it. Every service is planned and made by the same team.",
   },
   contactPage: {
     metaTitle: "Start a project",
