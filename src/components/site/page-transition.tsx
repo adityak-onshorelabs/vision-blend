@@ -14,7 +14,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Scene = "home" | "work" | "services" | "about" | "contact";
+type Scene = "home" | "work" | "industries" | "about" | "contact";
 type Phase = "idle" | "cover" | "hold" | "reveal";
 
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -24,7 +24,7 @@ const FAILSAFE_MS = 4000;
 
 function sceneFor(pathname: string, lang: string): Scene {
   const rest = pathname.replace(new RegExp(`^/${lang}`), "").split("/")[1] ?? "";
-  return (["work", "services", "about", "contact"].includes(rest) ? rest : "home") as Scene;
+  return (["work", "industries", "about", "contact"].includes(rest) ? rest : "home") as Scene;
 }
 
 export function PageTransition({ lang, labels }: { lang: string; labels: Record<Scene, string> }) {
@@ -161,7 +161,7 @@ function Illustration({ scene }: { scene: Scene }) {
       </svg>
     );
   }
-  if (scene === "services") {
+  if (scene === "industries") {
     // Three practices, three overlapping circles.
     return (
       <svg {...common}>

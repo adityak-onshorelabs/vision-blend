@@ -34,6 +34,18 @@ export type Industry = {
   /** Short clarification under the name, when the name alone is ambiguous */
   note?: string;
   services: string[];
+  /** One-line pitch shown on the industries index card */
+  summary?: string;
+  /** Full page for the industry. PLACEHOLDER content until Vision Blend sends the real copy. */
+  detail?: IndustryDetail;
+};
+
+export type IndustryDetail = {
+  lead: string;
+  paragraphs: string[];
+  offerings: { title: string; text: string }[];
+  challenges: { title: string; text: string }[];
+  faqs: { q: string; a: string }[];
 };
 
 export type Phone = { name: string; number: string };
@@ -139,7 +151,7 @@ export type Content = {
     ctaTitle: string;
     ctaText: string;
   };
-  servicesPage: { metaTitle: string; metaDescription: string; title: string };
+  industriesPage: { metaTitle: string; metaDescription: string; title: string; lead: string };
   contactPage: {
     metaTitle: string;
     metaDescription: string;

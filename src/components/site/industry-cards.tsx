@@ -31,7 +31,7 @@ export function IndustryCards({ industries, lang, linkLabel }: { industries: Ind
             ))}
           </ul>
           {linkLabel && (
-            <Link href={`/${lang}/services#${s.slug}`} className="u mt-4 self-end justify-self-start text-[0.92rem]">
+            <Link href={`/${lang}/industries/${s.slug}`} className="u mt-4 self-end justify-self-start text-[0.92rem]">
               {linkLabel} <span className="sr-only">{s.name}</span>
             </Link>
           )}
