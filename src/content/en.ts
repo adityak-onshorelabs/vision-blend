@@ -1,3 +1,4 @@
+import { withDetails } from "./industry-details";
 /*
   Vision Blend site content (English).
 
@@ -75,7 +76,7 @@ export const en: Content = {
   },
   nav: [
     { href: "/work", label: "Work" },
-    { href: "/services", label: "Services" },
+    { href: "/industries", label: "Industries" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ],
@@ -231,13 +232,13 @@ export const en: Content = {
       crop: { pos: "96% 22%", sz: "260%" },
     },
   ],
-  industries: [
+  industries: withDetails([
     { slug: "real-estate", name: "Real Estate", services: ["AV films", "Social media", "Ads", "Branding", "Event launches"] },
     { slug: "d2c", name: "D2C", note: "Direct-to-consumer brands", services: ["Social media", "Ads", "Product shoots", "Brand films", "Event launches"] },
     { slug: "services", name: "Services", note: "Service businesses", services: ["Social media and ads", "Brand films", "Events and launches"] },
     { slug: "hospitality", name: "Hospitality", services: ["Social media and ads", "Brand films", "Events and launches"] },
     { slug: "automobile", name: "Automobile", services: ["Social media and ads", "Brand films", "Events and launches"] },
-  ],
+  ]),
   beliefs: [
     { text: "Good creative doesn't ask for attention. It earns it.", date: "Sep 2026", url: `${ig}p/DdosU14Eu4Z/` },
     { text: "Attention is temporary. Recognition compounds.", date: "Aug 2026", url: `${ig}p/DcA9_fKqHeb/` },
@@ -292,8 +293,9 @@ export const en: Content = {
     ctaTitle: "Have a *brief* like these",
     ctaText: "Tell us about the brand and what it needs. We read every brief and reply with next steps.",
   },
-  servicesPage: {
-    metaTitle: "Services",
+  industriesPage: {
+    metaTitle: "Industries",
+    lead: "Pick an industry to see how we work with brands in it.",
     metaDescription: "Films, social media, ads, branding and launches for real estate, D2C, service businesses, hospitality and automobile brands.",
     title: "Five industries, *one team*",
   },
@@ -327,7 +329,7 @@ export const en: Content = {
       title: "Not *ready* yet?",
       links: [
         { href: "/work", title: "See the work", text: "Films and studio projects, filed the way we post them." },
-        { href: "/services", title: "What we make", text: "Films, social, ads and launches for five industries." },
+        { href: "/industries", title: "Industries we serve", text: "Films, social, ads and launches for five industries." },
         { href: "/about", title: "Who we are", text: `${TEAM} building brands to be remembered.` },
       ],
     },

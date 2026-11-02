@@ -73,12 +73,9 @@ export function Hero({ lang, tagline, copy, services, labels }: Props) {
             <ul className="hero-services">
               {services.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/${lang}/services#${s.slug}`} className="u">{s.name}</Link>
+                  <Link href={`/${lang}/industries/${s.slug}`} className="u">{s.name}</Link>
                 </li>
               ))}
-              <li>
-                <a href="#reel-title" className="u">{copy.showreel.label}</a>
-              </li>
             </ul>
           </div>
         </div>

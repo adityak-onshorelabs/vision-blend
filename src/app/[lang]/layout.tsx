@@ -67,7 +67,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         <Footer lang={lang} content={c} />
         <PageTransition
           lang={lang}
-          labels={{ home: c.company.name, work: "Work", services: "Services", about: "About", contact: c.ui.startProject }}
+          labels={{ home: c.company.name, work: "Work", industries: "Industries", about: "About", contact: c.ui.startProject }}
         />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </body>

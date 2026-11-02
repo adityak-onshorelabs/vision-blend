@@ -7,6 +7,9 @@ const nextConfig: NextConfig = {
   // Project covers uploaded from the admin (its own deployment) live on Vercel Blob
   images: { qualities: [75, 90], remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }] },
   partialPrefetching: true,
+  async redirects() {
+    return [{ source: "/:lang/services", destination: "/:lang/industries", permanent: true }];
+  },
   turbopack: {
     root: process.cwd(),
     rules: {
