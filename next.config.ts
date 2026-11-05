@@ -17,7 +17,12 @@ const nextConfig: NextConfig = {
   },
   partialPrefetching: true,
   async redirects() {
-    return [{ source: "/:lang/services", destination: "/:lang/industries", permanent: true }];
+    return [
+      { source: "/:lang/services", destination: "/:lang/industries", permanent: true },
+      // Hospitality and Services became one page (5 Nov 2026 brief)
+      { source: "/:lang/industries/:old(hospitality|services)", destination: "/:lang/industries/hospitality-services", permanent: true },
+      { source: "/:lang/industries/:old(hospitality|services)/:rest*", destination: "/:lang/industries/hospitality-services/:rest*", permanent: true },
+    ];
   },
   turbopack: {
     root: process.cwd(),

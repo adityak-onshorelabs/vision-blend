@@ -43,16 +43,16 @@ export default async function IndustriesPage({ params }: PageProps<"/[lang]/indu
             <p className="t-lead text-muted-foreground md:col-span-4">{c.industriesPage.lead}</p>
           </div>
 
-          {/* Each card is a preview of that industry's own page. First two run large, the rest in threes. */}
+          {/* Each card is a preview of that industry's own page. Four sit two by two; five run two large, then three. */}
           <ul className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 lg:gap-5" aria-label="Industry pages">
             {c.industries.map((s, i) => (
               <Reveal
                 as="li"
                 key={s.slug}
                 delay={(i % 3) * 0.06}
-                className={cn("grid", i < 2 ? "lg:col-span-3" : "lg:col-span-2", i === total - 1 && total % 2 === 1 && "md:col-span-2 lg:col-span-2")}
+                className={cn("grid", i < 2 || total === 4 ? "lg:col-span-3" : "lg:col-span-2", i === total - 1 && total % 2 === 1 && "md:col-span-2 lg:col-span-2")}
               >
-                <IndustryCard industry={s} lang={lang} index={i} total={total} size={i < 2 ? "lg" : "md"} />
+                <IndustryCard industry={s} lang={lang} index={i} total={total} size={i < 2 || total === 4 ? "lg" : "md"} />
               </Reveal>
             ))}
           </ul>

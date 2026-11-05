@@ -14,6 +14,11 @@ import { cn } from "@/lib/utils";
 
 export type EmbedKind = "landscape" | "portrait" | "reel";
 
+/** A reel link plays as a reel; a post link is taken as a 4:5 post (carousels, statics) */
+export const embedKindOf = (url: string): EmbedKind => (url.includes("/reel/") ? "reel" : "portrait");
+/** The shape of the cropped window for a link, as width and height */
+export const embedRatioOf = (url: string): [number, number] => (embedKindOf(url) === "reel" ? [7, 10] : [4, 5]);
+
 const HEADER = 54;
 
 const geometry: Record<EmbedKind, { aspect: string; width: string; left: string; height: string }> = {
@@ -28,12 +33,15 @@ export function InstagramMedia({
   title,
   className,
   priority = false,
+  preview = false,
 }: {
   url: string;
   kind: EmbedKind;
   title: string;
   className?: string;
   priority?: boolean;
+  /** Inside a link or button: the embed is shown but not focusable or clickable */
+  preview?: boolean;
 }) {
   const g = geometry[kind];
   const src = `${url.replace(/\/?$/, "/")}embed/`;
@@ -41,10 +49,12 @@ export function InstagramMedia({
     <div className={cn("relative w-full overflow-hidden bg-[var(--well)]", g.aspect, className)}>
       <span aria-hidden="true" className="crop crop-bw absolute inset-0 opacity-60" style={{ backgroundSize: "260%" }} />
       {/* Scaled 1.5% around the window's centre to hide the 1px white edge Instagram leaves. */}
-      <div className="absolute inset-0 scale-[1.015]">
+      <div className={cn("absolute inset-0 scale-[1.015]", preview && "pointer-events-none")}>
         <iframe
           src={src}
           title={`Instagram: ${title}`}
+          tabIndex={preview ? -1 : undefined}
+          aria-hidden={preview || undefined}
           loading={priority ? "eager" : "lazy"}
           scrolling="no"
           allow="autoplay; encrypted-media; picture-in-picture; fullscreen"

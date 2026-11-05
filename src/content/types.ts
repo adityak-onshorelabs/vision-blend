@@ -73,9 +73,10 @@ export type IndustryDetail = {
 };
 
 /**
- * One file on an industry's portfolio subpage. Everything comes from Google Drive: the card shows
- * Drive's own thumbnail of the file, and the lightbox plays or shows the file in Drive's player,
- * so nothing but this record lives on the site.
+ * One piece on an industry's portfolio subpage, from Google Drive or Instagram, so nothing but this
+ * record lives on the site. A Drive piece shows Drive's own thumbnail on the card and plays in
+ * Drive's player; an Instagram piece shows Instagram's embed on both. Exactly one of `drive` and
+ * `instagram` is set.
  */
 export type WorkItem = {
   title: string;
@@ -83,7 +84,9 @@ export type WorkItem = {
   category: string;
   client?: string;
   /** Drive file id. The file must be shared "anyone with the link". */
-  drive: string;
+  drive?: string;
+  /** Instagram post or reel link */
+  instagram?: string;
   kind: "film" | "still";
   /** The piece's own frame, width and height. The thumbnail is cropped to it (drops letterbox bars). */
   ratio: [number, number];
@@ -105,6 +108,8 @@ export type Offering = {
   image?: Photo;
   /** Showcase film (muted loop), a public/ path or ImageKit URL via media(). Absent until the studio's edit is in. */
   video?: string;
+  /** Instagram post or reel shown in the card instead of a looping film (Instagram's own player) */
+  instagram?: string;
   /**
    * The film's own frame, width and height (e.g. [9, 16] for a reel). The card is cut to exactly
    * this shape: no crop, no letterbox, no blurred fill. Defaults to 16:9.

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { Industry } from "@/content/types";
+import { cn } from "@/lib/utils";
 
 /**
  * One column per industry with the services offered to it. Hover draws a brown rule across the top.
@@ -8,7 +9,7 @@ import type { Industry } from "@/content/types";
  */
 export function IndustryCards({ industries, lang, linkLabel }: { industries: Industry[]; lang: string; linkLabel?: string }) {
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5 lg:gap-x-6 lg:gap-y-3.5">
+    <div className={cn("grid gap-4 sm:grid-cols-2 lg:gap-x-6 lg:gap-y-3.5", industries.length === 4 ? "lg:grid-cols-4" : "lg:grid-cols-5")}>
       {industries.map((s, n) => (
         <article
           key={s.slug}

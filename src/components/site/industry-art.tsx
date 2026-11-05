@@ -96,7 +96,7 @@ const fallback = (
 export function IndustryArt({ slug, className }: { slug: string; className?: string }) {
   return (
     <svg className={cn("ill", className)} viewBox="0 0 240 160" aria-hidden="true">
-      {art[slug] ?? fallback}
+      {art[slug === "hospitality-services" ? "hospitality" : slug] ?? fallback}
     </svg>
   );
 }

@@ -10,8 +10,7 @@
   the team picked) was chosen by the team and carries no placeholder tag; the
   Branding still (Unsplash, public/placeholder/) is a stand-in, tagged as a placeholder.
 
-  D2C, Services, Hospitality, Automobile: still PLACEHOLDER copy. Their approved copy is in the
-  same tracker and goes in the same way.
+  D2C, Hospitality & Services, Automobile: see the note above their entries below.
 
   No client names, testimonials, metrics or results here: none have been approved for these pages.
 */
@@ -24,6 +23,30 @@ const reImg = (name: string, alt: string) => ({ src: `/placeholder/real-estate/$
 // Showcase clips: 12-second muted loops cut from the studio's Drive files, with their first frame as the poster
 const clip = (name: string) => media(`/videos/real-estate/${name}.mp4`);
 const reClip = (name: string, alt: string) => ({ src: media(`/videos/real-estate/${name}.jpg`), alt });
+const ig = "https://www.instagram.com/";
+/** Drive's own thumbnail of a file, as a poster until a loop is cut from it */
+const driveThumb = (id: string) => `https://lh3.googleusercontent.com/d/${id}=w1200`;
+
+/* Shared by every sector page (the doc's wording, as on Real Estate) */
+const PROCESS = {
+  title: "Process",
+  steps: [
+    { name: "Strategy & Script", text: "Define the communication strategy and develop the script around the brand's purpose." },
+    { name: "Visual Direction", text: "Present the visual deck and finalise the look and feel of the brand and content before production." },
+    { name: "Shoot & Production", text: "Bring the approved script and visual direction to life through a planned shoot." },
+    { name: "Editing & Delivery", text: "Refine the footage through editing, colour and sound, then deliver the finished content." },
+  ],
+};
+const CLOSING = { title: "Let's *Work Together*", primary: "Start a Project", secondary: "Email Us" };
+const designedToDo = (awareness: string, sales: string) => ({
+  title: "What the work is *designed to do*",
+  items: [
+    { title: "Create Brand Awareness", text: awareness },
+    { title: "Generate Sales", text: sales },
+  ],
+});
+/** Until the studio sends sector photos: the copper key visual, tagged as a placeholder */
+const STAND_IN_HERO = { src: "/images/hero-copper.jpg", alt: "Copper key visual, standing in for the sector photo", placeholder: true };
 
 const details: Record<string, Extra> = {
   "real-estate": {
@@ -217,106 +240,130 @@ const details: Record<string, Extra> = {
       },
     },
   },
+  /*
+    D2C, Hospitality & Services, Automobile: the studio's "Industry Landing Pages: Master
+    Reference" doc (5 Nov 2026), one tab per sector, built on the Real Estate layout. Hero,
+    category titles and subtitles, purpose points, process and closing are the doc's wording.
+    FAQs keep the current text until the studio approves the doc's drafts (the merged Hospitality
+    & Services page has no current text, so it uses the drafts). Client names stay internal.
+
+    D2C media: the first link in each category row leads the card, the rest go to the work page
+    (studio's instruction). Instagram links play in Instagram's own embed. Product & AI's first
+    link (Drive) does not open publicly, so its Instagram reel leads instead; Model-led's first
+    Drive file shows its thumbnail until a loop is cut (the doc asks the studio to confirm that
+    file). Offer Creatives has no link yet. Hospitality & Services and Automobile have no links
+    yet: every card is a marked placeholder, and the heroes use the copper key visual as a
+    stand-in until the studio's sector photos are in.
+  */
   d2c: {
     summary: "Product shoots, feeds and ads that turn scrolling into buying.",
     detail: {
-      lead: "D2C brands live and die on the feed. We make the product shoots, content and ads that make people stop, look and buy.",
-      paragraphs: [
-        "We shoot products the way your customer will see them: on a phone screen, between a friend's post and an ad from a competitor.",
-        "Content and ads are made by the same team, so what performs in ads feeds back into the content, and the other way round.",
-      ],
+      eyebrow: "Creative & marketing for D2C",
+      headline: "D2C, *Considered*",
+      lead: "An exploration of products, identities and everyday rituals through brand films, design and communication.",
+      hero: STAND_IN_HERO,
+      paragraphs: [],
+      servicesTitle: "What we make for *D2C brands*",
       offerings: [
-        { title: "Social media", text: "Monthly content for Instagram and beyond, planned around launches and sales." },
-        { title: "Ads", text: "Performance creative in many cuts and formats, tested and refreshed." },
-        { title: "Product shoots", text: "Studio and lifestyle shoots for the store, marketplaces and social." },
-        { title: "Brand films", text: "Short films that tell the story behind the product." },
-        { title: "Event launches", text: "Pop-ups, product drops and launch events, covered live." },
+        { title: "Product & AI Content", subtitle: "Products in imagined and observed settings", text: "", instagram: `${ig}reel/DSfe26BgY_b/` },
+        { title: "Cinematic / Event Content", subtitle: "Brand narratives and occasions, on film", text: "", instagram: `${ig}reel/DSFC_tUiHrP/` },
+        { title: "Vox Pop Content", subtitle: "Public perspectives, in conversation", text: "", instagram: `${ig}reel/DVOX3RvAvtT/` },
+        { title: "Founder-led Content", subtitle: "The perspective behind the brand", text: "", instagram: `${ig}reel/DS2ejWijJp-/` },
+        {
+          title: "Model-led / UGC Content",
+          subtitle: "Products through personal experience",
+          text: "",
+          image: { src: driveThumb("1UiEh2FgpCu8K5we1cPNelFMOYVXc2x5T"), alt: "A still from a vertical product film", placeholder: true },
+          ratio: [9, 16],
+        },
+        { title: "Festive Campaigns", subtitle: "Brand stories within cultural occasions", text: "", instagram: `${ig}reel/DQCF4txiXQh/` },
+        { title: "Informative Carousels", subtitle: "Product knowledge, in sequence", text: "", instagram: `${ig}p/DQwf1RMki7a/` },
+        { title: "Product Creatives", subtitle: "Form, benefit and detail in composition", text: "", instagram: `${ig}p/DTLUTregizO/` },
+        { title: "Offer Creatives", subtitle: "Promotions, clearly composed", text: "", ratio: [4, 5] },
       ],
-      challenges: [
-        { title: "Creative fatigue", text: "Ads wear out fast. The brand needs a steady supply of fresh, on-brand creative." },
-        { title: "Standing out", text: "Category feeds look the same. A recognisable look is worth more than one viral post." },
-        { title: "Proof", text: "Every rupee of spend has to show up in sales." },
-      ],
+      value: designedToDo("Establish a distinct presence for your brand and its products.", "Turn product interest into purchases."),
+      challenges: [],
+      process: PROCESS,
       faqs: [
         { q: "Do you run the ads as well as make them?", a: "Yes, we can plan, make and run campaigns, or hand creative to your team." },
         { q: "How many creatives a month?", a: "It depends on the plan. We agree the number up front and stick to it." },
         { q: "Can you shoot at our warehouse?", a: "Yes, we shoot on location or in a studio." },
       ],
+      cta: CLOSING,
+      // The remaining links from each category row. Titles describe the piece, never the client.
+      work: {
+        title: "Work for *D2C brands*",
+        lead: "Films, reels and creatives made for D2C brands, each one in full.",
+        items: [
+          { title: "Brand film", category: "Cinematic / Event Content", drive: "1P3c96N5JPt-a5UotCflab97zeSSJo0-t", kind: "film", ratio: [9, 16] },
+          { title: "Vox pop", category: "Vox Pop Content", instagram: `${ig}reel/DTk-n3AiFxC/`, kind: "film", ratio: [9, 16] },
+          { title: "Founder story", category: "Founder-led Content", instagram: `${ig}reel/DO0l4YdEvI-/`, kind: "film", ratio: [9, 16] },
+          { title: "Product knowledge carousel", category: "Informative Carousels", instagram: `${ig}p/DTiSPVUjNlG/`, kind: "still", ratio: [4, 5] },
+          { title: "UGC reel", category: "Model-led / UGC Content", drive: "1ZR6uzJ-kFU8o6KHfWqLvzkZD5c9eP-gv", kind: "film", ratio: [9, 16] },
+          { title: "Festive reel", category: "Festive Campaigns", instagram: `${ig}reel/DO_U0NCiW9V/`, kind: "film", ratio: [9, 16] },
+          { title: "Does this smell expensive?", category: "Vox Pop Content", drive: "1FQM_LHpXd1DxJsUMSF8VoR-gZ2nmnaOM", kind: "film", ratio: [9, 16] },
+          { title: "Brand film, part two", category: "Cinematic / Event Content", drive: "1h-SYunBHTuHehtjUyR2TMj_Y2liltn1R", kind: "film", ratio: [9, 16] },
+          { title: "Founder story, part two", category: "Founder-led Content", instagram: `${ig}reel/DUIxrt7kmkR/`, kind: "film", ratio: [9, 16] },
+          { title: "Product carousel", category: "Informative Carousels", instagram: `${ig}p/DPjAosrCAsc/`, kind: "still", ratio: [4, 5] },
+        ],
+      },
     },
   },
-  services: {
-    summary: "Clear, human content for businesses that sell expertise, not products.",
+  "hospitality-services": {
+    summary: "Films, feeds and launches for venues and service businesses.",
     detail: {
-      lead: "Service businesses sell trust. We make the films and content that show the people and the work behind the name.",
-      paragraphs: [
-        "Clinics, consultancies, agencies and studios all have the same problem: the product is invisible. We make it visible through people, process and results.",
-        "A steady stream of social content, backed by a brand film and events, builds the recognition that turns into enquiries.",
-      ],
+      eyebrow: "Creative & marketing for hospitality & services",
+      headline: "Hospitality & Services, *Articulated*",
+      lead: "An exploration of places, expertise and human experiences through brand films, design and communication.",
+      hero: STAND_IN_HERO,
+      paragraphs: [],
+      servicesTitle: "What we make for *hospitality & service brands*",
       offerings: [
-        { title: "Social media and ads", text: "Content that explains what you do and why to choose you, with ads to reach the right people." },
-        { title: "Brand films", text: "A film about the team, the work and the results." },
-        { title: "Events and launches", text: "Openings, seminars and milestones, planned and covered." },
+        { title: "Social Media", subtitle: "Your brand's digital presence", text: "", ratio: [9, 16] },
+        { title: "Ads", subtitle: "To bring you enquiries, bookings and sales", text: "", ratio: [16, 9] },
+        { title: "Brand Films", subtitle: "The people, places and thinking behind your brand", text: "", ratio: [16, 9] },
+        { title: "Events & Launches", subtitle: "Key moments in your brand's story", text: "", ratio: [16, 9] },
+        { title: "Branding", subtitle: "A visual identity for your brand", text: "", ratio: [3, 4] },
+        { title: "AI Videos", subtitle: "Your vision, without a production shoot", text: "", ratio: [16, 9] },
+        { title: "Statics & Carousels", subtitle: "Narratives in composition", text: "", ratio: [4, 5] },
       ],
-      challenges: [
-        { title: "Invisible product", text: "There is nothing to photograph. The story has to come from people and outcomes." },
-        { title: "Trust first", text: "Clients buy from people they believe. Content has to feel honest." },
-        { title: "Explaining simply", text: "Complex services need clear, short explanations." },
-      ],
+      value: designedToDo("Establish a distinct presence for your brand, its expertise and experience.", "Turn interest into enquiries, bookings and sales opportunities."),
+      challenges: [],
+      process: PROCESS,
+      // DRAFT from the doc: no current wording exists for the merged page
+      faqTitle: "A few things you might *want to know*",
       faqs: [
-        { q: "We are a small team. Is this for us?", a: "Yes. Many of our service clients are founder-led teams." },
-        { q: "Do our people need to be on camera?", a: "It helps, and we make it easy. We coach and direct every shoot." },
-        { q: "How soon will we see enquiries?", a: "It varies by business. We set goals together at the start." },
+        { q: "Can we work with you on a single launch or campaign?", a: "Yes. The scope can focus on one venue, service, opening or campaign." },
+        { q: "Can films, branding, social content and ads share the same direction?", a: "Yes. A shared narrative and visual direction keep the brand consistent across formats." },
+        { q: "What do you need to get started?", a: "A brief, details of the venue or service, brand guidelines, available assets and the intended timeline." },
       ],
-    },
-  },
-  hospitality: {
-    summary: "Films and feeds that make people want to book a table or a stay.",
-    detail: {
-      lead: "Hospitality is felt before it is visited. We make content that lets people taste the food and feel the room from their phone.",
-      paragraphs: [
-        "Restaurants, cafés, hotels and resorts each have a mood. We capture it in films and posts that make people want to be there.",
-        "From opening night to the weekly feed, one team keeps the place looking the way it feels.",
-      ],
-      offerings: [
-        { title: "Social media and ads", text: "Food, rooms and moments, posted regularly, with ads around launches and seasons." },
-        { title: "Brand films", text: "Short films that show the place, the people and the experience." },
-        { title: "Events and launches", text: "Openings, menu launches and seasonal events, planned and covered." },
-      ],
-      challenges: [
-        { title: "Mood on a screen", text: "Atmosphere is hard to film. It needs light, sound and patience." },
-        { title: "Always new", text: "Menus, seasons and events change. The feed has to keep up." },
-        { title: "Local reach", text: "The right audience is often within a few kilometres." },
-      ],
-      faqs: [
-        { q: "Can you shoot during service?", a: "Yes, we plan shoots around service to keep the floor running." },
-        { q: "Do you do menu photography?", a: "Yes, for print, delivery apps and social." },
-        { q: "Can you help with an opening?", a: "Yes, from pre-opening teasers to opening-night coverage." },
-      ],
+      cta: CLOSING,
     },
   },
   automobile: {
     summary: "Launch films and campaigns with the speed and polish the category expects.",
     detail: {
-      lead: "Cars and bikes are bought with the heart and justified with the head. We make content that does both.",
-      paragraphs: [
-        "Dealerships, showrooms and automotive brands need content that matches the polish of the machines: launch films, walkarounds and campaigns.",
-        "We plan around model launches, festive seasons and showroom events so every moment that matters is covered.",
-      ],
+      eyebrow: "Creative & marketing for automotive",
+      headline: "Automotive, *In Detail*",
+      lead: "An exploration of design, performance and ownership through films, visual content and communication.",
+      hero: STAND_IN_HERO,
+      paragraphs: [],
+      servicesTitle: "What we make for *automotive brands*",
       offerings: [
-        { title: "Social media and ads", text: "Model content, offers and showroom life, with lead ads around launches." },
-        { title: "Brand films", text: "Launch films and walkarounds shot with the polish the category expects." },
-        { title: "Events and launches", text: "Unveilings, test-drive events and showroom launches, planned and covered." },
+        { title: "Events", subtitle: "Launches and experiences, documented", text: "", ratio: [16, 9] },
+        { title: "Social Media", subtitle: "Your brand's digital presence", text: "", ratio: [9, 16] },
+        { title: "Ads", subtitle: "To bring you enquiries and sales", text: "", ratio: [16, 9] },
+        { title: "Statics & Carousels", subtitle: "Design and detail in composition", text: "", ratio: [4, 5] },
       ],
-      challenges: [
-        { title: "High expectations", text: "Buyers have seen the global ads. Local content has to hold up." },
-        { title: "Launch windows", text: "Content has to be ready the moment a model goes on sale." },
-        { title: "Footfall", text: "Online attention has to turn into showroom visits and test drives." },
-      ],
+      value: designedToDo("Establish a distinct presence for your brand and its vehicles.", "Turn vehicle interest into test-drive enquiries and sales opportunities."),
+      challenges: [],
+      process: PROCESS,
       faqs: [
         { q: "Can you shoot moving cars?", a: "Yes, including tracking and drone shots, with the right permissions." },
         { q: "Do you work with dealerships?", a: "Yes, as well as brands directly." },
         { q: "Can you turn content around for a launch day?", a: "Yes, we plan same-day edits for launches and events." },
       ],
+      cta: CLOSING,
     },
   },
 };
