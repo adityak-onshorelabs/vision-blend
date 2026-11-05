@@ -43,11 +43,65 @@ export function cmsDefaults(c: Content): Docs {
       cover: p.cover,
     })),
     episodes: c.episodes.filter((e) => e.ep > 0).map(({ ep, title, date, url, by }) => ({ ep, title, date, url, by })),
+    industries: c.industries.map(({ slug, name, note, services, summary, detail }) => ({ slug, name, note, services, summary, detail })),
+    pages: {
+      home: {
+        metaTitle: c.home.metaTitle,
+        metaDescription: c.home.metaDescription,
+        showreel: (({ label, title, sub, date, src, poster, instagram, card: { left, right, place, line } }) => ({ label, title, sub, date, src, poster, instagram, card: { left, right, place, line } }))(c.home.showreel),
+        work: c.home.work,
+        services: c.home.services,
+        beliefs: c.home.beliefs,
+        process: c.home.process,
+        series: c.home.series,
+        contact: c.home.contact,
+        beliefList: c.beliefs,
+        steps: c.process.map(({ name, text, out }) => ({ name, text, out: out ?? "" })),
+      },
+      about: {
+        metaTitle: c.about.metaTitle,
+        metaDescription: c.about.metaDescription,
+        title: c.about.title,
+        lead: c.about.lead,
+        paragraphs: c.about.paragraphs,
+        team: { title: c.about.team.title, text: c.about.team.text },
+        join: c.about.join,
+      },
+      workPage: c.workPage,
+      industriesPage: c.industriesPage,
+      contactPage: (({ metaTitle, metaDescription, title, lead, collaborate, next, talk, explore }) => ({ metaTitle, metaDescription, title, lead, collaborate, next, talk, explore }))(c.contactPage),
+    },
   };
+}
+
+/** Saved page copy over the defaults (arrays are replaced, objects merged key by key). */
+function applyPages(c: Content, p: Docs["pages"]) {
+  const { beliefList, steps, showreel, ...home } = p.home;
+  Object.assign(c.home, home);
+  c.home.showreel = { ...c.home.showreel, ...showreel, card: { ...c.home.showreel.card, ...showreel.card } };
+  c.beliefs = beliefList;
+  c.process = steps;
+  const { team, ...about } = p.about;
+  Object.assign(c.about, about);
+  c.about.team = { ...c.about.team, ...team };
+  Object.assign(c.workPage, p.workPage);
+  Object.assign(c.industriesPage, p.industriesPage);
+  Object.assign(c.contactPage, p.contactPage);
 }
 
 export function applyCms(base: Content, docs: Partial<Docs>): Content {
   const c: Content = structuredClone(base);
+
+  // Page copy first, so the team count below is swapped into the saved wording too
+  if (docs.pages) applyPages(c, docs.pages);
+
+  if (docs.industries) {
+    // Industries in code set which pages exist and their order; saved ones replace their content
+    c.industries = c.industries.map((i) => {
+      const saved = docs.industries?.find((s) => s.slug === i.slug);
+      return saved ? { ...i, ...saved } : i;
+    });
+  }
 
   if (docs.team) {
     const teamSize = docs.team.length;
