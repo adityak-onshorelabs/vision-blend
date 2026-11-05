@@ -134,6 +134,8 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                   src={w.poster ?? thumb(w.drive ?? "", 1600)}
                   alt=""
                   fill
+                  // The first row is above the fold (it is the page's largest image)
+                  loading={j < 4 ? "eager" : undefined}
                   sizes="(min-width: 1360px) 310px, (min-width: 1280px) 23vw, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
                   className="object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
