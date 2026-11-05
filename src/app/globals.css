@@ -576,8 +576,18 @@ html:has(.hero[data-hero]):not([data-intro="done"], [data-intro="off"]) .site-he
   padding-top: calc(var(--header-h) + clamp(20px, 2.4vw, 32px)); padding-bottom: clamp(28px, 4vw, 52px);
 }
 .ind-hero-content .index-row { margin-bottom: 0; }
+/*
+  Phones: the photo is cropped to a tall slice, so the text block covers the lower half of it,
+  over whatever the photo has there (a light sky, busy window lines). The scrim goes dark from the
+  middle down and the top row gets its own band; the lead turns near-white with a soft shadow.
+*/
 @media (max-width: 759px) {
-  .ind-hero-scrim { background: linear-gradient(180deg, oklch(0.12 0.01 40 / 0.55), oklch(0.12 0.01 40 / 0.2) 28%, oklch(0.12 0.01 40 / 0.45) 55%, oklch(0.12 0.01 40 / 0.88)); }
+  .ind-hero-scrim {
+    background: linear-gradient(180deg, oklch(0.12 0.01 40 / 0.7), oklch(0.12 0.01 40 / 0.35) 22%, oklch(0.12 0.01 40 / 0.35) 34%, oklch(0.12 0.01 40 / 0.8) 52%, oklch(0.12 0.01 40 / 0.92));
+  }
+  .ind-hero-content { --muted: oklch(0.88 0.006 60); --muted-foreground: var(--muted); --faint: oklch(0.82 0.006 60); }
+  .ind-hero-content .index-row { --brand: oklch(0.76 0.09 55); }
+  .ind-hero-content :is(h1, .t-lead, .t-label) { text-shadow: 0 1px 14px oklch(0.1 0.01 40 / 0.6); }
 }
 @keyframes hero-settle { from { transform: scale(1.08); opacity: 0.6; } to { transform: scale(1); opacity: 1; } }
 
