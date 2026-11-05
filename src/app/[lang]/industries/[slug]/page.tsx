@@ -29,6 +29,13 @@ import { cn } from "@/lib/utils";
 
 type Params = PageProps<"/[lang]/industries/[slug]">["params"];
 
+/*
+  Every industry is prerendered (generateStaticParams), so in production this page is static and a
+  navigation to it loads the prefetched page at once. Next's dev-only instant check reads the
+  `await params` below as blocking; opting out says this segment may block, which it never does.
+*/
+export const instant = false;
+
 export async function generateStaticParams() {
   const all = await Promise.all(locales.map(async (lang) => ({ lang, c: await getContent(lang) })));
   return all.flatMap(({ lang, c }) => c.industries.map((s) => ({ lang, slug: s.slug })));
