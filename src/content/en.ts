@@ -97,7 +97,7 @@ export const en: Content = {
     facts: [
       { label: "Since", value: "2023" },
       { label: "Team", value: TEAM },
-      { label: "Industries", value: "Five" },
+      { label: "Industries", value: "Four" },
     ],
     visualCaption: ["Key visual, copper blend", "Est. 2023"],
     showreel: {
@@ -131,8 +131,8 @@ export const en: Content = {
     },
     services: {
       label: "Services",
-      title: "Five industries, *one team*",
-      text: "Real estate, D2C, service businesses, hospitality and automobile. Each gets the services it needs, made by the same team.",
+      title: "Four industries, *one team*",
+      text: "Real estate, D2C, hospitality and service businesses, and automobile. Each gets the services it needs, made by the same team.",
     },
     beliefs: {
       label: "Beliefs",
@@ -235,8 +235,8 @@ export const en: Content = {
   industries: withDetails([
     { slug: "real-estate", name: "Real Estate", services: ["AV films", "Social media", "Ads", "Branding", "Event launches"] },
     { slug: "d2c", name: "D2C", note: "Direct-to-consumer brands", services: ["Social media", "Ads", "Product shoots", "Brand films", "Event launches"] },
-    { slug: "services", name: "Services", note: "Service businesses", services: ["Social media and ads", "Brand films", "Events and launches"] },
-    { slug: "hospitality", name: "Hospitality", services: ["Social media and ads", "Brand films", "Events and launches"] },
+    // One page for both since the 5 Nov 2026 brief; the old /hospitality and /services addresses redirect here
+    { slug: "hospitality-services", name: "Hospitality & Services", services: ["Social media", "Ads", "Brand films", "Events & launches", "Branding"] },
     { slug: "automobile", name: "Automobile", services: ["Social media and ads", "Brand films", "Events and launches"] },
   ]),
   beliefs: [
@@ -297,7 +297,7 @@ export const en: Content = {
     metaTitle: "Industries",
     lead: "Pick an industry to see how we work with brands in it.",
     metaDescription: "Films, social media, ads, branding and launches for real estate, D2C, service businesses, hospitality and automobile brands.",
-    title: "Five industries, *one team*",
+    title: "Four industries, *one team*",
   },
   contactPage: {
     metaTitle: "Start a project",
@@ -329,7 +329,7 @@ export const en: Content = {
       title: "Not *ready* yet?",
       links: [
         { href: "/work", title: "See the work", text: "Films and studio projects, filed the way we post them." },
-        { href: "/industries", title: "Industries we serve", text: "Films, social, ads and launches for five industries." },
+        { href: "/industries", title: "Industries we serve", text: "Films, social, ads and launches for four industries." },
         { href: "/about", title: "Who we are", text: `${TEAM} building brands to be remembered.` },
       ],
     },

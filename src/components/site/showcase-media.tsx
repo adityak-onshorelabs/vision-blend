@@ -9,16 +9,27 @@
     a stock stand-in, with a play mark so the slot still reads as "film".
   - The slot takes the film's own frame (`ratio`): a reel stays 9:16, a carousel 4:5, a
     scope film 2.35:1. Nothing is cropped, letterboxed or padded with a blurred fill.
+  - Instagram (`instagram`): Instagram's own player fills the slot instead, cropped to the media.
+  - Nothing at all yet: a marked staging placeholder, so a missing asset is never mistaken for work.
 */
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { embedKindOf, InstagramMedia } from "./instagram-media";
 
-type Props = { video?: string; poster?: Photo; ratio?: [number, number]; sizes: string; className?: string };
+type Props = { video?: string; instagram?: string; title?: string; poster?: Photo; ratio?: [number, number]; sizes: string; className?: string };
 
-export function ShowcaseMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) {
+export function ShowcaseMedia(props: Props) {
+  const { instagram, title, className } = props;
+  if (instagram && !props.video) {
+    return <InstagramMedia url={instagram} kind={embedKindOf(instagram)} title={title ?? "Instagram post"} className={className} />;
+  }
+  return <LoopMedia {...props} />;
+}
+
+function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) {
   const reduce = useReducedMotion();
   const box = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLVideoElement>(null);
@@ -47,6 +58,8 @@ export function ShowcaseMedia({ video, poster, ratio = [16, 9], sizes, className
       className={cn("relative w-full overflow-hidden bg-[var(--night)]", className)}
       style={{ aspectRatio: `${ratio[0]} / ${ratio[1]}` }}
     >
+      {/* No asset yet: the copper texture holds the slot */}
+      {!poster && !hasVideo && <span aria-hidden="true" className="crop crop-bw absolute inset-0 opacity-50" style={{ backgroundSize: "260%" }} />}
       {poster && (
         <Image
           src={poster.src}
@@ -86,16 +99,17 @@ export function ShowcaseMedia({ video, poster, ratio = [16, 9], sizes, className
           <PlayMark />
         </button>
       ) : (
-        !playing && (
+        !playing &&
+        (poster || hasVideo) && (
           <span aria-hidden="true" className="pointer-events-none absolute inset-0 grid place-items-center">
             <PlayMark />
           </span>
         )
       )}
 
-      {poster?.placeholder && !hasVideo && (
+      {(poster?.placeholder || !poster) && !hasVideo && (
         <span className="absolute end-3 top-3 bg-[oklch(0.17_0.006_40/0.6)] px-2 py-1 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[var(--on-night)] backdrop-blur-sm">
-          Placeholder · video to come
+          {poster ? "Placeholder · video to come" : "Placeholder · media to come"}
         </span>
       )}
     </div>

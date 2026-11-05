@@ -3,24 +3,29 @@
 /*
   An industry's portfolio: every file from the studio's Drive folder, filterable by category, each
   opening in a lightbox.
-  - Everything comes from Drive. Cards show Drive's own thumbnail of the file (through the Next
-    image optimiser, so visitors get a resized WebP from the site's cache, not Drive). No loops
-    and no hosted media: this page is a contact sheet, not the showcase on the industry page.
+  - Everything comes from Drive or Instagram. Drive cards show Drive's own thumbnail of the file
+    (through the Next image optimiser, so visitors get a resized WebP from the site's cache, not
+    Drive); Instagram cards show the post's own embed, inert until opened. No loops and no hosted
+    media: this page is a contact sheet, not the showcase on the industry page.
   - Layout: a masonry of the pieces in their own shapes (a reel stays 9:16, a slide 4:5, a scope
     film 2.35:1), title and category over the image.
   - Lightbox: a native modal <dialog>, so focus is held inside, Esc closes and the page behind is
     inert. Films play in Drive's player (/file/d/<id>/preview), loaded only while open; stills show
     the full image. Prev/next (and the arrow keys) move through the pieces in the current filter.
-  - "Open in Drive" is always offered, for when the player is blocked or Drive asks to wait.
+  - "Open in Drive" (or "on Instagram") is always offered, for when the player is blocked.
 */
 import Image from "next/image";
 import type { MouseEvent, ReactNode, Ref } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { WorkItem } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { embedKindOf, embedRatioOf, InstagramMedia } from "./instagram-media";
 
 const pad = (n: number) => String(n).padStart(2, "0");
-const ratioOf = (w: WorkItem) => w.ratio[0] / w.ratio[1];
+/** Instagram pieces take the embed's window; Drive pieces their own frame */
+const frameOf = (w: WorkItem): [number, number] => (w.instagram ? embedRatioOf(w.instagram) : w.ratio);
+const ratioOf = (w: WorkItem) => frameOf(w)[0] / frameOf(w)[1];
+const keyOf = (w: WorkItem) => w.drive ?? w.instagram ?? w.title;
 /** Drive's thumbnail of any file (frame of a film, the image itself for a still), at a given width */
 const thumb = (id: string, width: number) => `https://lh3.googleusercontent.com/d/${id}=w${width}`;
 const preview = (id: string) => `https://drive.google.com/file/d/${id}/preview`;
@@ -48,7 +53,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
   const current = open !== null ? shown[open] : null;
 
   useEffect(() => {
-    if (current) last.current = current.drive;
+    if (current) last.current = keyOf(current);
   }, [current]);
 
   /*
@@ -110,25 +115,29 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
 
       <ul className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
         {shown.map((w, j) => (
-          <li key={w.drive} className="mb-5 break-inside-avoid">
+          <li key={keyOf(w)} className="mb-5 break-inside-avoid">
             <button
               ref={(el) => {
-                if (el) cards.current.set(w.drive, el);
-                else cards.current.delete(w.drive);
+                if (el) cards.current.set(keyOf(w), el);
+                else cards.current.delete(keyOf(w));
               }}
               type="button"
               onClick={() => setOpen(j)}
               aria-haspopup="dialog"
               className="group relative block w-full overflow-hidden bg-[var(--night)] text-start text-white"
-              style={{ aspectRatio: `${w.ratio[0]} / ${w.ratio[1]}` }}
+              style={{ aspectRatio: `${frameOf(w)[0]} / ${frameOf(w)[1]}` }}
             >
-              <Image
-                src={w.poster ?? thumb(w.drive, 1600)}
-                alt=""
-                fill
-                sizes="(min-width: 1360px) 310px, (min-width: 1280px) 23vw, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
-                className="object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
-              />
+              {w.instagram && !w.poster ? (
+                <InstagramMedia url={w.instagram} kind={embedKindOf(w.instagram)} title={w.title} preview className="absolute inset-0 !aspect-auto h-full" />
+              ) : (
+                <Image
+                  src={w.poster ?? thumb(w.drive ?? "", 1600)}
+                  alt=""
+                  fill
+                  sizes="(min-width: 1360px) 310px, (min-width: 1280px) 23vw, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
+                  className="object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                />
+              )}
               {/* Stills carry their own headline in the artwork, so only films get the title over the image */}
               {w.kind === "film" && (
                 <span aria-hidden="true" className="absolute inset-0 bg-[linear-gradient(to_top,oklch(0.13_0.006_40/0.85),oklch(0.13_0.006_40/0)_55%)]" />
@@ -192,7 +201,9 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
             <div className="grid min-h-0 place-items-center" onClick={onBackdrop}>
               {/* Sized to the piece's own frame, as large as the space allows */}
               <div className="relative bg-black" style={{ aspectRatio: String(r), width: `min(100%, calc((100dvh - 10.5rem) * ${r}))` }}>
-                {current.kind === "film" ? (
+                {current.instagram ? (
+                  <InstagramMedia key={current.instagram} url={current.instagram} kind={embedKindOf(current.instagram)} title={current.title} priority className="absolute inset-0 !aspect-auto h-full" />
+                ) : current.kind === "film" && current.drive ? (
                   <>
                     <span className="absolute inset-0 grid place-items-center text-[0.8rem] text-white/60" aria-hidden="true">
                       Loading&hellip;
@@ -209,7 +220,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 ) : (
                   <Image
                     key={current.drive}
-                    src={thumb(current.drive, 2000)}
+                    src={thumb(current.drive ?? "", 2000)}
                     alt={`${current.title}${current.client ? `, ${current.client}` : ""}`}
                     fill
                     sizes="(min-width: 768px) 70vh, 100vw"
@@ -228,12 +239,12 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 <span className="text-[clamp(1.15rem,1rem+0.6vw,1.6rem)] font-[340] tracking-[-0.02em]">{current.title}</span>
               </div>
               <a
-                href={view(current.drive)}
+                href={current.instagram ?? view(current.drive ?? "")}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="cta cta-sm cta-line border-white/60 text-white hover:border-white hover:bg-white hover:text-[var(--night)] focus-visible:outline-white"
               >
-                Open in Drive <span className="arr" aria-hidden="true">&#8599;</span>
+                {current.instagram ? "Open on Instagram" : "Open in Drive"} <span className="arr" aria-hidden="true">&#8599;</span>
               </a>
             </div>
           </div>

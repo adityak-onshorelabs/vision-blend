@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { IndustryArt } from "@/components/site/industry-art";
 import { HeroHeader } from "@/components/site/hero-header";
 import { IndustryCard } from "@/components/site/industry-card";
+import { embedRatioOf } from "@/components/site/instagram-media";
 import { ProcessReel } from "@/components/site/process-reel";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
@@ -60,7 +61,36 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
-const aspect = (o: { ratio?: [number, number] }) => (o.ratio ? o.ratio[0] / o.ratio[1] : 16 / 9);
+/** A card's frame: an Instagram card takes the embed's window, a film its own frame */
+const frameOf = (o: { ratio?: [number, number]; instagram?: string; video?: string }): [number, number] =>
+  o.instagram && !o.video ? embedRatioOf(o.instagram) : (o.ratio ?? [16, 9]);
+const aspect = (o: { ratio?: [number, number]; instagram?: string; video?: string }) => {
+  const [w, h] = frameOf(o);
+  return w / h;
+};
+
+/**
+ * Splits the showcase cards into justified rows. A row takes at least two cards and keeps adding
+ * (up to four) until the frames' combined aspect ratio reaches 2, so a wide film pairs with a reel
+ * (as on Real Estate) while a run of reels and posts sits three or four across instead of two
+ * very tall cards. Each card's share of its row is its aspect over the row's total; a row that
+ * falls short (the last one) takes the row above's total, so its cards keep the same scale.
+ */
+function rowsOf(aspects: number[]) {
+  const out: { share: number; gaps: number }[] = [];
+  let last = 2;
+  for (let i = 0; i < aspects.length; ) {
+    let n = 1;
+    let sum = aspects[i];
+    while (i + n < aspects.length && n < 4 && (n < 2 || sum < 2)) sum += aspects[i + n++];
+    // A short last row takes the scale of the row above it
+    const total = n === 1 ? Math.max(sum, 2.4) : sum < 2 ? Math.max(last, 2) : sum;
+    last = total;
+    for (let k = 0; k < n; k++) out.push({ share: aspects[i + k] / total, gaps: n - 1 });
+    i += n;
+  }
+  return out;
+}
 
 /** Marks a stock stand-in so nobody mistakes it for the studio's own work. */
 function PhotoTag({ photo }: { photo: Photo }) {
@@ -80,6 +110,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
   const offerings: IndustryDetail["offerings"] = detail?.offerings ?? s.services.map((title) => ({ title, text: "" }));
   // Content categories (title + subtitle + one showcase video) instead of service cards
   const showcase = offerings.some((o) => o.subtitle);
+  const rows = rowsOf(offerings.map(aspect));
   const unit = showcase ? "categories" : "services";
   const others = c.industries.filter((x) => x.slug !== s.slug);
   // Both routes into an enquiry carry the industry, so the studio knows which page it came from
@@ -232,22 +263,21 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
             <ol className="grid gap-y-12 lg:flex lg:flex-wrap lg:gap-x-5 lg:gap-y-16">
               {offerings.map((o, j) => {
                 const ar = aspect(o);
-                const row = offerings.slice(j - (j % 2), j - (j % 2) + 2);
-                // A film alone on the last row does not stretch to the full width
-                const sum = row.length > 1 ? row.reduce((t, x) => t + aspect(x), 0) : Math.max(ar, 2.4);
-                const share = ar / sum;
+                const { share, gaps } = rows[j];
                 return (
                   <Reveal
                     as="li"
                     key={o.title}
-                    delay={(j % 2) * 0.06}
-                    className="group grid min-w-0 content-start gap-5 lg:shrink-0 lg:basis-[calc((100%-1.25rem-1px)*var(--share))]"
-                    style={{ "--share": share } as CSSProperties}
+                    delay={(j % 4) * 0.06}
+                    className="group grid min-w-0 content-start gap-5 lg:shrink-0 lg:basis-[calc((100%-var(--gaps)*1.25rem-1px)*var(--share))]"
+                    style={{ "--share": share, "--gaps": gaps } as CSSProperties}
                   >
                     <ShowcaseMedia
                       video={o.video}
+                      instagram={o.instagram}
+                      title={o.title}
                       poster={o.image}
-                      ratio={o.ratio}
+                      ratio={frameOf(o)}
                       sizes={`(min-width: 1360px) ${Math.round(1280 * share)}px, (min-width: 1024px) ${Math.round(share * 100)}vw, ${ar < 1 ? "18rem" : "100vw"}`}
                       className={cn(ar < 1 && "max-lg:max-w-[min(100%,18rem)]")}
                     />
@@ -431,7 +461,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
       <section className="band" aria-labelledby="more-title">
         <div className="frame">
           <SectionHead id="more-title" label={`More from ${c.company.name}`} title="Other *industries*" text={c.home.lead} />
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
+          <ul className={cn("grid gap-4 sm:grid-cols-2 lg:gap-5", others.length === 3 ? "lg:grid-cols-3" : "lg:grid-cols-4")}>
             {others.map((x) => (
               <li key={x.slug} className="grid">
                 <IndustryCard industry={x} lang={lang} index={c.industries.indexOf(x)} total={c.industries.length} size="sm" />
