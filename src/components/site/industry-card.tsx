@@ -58,7 +58,7 @@ export function IndustryCard({
         </div>
         <div className="flex items-center justify-between gap-4 border-t border-border pt-4">
           <span className="text-[0.78rem] font-medium tracking-[0.12em] text-[var(--faint)] uppercase">
-            {count} {count === 1 ? "service" : "services"}
+            {count} {s.detail?.offerings.some((o) => o.subtitle) ? (count === 1 ? "category" : "categories") : count === 1 ? "service" : "services"}
           </span>
           <span className="flex items-center gap-3 text-[0.92rem]">
             <span className="hidden sm:inline">View page</span>

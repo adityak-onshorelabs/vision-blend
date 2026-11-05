@@ -14,7 +14,7 @@ const INTRO_MS = 3500;
 export function HeroMotion() {
   useEffect(() => {
     const root = document.documentElement;
-    const hero = document.querySelector<HTMLElement>("[data-hero]");
+    const hero = document.querySelector<HTMLElement>(".hero[data-hero]");
     const done = () => {
       root.dataset.intro = "done";
     };

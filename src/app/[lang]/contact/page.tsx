@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
+import { ByIndustry } from "@/components/site/by-industry";
 import { ContactCard } from "@/components/site/contact-card";
 import { ProjectArt } from "@/components/site/project-art";
 import { Reach } from "@/components/site/reach";
@@ -8,6 +10,7 @@ import { ServiceIllustration } from "@/components/site/service-illustration";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
 import { hl } from "@/lib/highlight";
+import { industryGmail } from "@/lib/industry-enquiry";
 import { siteUrl } from "@/lib/site";
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
@@ -68,7 +71,31 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
             <div className="lg:col-span-7 lg:col-start-6">
               {/* Open on the page, like the steps beside it: a box here floated over the gradient */}
               <div className="border-t-2 border-brand pt-6 sm:pt-8">
-                <ContactCard content={c} />
+                {/* Arriving from an industry page (?industry=slug): name the industry, ask that
+                    page's question, and pre-fill the industry in the emailed brief */}
+                <Suspense fallback={<ContactCard content={c} />}>
+                  <ByIndustry
+                    variants={Object.fromEntries(
+                      c.industries.map((ind) => [
+                        ind.slug,
+                        <div key={ind.slug} className="grid gap-10">
+                          <div className="grid gap-3">
+                            <span className="t-label marker">{ind.name}</span>
+                            {ind.detail?.enquiry && (
+                              <>
+                                <h2 className="t-h3">{ind.detail.enquiry.prompt}</h2>
+                                <p className="max-w-[46ch] text-muted-foreground">{ind.detail.enquiry.placeholder}</p>
+                              </>
+                            )}
+                          </div>
+                          <ContactCard content={c} gmail={industryGmail(c.company, ind) ?? undefined} />
+                        </div>,
+                      ]),
+                    )}
+                  >
+                    <ContactCard content={c} />
+                  </ByIndustry>
+                </Suspense>
               </div>
             </div>
           </div>

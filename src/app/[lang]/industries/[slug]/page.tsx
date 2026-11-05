@@ -1,13 +1,30 @@
 import type { Metadata } from "next";
+import type { CSSProperties } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { IndustryArt } from "@/components/site/industry-art";
+import { HeroHeader } from "@/components/site/hero-header";
 import { IndustryCard } from "@/components/site/industry-card";
+import { ProcessReel } from "@/components/site/process-reel";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
+import { ShowcaseMedia } from "@/components/site/showcase-media";
 import { getContent } from "@/content";
+import type { IndustryDetail, Photo } from "@/content/types";
 import { hasLocale, locales } from "@/i18n/config";
+import { hl } from "@/lib/highlight";
+import { industryContactHref, industryGmail } from "@/lib/industry-enquiry";
 import { siteUrl } from "@/lib/site";
+import { cn } from "@/lib/utils";
+
+/*
+  An industry page. Each one is sent on its own to prospects from that industry, so it is built as
+  a complete landing page for someone who has never seen the site: what the studio does for the
+  industry, how, and how to get in touch, with the rest of the site one click away at the end.
+  Order follows the industry handoff: hero, introduction, services, value, process, FAQs, enquiry.
+  (Approved work for the industry slots in before the FAQs once the studio sends it.)
+*/
 
 type Params = PageProps<"/[lang]/industries/[slug]">["params"];
 
@@ -29,121 +46,263 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
   const d = await load(params);
   if (!d) return {};
   const { lang, industry } = d;
+  const meta = industry.detail?.meta;
+  const description = meta?.description ?? industry.summary ?? industry.detail?.lead;
+  const url = `${siteUrl}/${lang}/industries/${industry.slug}`;
   return {
-    title: industry.name,
-    description: industry.summary ?? industry.detail?.lead,
-    alternates: { canonical: `${siteUrl}/${lang}/industries/${industry.slug}` },
+    // The approved titles already end in "| Vision Blend", so they skip the layout's template
+    title: meta ? { absolute: meta.title } : industry.name,
+    description,
+    alternates: { canonical: url },
+    // These pages are shared as links on their own, so the preview names the industry
+    openGraph: { title: meta?.title ?? `${industry.name} | ${d.c.company.name}`, description, url },
   };
 }
 
 const pad = (n: number) => String(n).padStart(2, "0");
+const aspect = (o: { ratio?: [number, number] }) => (o.ratio ? o.ratio[0] / o.ratio[1] : 16 / 9);
+
+/** Marks a stock stand-in so nobody mistakes it for the studio's own work. */
+function PhotoTag({ photo }: { photo: Photo }) {
+  if (!photo.placeholder) return null;
+  return (
+    <span className="absolute end-3 top-3 bg-[oklch(0.17_0.006_40/0.6)] px-2 py-1 text-[0.68rem] font-medium uppercase tracking-[0.12em] text-[var(--on-night)] backdrop-blur-sm">
+      Placeholder photo
+    </span>
+  );
+}
 
 export default async function IndustryPage({ params }: PageProps<"/[lang]/industries/[slug]">) {
   const d = await load(params);
   if (!d) notFound();
-  const { lang, c, index, industry: s } = d;
+  const { lang, c, industry: s } = d;
   const detail = s.detail;
-  const total = c.industries.length;
-  const offerings = detail?.offerings ?? s.services.map((title) => ({ title, text: "" }));
-  // The other industries, starting from the next one, so "More industries" reads as a sequence
-  const others = [...c.industries.slice(index + 1), ...c.industries.slice(0, index)];
+  const offerings: IndustryDetail["offerings"] = detail?.offerings ?? s.services.map((title) => ({ title, text: "" }));
+  // Content categories (title + subtitle + one showcase video) instead of service cards
+  const showcase = offerings.some((o) => o.subtitle);
+  const unit = showcase ? "categories" : "services";
+  const others = c.industries.filter((x) => x.slug !== s.slug);
+  // Both routes into an enquiry carry the industry, so the studio knows which page it came from
+  const contact = industryContactHref(lang, s);
+  const brief = industryGmail(c.company, s);
 
   return (
     <>
-      {/* Hero: breadcrumb, title, lead, actions, and the drawing in a large panel */}
+      {/* Hero: what the studio does for this industry, the two actions, and a photo */}
+      {detail?.hero ? (
+        /*
+          With a photo, the photo is the hero: full screen, running up behind the transparent
+          header, settling in from a slight zoom. The text sits on it at the lower left, where the
+          scrim is darkest; the eyebrow row stays at the top.
+        */
+        <section data-hero className="ind-hero" aria-labelledby="industry-title">
+          <HeroHeader />
+          <div className="hero-still absolute inset-0">
+            <Image src={detail.hero.src} alt={detail.hero.alt} fill priority quality={90} sizes="100vw" className="object-cover" />
+          </div>
+          <div className="ind-hero-scrim" aria-hidden="true" />
+
+          <div className="band-dark !bg-transparent">
+            <div className="frame ind-hero-content">
+              <div className="index-row">
+                <span className="t-label marker">{detail.eyebrow ?? s.note ?? s.name}</span>
+                <Link href={`/${lang}/industries`} className="t-label u shrink-0 whitespace-nowrap">
+                  All industries
+                </Link>
+              </div>
+
+              <div />
+
+              <div className="grid gap-8 lg:grid-cols-12 lg:items-end lg:gap-6">
+                <div className="grid gap-6 lg:col-span-8 lg:gap-7">
+                  <h1 id="industry-title" className="t-h1 max-w-[14ch] text-balance">
+                    {hl(detail.headline ?? s.name)}
+                    <span className="stop">.</span>
+                  </h1>
+                  <p className="t-lead max-w-[42ch] text-muted-foreground">{detail.lead}</p>
+                  <div className="flex flex-wrap gap-3">
+                    <Link href={contact} className="cta">
+                      {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
+                    </Link>
+                    <a href="#industry-services" className="cta cta-line">
+                      Explore our services <span className="arr" aria-hidden="true">&darr;</span>
+                    </a>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 lg:col-span-4 lg:justify-end">
+                  <span className="t-label">
+                    {pad(offerings.length)} {unit}
+                  </span>
+                  {detail.hero.placeholder && (
+                    <span className="t-label border border-[var(--rule)] px-2 py-1 text-muted-foreground">Placeholder photo</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      ) : (
       <section className="band" aria-labelledby="industry-title">
         <div className="frame">
           <div className="index-row">
-            <nav aria-label="Breadcrumb">
-              <ol className="flex items-center gap-2 t-label">
-                <li>
-                  <Link href={`/${lang}/industries`} className="marker u">
-                    Industries
-                  </Link>
-                </li>
-                <li aria-hidden="true" className="text-[var(--faint)]">/</li>
-                <li aria-current="page" className="text-ink">{s.name}</li>
-              </ol>
-            </nav>
-            <span className="count">
-              <b>{pad(index + 1)}</b> / {pad(total)}
-            </span>
+            <span className="t-label marker">{detail?.eyebrow ?? s.note ?? s.name}</span>
+            <Link href={`/${lang}/industries`} className="t-label u">
+              All industries
+            </Link>
           </div>
 
-          {/* On lg the hero is sized to fit one screen: the panel takes the height left after the
-              header and the index row. */}
           <div className="grid items-stretch gap-8 lg:grid-cols-12 lg:gap-6">
-            <div className="grid content-between gap-8 lg:col-span-7 lg:pe-8">
-              <div className="grid content-start gap-4 lg:gap-5">
-                {s.note && <span className="t-label">{s.note}</span>}
-                <h1 id="industry-title" className="t-display">
-                  {s.name}
+            <div className={cn("grid gap-8 lg:col-span-7 lg:pe-8", detail?.headline ? "content-center lg:gap-10" : "content-between")}>
+              <div className="grid content-start gap-5 lg:gap-6">
+                <h1 id="industry-title" className={detail?.headline ? "t-h1 max-w-[14ch]" : "t-display"}>
+                  {hl(detail?.headline ?? s.name)}
                   <span className="stop">.</span>
                 </h1>
-                {detail && <p className="t-lead max-w-[42ch] text-muted-foreground">{detail.lead}</p>}
+                {detail && <p className="t-lead max-w-[46ch] text-muted-foreground">{detail.lead}</p>}
               </div>
               <div className="flex flex-wrap gap-3">
-                <Link href={`/${lang}/contact`} className="cta">
+                <Link href={contact} className="cta">
                   {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                 </Link>
-                <a href="#services" className="cta cta-line">
-                  What we make <span className="arr" aria-hidden="true">&darr;</span>
+                <a href="#industry-services" className="cta cta-line">
+                  Explore our services <span className="arr" aria-hidden="true">&darr;</span>
                 </a>
               </div>
             </div>
-            <div className="panel group relative grid aspect-[4/3] place-items-center lg:col-span-5 lg:aspect-auto lg:h-[clamp(280px,calc(100svh-var(--header-h)-200px),520px)]">
+            <div className="panel relative grid aspect-[4/3] place-items-center overflow-hidden lg:col-span-5 lg:aspect-auto lg:h-[clamp(320px,calc(100svh-var(--header-h)-200px),580px)]">
               <IndustryArt slug={s.slug} className="h-auto max-h-[78%] w-[78%] text-ink" />
               <span className="absolute bottom-4 start-4 t-label">
-                {pad(offerings.length)} services
+                {pad(offerings.length)} {unit}
               </span>
             </div>
           </div>
-
-
         </div>
       </section>
+      )}
 
-      {detail && (
+      {detail && detail.paragraphs.length > 0 && (
         <section className="band" aria-labelledby="overview-title">
           <div className="frame">
-            <SectionHead id="overview-title" label="Overview" title={`How we work with *${s.name}*`} />
-            <div className="grid gap-8 border-t border-border pt-8 md:grid-cols-2 md:gap-6">
-              {detail.paragraphs.map((p, j) => (
-                <p key={p} className={j === 0 ? "t-lead md:pe-10" : "text-[1.1rem] leading-relaxed text-muted-foreground md:pt-1"}>
-                  {p}
-                </p>
-              ))}
-            </div>
+            <SectionHead id="overview-title" label="Introduction" title={detail.introTitle ?? `How we work with *${s.name}*`} />
+            {detail.paragraphs.length === 1 ? (
+              <div className="grid md:grid-cols-12 md:gap-6">
+                <p className="t-lead max-w-[56ch] md:col-span-8 md:col-start-5">{detail.paragraphs[0]}</p>
+              </div>
+            ) : (
+              <div className="grid gap-8 border-t border-border pt-8 md:grid-cols-2 md:gap-6">
+                {detail.paragraphs.map((p, j) => (
+                  <p key={p} className={j === 0 ? "t-lead md:pe-10" : "text-[1.1rem] leading-relaxed text-muted-foreground md:pt-1"}>
+                    {p}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
         </section>
       )}
 
-      <section id="services" className="band scroll-mt-24" aria-labelledby="make-title">
+      <section id="industry-services" className="band scroll-mt-24" aria-labelledby="make-title">
         <div className="frame">
-          <SectionHead id="make-title" label="Services" title="What we *make*" text={`The services we offer ${s.name} brands, made by one team.`} />
-          <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 lg:gap-5">
+          <SectionHead
+            id="make-title"
+            label="Services"
+            title={detail?.servicesTitle ?? "What we *make*"}
+            text={detail?.servicesTitle ? undefined : `The services we offer ${s.name} brands, made by one team.`}
+          />
+          {showcase ? (
+            /*
+              Content categories: one showcase video each, the title as the main text and a short
+              subtitle under it. Every film keeps its own frame (a reel stays 9:16). On wide screens
+              they sit two to a row as a justified row: each card's width is its share of the row's
+              combined aspect ratio, so both films come out the same height and titles line up.
+              Narrower screens stack them, with vertical films held to a phone-like width.
+            */
+            <ol className="grid gap-y-12 lg:flex lg:flex-wrap lg:gap-x-5 lg:gap-y-16">
+              {offerings.map((o, j) => {
+                const ar = aspect(o);
+                const row = offerings.slice(j - (j % 2), j - (j % 2) + 2);
+                // A film alone on the last row does not stretch to the full width
+                const sum = row.length > 1 ? row.reduce((t, x) => t + aspect(x), 0) : Math.max(ar, 2.4);
+                const share = ar / sum;
+                return (
+                  <Reveal
+                    as="li"
+                    key={o.title}
+                    delay={(j % 2) * 0.06}
+                    className="group grid min-w-0 content-start gap-5 lg:shrink-0 lg:basis-[calc((100%-1.25rem-1px)*var(--share))]"
+                    style={{ "--share": share } as CSSProperties}
+                  >
+                    <ShowcaseMedia
+                      video={o.video}
+                      poster={o.image}
+                      ratio={o.ratio}
+                      sizes={`(min-width: 1360px) ${Math.round(1280 * share)}px, (min-width: 1024px) ${Math.round(share * 100)}vw, ${ar < 1 ? "18rem" : "100vw"}`}
+                      className={cn(ar < 1 && "max-lg:max-w-[min(100%,18rem)]")}
+                    />
+                    <div className="grid grid-cols-[auto_minmax(0,1fr)] items-baseline gap-x-4 gap-y-1.5">
+                      <span className="text-[0.78rem] font-medium tabular-nums tracking-[0.12em] text-[var(--faint)] transition-colors group-hover:text-brand">
+                        {pad(j + 1)}
+                      </span>
+                      <h3 className="text-[clamp(1.6rem,1.15rem+1.5vw,2.5rem)] font-[340] leading-[1.05] tracking-[-0.025em]">{o.title}</h3>
+                      {o.subtitle && <p className="col-start-2 text-[0.98rem] text-muted-foreground">{o.subtitle}</p>}
+                    </div>
+                  </Reveal>
+                );
+              })}
+            </ol>
+          ) : (
+          /* Five cards sit 2 + 3 on wide screens (six-column grid), so no card is left alone on a row */
+          <ol className="grid gap-4 md:grid-cols-2 lg:grid-cols-6 lg:gap-5">
             {offerings.map((o, j) => (
-              <Reveal as="li" key={o.title} delay={(j % 3) * 0.06} className="panel group relative grid content-start gap-4 p-6 md:p-7">
-                <div className="flex items-center justify-between">
-                  <span className="text-[0.78rem] font-medium tabular-nums tracking-[0.12em] text-[var(--faint)] transition-colors group-hover:text-brand">
-                    {pad(j + 1)}
-                  </span>
-                  <span aria-hidden="true" className="size-1.5 rounded-full bg-brand opacity-40 transition-opacity group-hover:opacity-100" />
+              <Reveal
+                as="li"
+                key={o.title}
+                delay={(j % 3) * 0.06}
+                className={cn(
+                  "panel group relative grid content-start overflow-hidden",
+                  offerings.length === 5 ? (j < 2 ? "lg:col-span-3" : "lg:col-span-2") : "lg:col-span-2",
+                  offerings.length % 2 === 1 && j === offerings.length - 1 && "md:col-span-2 lg:col-span-2",
+                )}
+              >
+                {o.image && (
+                  <div className={cn("relative overflow-hidden", offerings.length === 5 && j < 2 ? "aspect-[16/9]" : "aspect-[4/3]")}>
+                    <Image
+                      src={o.image.src}
+                      alt={o.image.alt}
+                      fill
+                      sizes="(min-width: 1024px) 45vw, (min-width: 768px) 50vw, 100vw"
+                      className="object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover:scale-[1.03] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+                    />
+                    <PhotoTag photo={o.image} />
+                  </div>
+                )}
+                <div className="grid content-start gap-3 p-6 md:p-7">
+                  <div className="flex items-center gap-3">
+                    <span className="text-[0.78rem] font-medium tabular-nums tracking-[0.12em] text-[var(--faint)] transition-colors group-hover:text-brand">
+                      {pad(j + 1)}
+                    </span>
+                    {o.headline && <span className="t-label text-ink">{o.title}</span>}
+                  </div>
+                  <h3 className="t-h3">{o.headline ?? o.title}</h3>
+                  {o.text && <p className="text-muted-foreground">{o.text}</p>}
                 </div>
-                <h3 className="t-h3">{o.title}</h3>
-                {o.text && <p className="text-muted-foreground">{o.text}</p>}
               </Reveal>
             ))}
           </ol>
+          )}
         </div>
       </section>
 
-      {detail && (
-        <section className="band band-dark" aria-labelledby="challenges-title">
+      {detail && (detail.value || detail.challenges.length > 0) && (
+        <section className="band band-dark" aria-labelledby="value-title">
           <div className="frame">
-            <SectionHead id="challenges-title" label="The brief" title="What the *industry* asks for" text="The problems we hear most often, and plan the work around." />
-            <ol className="grid gap-10 md:grid-cols-3 md:gap-6">
-              {detail.challenges.map((ch, j) => (
+            {detail.value ? (
+              <SectionHead id="value-title" label="Why it works" title={detail.value.title} />
+            ) : (
+              <SectionHead id="value-title" label="The brief" title="What the *industry* asks for" text="The problems we hear most often, and plan the work around." />
+            )}
+            <ol className={cn("grid gap-10 md:gap-6", (detail.value?.items ?? detail.challenges).length === 2 ? "md:grid-cols-2" : "md:grid-cols-3")}>
+              {(detail.value?.items ?? detail.challenges).map((ch, j) => (
                 <li key={ch.title} className="grid content-start gap-4 border-t border-border pt-6">
                   <span className="t-h2 text-brand tabular-nums">{pad(j + 1)}</span>
                   <h3 className="t-h3">{ch.title}</h3>
@@ -155,10 +314,25 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
         </section>
       )}
 
-      {detail && (
+      {detail?.process && (
+        <section className="band band-tint" aria-labelledby="process-title">
+          <div className="frame">
+            {/* The label would only repeat a title that is itself "Process" */}
+            <SectionHead id="process-title" label={detail.process.title === "Process" ? "How we work" : "Process"} title={detail.process.title} />
+            <ProcessReel steps={detail.process.steps} />
+          </div>
+        </section>
+      )}
+
+      {detail && detail.faqs.length > 0 && (
         <section className="band" aria-labelledby="faq-title">
           <div className="frame">
-            <SectionHead id="faq-title" label="Questions" title="Asked *often*" text="Something not covered here? Send it with your brief." />
+            <SectionHead
+              id="faq-title"
+              label="Questions"
+              title={detail.faqTitle ?? "Asked *often*"}
+              text={detail.faqTitle ? undefined : "Something not covered here? Send it with your brief."}
+            />
             {/* Numbered rows like the services list: number, question, plus/minus. The answer lines up under the question. */}
             <div className="faq border-t border-border">
               {detail.faqs.map((f, j) => (
@@ -187,23 +361,71 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
         </section>
       )}
 
+      {/* Enquiry: the page may be the only one a prospect opens, so the ways to reach the studio are right here */}
+      <section className="band" aria-labelledby="enquiry-title">
+        <div className="frame">
+          <div className="index-row">
+            <span className="t-label marker">Start a project</span>
+          </div>
+          {/* A heading on its own (no supporting line) centres against the buttons instead of sinking below them */}
+          <div className={cn("grid gap-10 lg:grid-cols-12 lg:gap-6", detail?.cta && !detail.cta.text ? "items-center" : "items-end")}>
+            <div className="grid gap-5 lg:col-span-7">
+              <h2 id="enquiry-title" className="t-h1 max-w-[16ch]">
+                {hl(detail?.cta?.title ?? `Have a brief for *${s.name}*`)}
+                <span className="stop">{detail?.cta ? "." : "?"}</span>
+              </h2>
+              {detail?.cta?.text && <p className="t-lead max-w-[44ch] text-muted-foreground">{detail.cta.text}</p>}
+            </div>
+            <div className="grid gap-5 lg:col-span-5 lg:justify-items-start">
+              <div className="flex flex-wrap gap-3">
+                <Link href={contact} className="cta">
+                  {detail?.cta?.primary ?? c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
+                </Link>
+                {brief && (
+                  <a href={brief} target="_blank" rel="noopener noreferrer" className="cta cta-line">
+                    {detail?.cta?.secondary ?? "Email the studio"} <span className="arr" aria-hidden="true">&#8599;</span>
+                  </a>
+                )}
+              </div>
+              {c.company.phones.length > 0 && (
+                <p className="text-[0.94rem] text-muted-foreground">
+                  {c.contactPage.email.phone}{" "}
+                  {c.company.phones.map((p, i) => (
+                    <span key={p.number}>
+                      {i > 0 && " or "}
+                      {p.name} on{" "}
+                      <a href={`tel:${p.number.replace(/[^\d+]/g, "")}`} className="u whitespace-nowrap text-ink">
+                        {p.number}
+                      </a>
+                    </span>
+                  ))}
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* The way into the rest of the site, for someone who arrived on this page alone */}
       <section className="band" aria-labelledby="more-title">
         <div className="frame">
-          <SectionHead id="more-title" label="More industries" title="Other *industries*" text="See how we work with brands in the rest of the industries we serve." />
+          <SectionHead id="more-title" label={`More from ${c.company.name}`} title="Other *industries*" text={c.home.lead} />
           <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 lg:gap-5">
             {others.map((x) => (
               <li key={x.slug} className="grid">
-                <IndustryCard industry={x} lang={lang} index={c.industries.indexOf(x)} total={total} size="sm" />
+                <IndustryCard industry={x} lang={lang} index={c.industries.indexOf(x)} total={c.industries.length} size="sm" />
               </li>
             ))}
           </ul>
-          <div className="mt-[clamp(56px,7vw,104px)] flex flex-wrap items-end justify-between gap-8 border-t border-border pt-8">
-            <p className="t-h2 max-w-[18ch]">
-              Have a brief for <span className="hl">{s.name}</span>
-              <span className="stop">?</span>
-            </p>
-            <Link href={`/${lang}/contact`} className="cta">
-              {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
+          <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-6">
+            <Link href={`/${lang}/work`} className="t-label u text-ink">
+              {c.ui.seeWork} &rarr;
+            </Link>
+            <Link href={`/${lang}/about`} className="t-label u text-ink">
+              About the studio &rarr;
+            </Link>
+            <Link href={`/${lang}/industries`} className="t-label u text-ink">
+              All industries &rarr;
             </Link>
           </div>
         </div>

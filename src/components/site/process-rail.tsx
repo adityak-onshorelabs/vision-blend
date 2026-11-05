@@ -112,7 +112,7 @@ export function ProcessRail({ steps }: { steps: Step[] }) {
             <span className="t-label">Step {i + 1}</span>
             <h3 className="t-h3">{step.name}</h3>
             <p className="text-[0.96rem] text-muted-foreground">{step.text}</p>
-            <span className="text-[0.92rem]">{step.out}</span>
+            {step.out && <span className="text-[0.92rem]">{step.out}</span>}
           </li>
         );
       })}
