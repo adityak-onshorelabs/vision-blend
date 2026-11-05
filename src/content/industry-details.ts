@@ -6,7 +6,8 @@
   points, the four-step process and the closing are the doc's exact wording. FAQs are left as they
   were (their keep/remove/rewrite decision is still open with the studio). Titles drop a final full
   stop because the page adds the brand one; *stars* mark the highlighted key word. The hero photo
-  (Unsplash, C Dustin, public/images/) was chosen by the team and carries no placeholder tag; the
+  (public/images/real-estate-hero.jpg, from a Pinterest pin the team picked, upscaled 4x from
+  735x490) was chosen by the team and carries no placeholder tag; the
   Branding still (Unsplash, public/placeholder/) is a stand-in, tagged as a placeholder.
 
   D2C, Services, Hospitality, Automobile: still PLACEHOLDER copy. Their approved copy is in the
@@ -32,8 +33,8 @@ const details: Record<string, Extra> = {
       headline: "Real Estate, *Articulated*",
       lead: "An exploration of spaces, identities and experiences through brand films, design and communication.",
       hero: {
-        src: "/images/c-dustin-91AQt9p4Mo8-unsplash.jpg",
-        alt: "Residential towers under construction, wrapped in teal netting, with tower cranes against a cloudy sky",
+        src: "/images/real-estate-hero.jpg",
+        alt: "Black-and-white view looking up at the glass corner of an office building against an overcast sky",
       },
       // The Introduction section was removed in the 4 Nov review: no intro paragraphs
       paragraphs: [],
@@ -167,6 +168,52 @@ const details: Record<string, Extra> = {
       meta: {
         title: "Real Estate Films, Branding & Marketing | Vision Blend",
         description: "Explore real estate AV films, social media, ads, branding and event launches with Vision Blend. Build a clear story for your next property project.",
+      },
+      /*
+        Portfolio subpage: every file in the studio's REAL ESTATE Drive folder (shared 5 Nov 2026,
+        15 files across the category folders, AV/Ai included; Branding is empty). Each file is one
+        piece: Drive's thumbnail on the card, Drive's player in the lightbox. Ratios are measured
+        from the files. FIFA and the Meghna film open on dark title cards, so they use the showcase
+        posters instead. Titles and clients come from the file names and the slides' own headlines:
+        DRAFT until the studio approves naming these clients (only Paradise is named elsewhere).
+        Order: a mix of shapes and categories, so the grid does not read as one category at a time.
+      */
+      work: {
+        title: "Work for *real estate*",
+        lead: "Films, reels, launches and campaigns made for real estate brands, each one in full.",
+        items: [
+          { title: "Presidence One, BKC NEX walkthrough", category: "AV Films", drive: "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv", kind: "film", ratio: [1280, 560] },
+          { title: "Where Vision Meets Vista", category: "Ads", client: "Godrej", drive: "1EkolrQ1iLk_ctjj1Lca7VE33HN8rkiWQ", kind: "film", ratio: [9, 16] },
+          { title: "Where Better Work Begins", category: "Statics & Carousels", client: "Meghna Realty", drive: "1M_l_jlRKSJE4hXv4tJDpNFeC3RpWfNGT", kind: "still", ratio: [4, 5] },
+          {
+            title: "FIFA at Sai World Empire",
+            category: "Campaign Film",
+            client: "Paradise Group",
+            drive: "1H7Ff4uay6LEawRH_Ay_vlhc0B_WFKsEG",
+            kind: "film",
+            ratio: [16, 9],
+            poster: media("/videos/real-estate/campaign-film.jpg"),
+          },
+          { title: "What Home Means to Me", category: "Testimonials", client: "Paradise Group", drive: "11xZkFbKV8wTJH8gR2TcIRJWgBgRInOgK", kind: "film", ratio: [1682, 720] },
+          { title: "Upper Kharghar Growth Area", category: "Social Media", drive: "1AkTnxyxJ0dJX6CHPz2hrJftqJWG1a2pz", kind: "film", ratio: [9, 16] },
+          { title: "Prime Business Address", category: "Statics & Carousels", client: "Meghna Realty", drive: "1OPcuhfV8kOCfRkNVke8jQ2_FGcztnciM", kind: "still", ratio: [4, 5] },
+          { title: "Presidence One launch", category: "Event Launches", drive: "1dqmYNyH-Pwce1PFTWms9VCyDTq4kYtHN", kind: "film", ratio: [16, 9] },
+          {
+            title: "Meghna One brand film",
+            category: "AI Films",
+            client: "Meghna Realty",
+            drive: "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z",
+            kind: "film",
+            ratio: [16, 9],
+            poster: media("/videos/real-estate/ai-films.jpg"),
+          },
+          { title: "IGBC-Certified Sustainable Landmark", category: "Statics & Carousels", client: "Meghna Realty", drive: "1ZHBWoN_SG5YY7crDp5C_OlCzPAREmiXd", kind: "still", ratio: [4, 5] },
+          { title: "Site Supervisor", category: "Construction Updates", client: "Platinum Corp", drive: "1iGBXHQDvv7D3STZZ2JqWWAS4lxtzeGkF", kind: "film", ratio: [16, 9] },
+          { title: "Your Office, Your Way", category: "Statics & Carousels", client: "Meghna Realty", drive: "1QZ8Njg2TvIIIpygOeKdvDAJ-nMY6gTqY", kind: "still", ratio: [4, 5] },
+          { title: "A Smoother Start to Every Workday", category: "Statics & Carousels", client: "Meghna Realty", drive: "1OlhEiTcdKJGAt5_NEKBxzWcXcAMMg2TX", kind: "still", ratio: [4, 5] },
+          { title: "Wellness Beyond the Workplace", category: "Statics & Carousels", client: "Meghna Realty", drive: "18ffMNJCo-xpfWW5VIXYEHD_vWQHbyi4a", kind: "still", ratio: [4, 5] },
+          { title: "Your Own Personal Rainforest", category: "Statics & Carousels", client: "Meghna Realty", drive: "1NPcP56ChH6UOrCUdJoFsKsud0-zoiPu5", kind: "still", ratio: [4, 5] },
+        ],
       },
     },
   },

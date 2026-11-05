@@ -85,6 +85,8 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
   // Both routes into an enquiry carry the industry, so the studio knows which page it came from
   const contact = industryContactHref(lang, s);
   const brief = industryGmail(c.company, s);
+  // The portfolio subpage, when the industry has one
+  const work = detail?.work ? `/${lang}/industries/${s.slug}/work` : null;
 
   return (
     <>
@@ -124,6 +126,11 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                     <Link href={contact} className="cta">
                       {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                     </Link>
+                    {work && (
+                      <Link href={work} className="cta cta-line">
+                        See our work <span className="arr" aria-hidden="true">&rarr;</span>
+                      </Link>
+                    )}
                     <a href="#industry-services" className="cta cta-line">
                       Explore our services <span className="arr" aria-hidden="true">&darr;</span>
                     </a>
@@ -164,6 +171,11 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                 <Link href={contact} className="cta">
                   {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                 </Link>
+                {work && (
+                  <Link href={work} className="cta cta-line">
+                    See our work <span className="arr" aria-hidden="true">&rarr;</span>
+                  </Link>
+                )}
                 <a href="#industry-services" className="cta cta-line">
                   Explore our services <span className="arr" aria-hidden="true">&darr;</span>
                 </a>
@@ -289,6 +301,15 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
               </Reveal>
             ))}
           </ol>
+          )}
+          {/* The full pieces live on the portfolio subpage */}
+          {work && detail?.work && (
+            <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
+              <span className="t-label">{pad(detail.work.items.length)} pieces, played in full</span>
+              <Link href={work} className="cta cta-line">
+                See the work <span className="arr" aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
           )}
         </div>
       </section>
