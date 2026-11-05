@@ -68,6 +68,27 @@ export type IndustryDetail = {
   enquiry?: { prompt: string; placeholder: string };
   hero?: Photo;
   meta?: { title: string; description: string };
+  /** Portfolio subpage (/industries/<slug>/work). Absent: the industry has no subpage. */
+  work?: { title: string; lead: string; items: WorkItem[] };
+};
+
+/**
+ * One file on an industry's portfolio subpage. Everything comes from Google Drive: the card shows
+ * Drive's own thumbnail of the file, and the lightbox plays or shows the file in Drive's player,
+ * so nothing but this record lives on the site.
+ */
+export type WorkItem = {
+  title: string;
+  /** The content category it belongs to, e.g. "Ads". The page's filters are built from these. */
+  category: string;
+  client?: string;
+  /** Drive file id. The file must be shared "anyone with the link". */
+  drive: string;
+  kind: "film" | "still";
+  /** The piece's own frame, width and height. The thumbnail is cropped to it (drops letterbox bars). */
+  ratio: [number, number];
+  /** Overrides Drive's thumbnail, for films whose first frame is a dark title card */
+  poster?: string;
 };
 
 /**

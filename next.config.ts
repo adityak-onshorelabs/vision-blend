@@ -11,6 +11,8 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
       { protocol: "https", hostname: "ik.imagekit.io" },
+      // Drive thumbnails on the industry portfolio pages (src/components/site/work-gallery.tsx)
+      { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/d/**" },
     ],
   },
   partialPrefetching: true,

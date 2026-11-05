@@ -9,7 +9,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const perLocale = await Promise.all(
     locales.map(async (lang) => {
       const c = await getContent(lang);
-      const all = [...paths, ...c.industries.map((s) => `/industries/${s.slug}`)];
+      const all = [
+        ...paths,
+        ...c.industries.map((s) => `/industries/${s.slug}`),
+        ...c.industries.filter((s) => s.detail?.work).map((s) => `/industries/${s.slug}/work`),
+      ];
       return all.map((p) => ({ url: `${siteUrl}/${lang}${p}`, changeFrequency: "monthly" as const, priority: p === "" ? 1 : 0.7 }));
     }),
   );
