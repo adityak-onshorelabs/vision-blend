@@ -1,39 +1,173 @@
 /*
-  PLACEHOLDER industry pages.
+  Industry pages. Each one is shared on its own with prospects from that industry.
 
-  Everything in this file is dummy copy written so the industry pages have a shape. Replace it with
-  the real copy from the Vision Blend team when it arrives. The keys are the industry slugs in en.ts.
+  Real Estate: Vision Blend's "Real Estate Landing Page: Approved Changes" doc (4 Nov 2026), which
+  replaces the earlier tracker copy where they conflict. Hero, ten content categories, two purpose
+  points, the four-step process and the closing are the doc's exact wording. FAQs are left as they
+  were (their keep/remove/rewrite decision is still open with the studio). Titles drop a final full
+  stop because the page adds the brand one; *stars* mark the highlighted key word. The hero photo
+  (Unsplash, C Dustin, public/images/) was chosen by the team and carries no placeholder tag; the
+  Branding still (Unsplash, public/placeholder/) is a stand-in, tagged as a placeholder.
+
+  D2C, Services, Hospitality, Automobile: still PLACEHOLDER copy. Their approved copy is in the
+  same tracker and goes in the same way.
+
+  No client names, testimonials, metrics or results here: none have been approved for these pages.
 */
+import { media } from "@/lib/media";
 import type { Industry, IndustryDetail } from "./types";
 
 type Extra = { summary: string; detail: IndustryDetail };
 
+const reImg = (name: string, alt: string) => ({ src: `/placeholder/real-estate/${name}.jpg`, alt, placeholder: true });
+// Showcase clips: 12-second muted loops cut from the studio's Drive files, with their first frame as the poster
+const clip = (name: string) => media(`/videos/real-estate/${name}.mp4`);
+const reClip = (name: string, alt: string) => ({ src: media(`/videos/real-estate/${name}.jpg`), alt });
+
 const details: Record<string, Extra> = {
   "real-estate": {
-    summary: "Launch films, walkthroughs and campaigns that sell a project before it is built.",
+    summary: "Films, branding and campaigns that bring your property story to life.",
     detail: {
-      lead: "A project has to be sold long before anyone can walk through it. We make the films, feeds and launch events that let buyers see it first.",
-      paragraphs: [
-        "From the first teaser to possession day, we plan content around each stage of a project: pre-launch buzz, launch, construction updates and handover.",
-        "One team handles the AV film, the social calendar, the ads and the on-site event, so the project looks and sounds the same everywhere a buyer meets it.",
-      ],
+      eyebrow: "Creative & marketing for real estate",
+      headline: "Real Estate, *Articulated*",
+      lead: "An exploration of spaces, identities and experiences through brand films, design and communication.",
+      hero: {
+        src: "/images/c-dustin-91AQt9p4Mo8-unsplash.jpg",
+        alt: "Residential towers under construction, wrapped in teal netting, with tower cranes against a cloudy sky",
+      },
+      // The Introduction section was removed in the 4 Nov review: no intro paragraphs
+      paragraphs: [],
+      servicesTitle: "What we make for *real estate*",
+      // Ten content categories, in the approved order. Public text is the title and subtitle only.
+      // `assets` is the studio's Drive folder for each one (internal, never shown on the page).
+      // Clips live in public/videos/real-estate/ (see the README there). `ratio` is each clip's own
+      // frame (from the file), so reels stay vertical. Branding has no assets yet, so it keeps a
+      // stock still marked as a placeholder.
       offerings: [
-        { title: "AV films", text: "Cinematic project films built from renders, drone footage and on-ground shoots." },
-        { title: "Social media", text: "A content calendar from teaser to possession, with construction updates in between." },
-        { title: "Ads", text: "Lead campaigns on Meta and Google, with creative refreshed as the project moves." },
-        { title: "Branding", text: "Project names, logos and sales collateral that sit well with the developer brand." },
-        { title: "Event launches", text: "Launch-day production: site décor, stage, live content and same-day edits." },
+        {
+          title: "Testimonials",
+          subtitle: "Stories from your customers",
+          text: "",
+          image: reClip("testimonials", "Two residents on a garden bench, talking about their new home"),
+          ratio: [1682, 720],
+          video: clip("testimonials"),
+          assets: "https://drive.google.com/drive/folders/1BGLnz80ZUdN1jyWVM9T1cGYt2Ov9UQ1S",
+        },
+        {
+          title: "Social Media",
+          subtitle: "Your brand's digital presence",
+          text: "",
+          image: reClip("social-media", "A presenter standing over an aerial view of a growing suburb, from a vertical reel"),
+          ratio: [9, 16],
+          video: clip("social-media"),
+          assets: "https://drive.google.com/drive/folders/1MW6kiVgK0pYfjdnnr1NlBMbUtUyhYVqm",
+        },
+        {
+          title: "Event Launches",
+          subtitle: "The unveiling of a project",
+          text: "",
+          image: reClip("event-launches", "A speaker on stage at a project launch event"),
+          ratio: [16, 9],
+          video: clip("event-launches"),
+          assets: "https://drive.google.com/drive/folders/1Uri1hR5l8YbHf4yK8Hr79OYjuZcCP_HM",
+        },
+        {
+          // Awaiting assets from the studio
+          title: "Branding",
+          subtitle: "The visual identity of place",
+          text: "",
+          image: reImg("branding", "Looking up at the balconies of a dark-clad apartment block against a blue sky"),
+          ratio: [3, 4],
+          assets: "https://drive.google.com/drive/folders/10J2cs9gUg6v7pTyJ5LMXjk4wtsuS91Ua",
+        },
+        {
+          title: "AV Films",
+          subtitle: "Architecture, atmosphere and ambition",
+          text: "",
+          image: reClip("av-films", "A walkthrough of a commercial lobby with tall glass and polished stone"),
+          ratio: [1646, 720],
+          video: clip("av-films"),
+          assets: "https://drive.google.com/drive/folders/1hJXjfH94d-zsEPxVAYQSn_GC_QRrIC06",
+        },
+        {
+          title: "AI Films",
+          subtitle: "Your vision, without a production shoot",
+          text: "",
+          image: reClip("ai-films", "An AI-generated scene of two people meeting in a wood-panelled office"),
+          ratio: [16, 9],
+          video: clip("ai-films"),
+          assets: "https://drive.google.com/drive/folders/1nuk0f5uwJC-alyNsSOIGXYlyasyARtyw",
+        },
+        {
+          title: "Construction Updates",
+          subtitle: "A chronicle of progress",
+          text: "",
+          image: reClip("construction-updates", "A site engineer reading plans beside rising concrete columns"),
+          ratio: [16, 9],
+          video: clip("construction-updates"),
+          assets: "https://drive.google.com/drive/folders/1TxOvuLDke0N3T_aSLbOhMllsKHymoK9f",
+        },
+        {
+          title: "Ads",
+          subtitle: "To bring you sales",
+          text: "",
+          image: reClip("ads", "A vertical ad moving from the city skyline into a finished apartment"),
+          ratio: [9, 16],
+          video: clip("ads"),
+          assets: "https://drive.google.com/drive/folders/1Hw1dZwzlV8cySOgGv2DiCTJNl-hkMgN3",
+        },
+        {
+          title: "Campaign Film",
+          subtitle: "High production documentary style videos",
+          text: "",
+          image: reClip("campaign-film", "Young players with a football on a rooftop pitch"),
+          ratio: [16, 9],
+          video: clip("campaign-film"),
+          assets: "https://drive.google.com/drive/folders/1klXfQ4MsXOTAqcSrLLX-7qL9qJwVmf3d",
+        },
+        {
+          // The Drive folder holds images only, so the clip is the seven slides swiping one to the next
+          title: "Statics & Carousels",
+          subtitle: "Narratives in composition",
+          text: "",
+          image: reClip("statics-carousels", "A set of carousel slides for a commercial building, swiping one to the next"),
+          ratio: [4, 5],
+          video: clip("statics-carousels"),
+          assets: "https://drive.google.com/drive/folders/1ALLp5UZ8NJclhgIWglMjkMkZe--TNexw",
+        },
       ],
-      challenges: [
-        { title: "Selling the unbuilt", text: "Buyers need to picture a home that is still a site. Films and renders carry that weight." },
-        { title: "Long sales cycles", text: "Interest has to be kept warm for months, not days." },
-        { title: "Crowded markets", text: "Every project nearby says the same things. The creative has to say something else." },
-      ],
+      value: {
+        title: "What the work is *designed to do*",
+        items: [
+          { title: "Create Brand Awareness", text: "Establish a distinct presence for your brand and its projects." },
+          { title: "Generate Sales", text: "Turn buyer interest into enquiries and sales opportunities." },
+        ],
+      },
+      challenges: [],
+      process: {
+        title: "Process",
+        steps: [
+          { name: "Strategy & Script", text: "Define the communication strategy and develop the script around your project's purpose." },
+          { name: "Visual Direction", text: "Present the visual deck and finalise the look and feel of the brand and content before production." },
+          { name: "Shoot & Production", text: "Bring the approved script and visual direction to life through a planned shoot." },
+          { name: "Editing & Delivery", text: "Refine the footage through editing, colour and sound, then deliver the finished content." },
+        ],
+      },
+      faqTitle: "A few things you might *want to know*",
       faqs: [
-        { q: "Can you work from renders only?", a: "Yes. Most pre-launch films start from 3D renders, with live footage added as the site grows." },
-        { q: "Do you handle the launch event too?", a: "Yes, from planning and décor to live coverage and the recap film." },
-        { q: "How early should we bring you in?", a: "Ideally before the project name is final, so the brand and the launch plan are built together." },
+        { q: "Can we work with you for a single project launch?", a: "Yes. The scope can focus on a specific launch or combine selected services into a broader project campaign." },
+        { q: "Can the film, social content and ads follow the same story?", a: "Yes. We can develop them around a shared creative direction so the project feels consistent across touchpoints." },
+        { q: "What do you need to get started?", a: "Share the project brief, location, audience, launch timeline and available brand or project material. We can then discuss the services and assets needed." },
       ],
+      cta: { title: "Let's *Work Together*", primary: "Start a Project", secondary: "Email Us" },
+      enquiry: {
+        prompt: "Tell us about your project.",
+        placeholder: "What are you planning, who do you want to reach, and when would you like to launch?",
+      },
+      meta: {
+        title: "Real Estate Films, Branding & Marketing | Vision Blend",
+        description: "Explore real estate AV films, social media, ads, branding and event launches with Vision Blend. Build a clear story for your next property project.",
+      },
     },
   },
   d2c: {

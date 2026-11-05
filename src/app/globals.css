@@ -515,7 +515,8 @@ html:has([data-hero]):not([data-intro="off"]) .site-header:not([data-past="true"
 html:has([data-hero]):not([data-intro="off"]) .site-header:not([data-past="true"]):not([data-open="true"]) .cta { background: var(--on-night); border-color: var(--on-night); color: var(--ink); }
 html:has([data-hero]):not([data-intro="off"]) .site-header:not([data-past="true"]):not([data-open="true"]) .cta:hover { background: var(--brand); border-color: var(--brand); color: var(--night); }
 html:has([data-hero]):not([data-intro="off"]) .site-header :focus-visible { outline-color: currentColor; }
-html:has([data-hero]):not([data-intro="done"], [data-intro="off"]) .site-header { animation: hero-fade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 2.6s both; }
+/* Only the home hero has an intro for the header to wait out */
+html:has(.hero[data-hero]):not([data-intro="done"], [data-intro="off"]) .site-header { animation: hero-fade 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 2.6s both; }
 
 /* Project illustrations draw in each time they mount; at rest (and with reduced motion) fully drawn. */
 /* non-scaling strokes measure dashes in screen px and ignore pathLength, so turn them off here */
@@ -553,6 +554,85 @@ html:has([data-hero]):not([data-intro="done"], [data-intro="off"]) .site-header 
 .proc-step[data-active="true"] .layer-3 { transform: translate(10px, -8px); }
 .proc-step[data-active="true"] .climb { transform: translateY(-8px); }
 @keyframes ill-pop { from { transform: scale(0); } to { transform: scale(1); } }
+
+/* Industry hero photo: settles in from a slight zoom */
+/* backwards, not both: the end state is no transform anyway, and a held scale(1) keeps the photo
+   on its own GPU layer, which can draw thin seams across a large image */
+.hero-still img { animation: hero-settle 1.8s cubic-bezier(0.2, 0.8, 0.2, 1) backwards; }
+
+/* Full-screen industry hero: the photo fills the screen behind the header, the text sits on it
+   at the lower left. The scrim darkens the top (header), the left (where the text runs) and the
+   foot, and leaves the right of the photo open. */
+.ind-hero { position: relative; isolation: isolate; overflow: hidden; margin-top: calc(-1 * var(--header-h)); background: var(--night); }
+.ind-hero-scrim {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, oklch(0.12 0.01 40 / 0.62), oklch(0.12 0.01 40 / 0.28) 48%, transparent 75%),
+    linear-gradient(180deg, oklch(0.12 0.01 40 / 0.5), transparent 24%, transparent 52%, oklch(0.12 0.01 40 / 0.82));
+}
+.ind-hero-content {
+  position: relative; min-height: max(100svh, 640px);
+  display: grid; grid-template-rows: auto 1fr auto;
+  padding-top: calc(var(--header-h) + clamp(20px, 2.4vw, 32px)); padding-bottom: clamp(28px, 4vw, 52px);
+}
+.ind-hero-content .index-row { margin-bottom: 0; }
+@media (max-width: 759px) {
+  .ind-hero-scrim { background: linear-gradient(180deg, oklch(0.12 0.01 40 / 0.55), oklch(0.12 0.01 40 / 0.2) 28%, oklch(0.12 0.01 40 / 0.45) 55%, oklch(0.12 0.01 40 / 0.88)); }
+}
+@keyframes hero-settle { from { transform: scale(1.08); opacity: 0.6; } to { transform: scale(1); opacity: 1; } }
+
+/* Process reel (industry pages): story-style progress bars and one looping scene per step */
+.reel-fill { transform-origin: left center; transform: scaleX(0); }
+[dir="rtl"] .reel-fill { transform-origin: right center; }
+.reel-fill[data-state="done"] { transform: scaleX(1); }
+.reel-fill[data-state="active"] { transform: scaleX(1); animation: reel-fill var(--dur, 4.2s) linear both; }
+.reel-fill[data-state="active"][data-held="true"] { animation: none; }
+.reel[data-playing="false"] .reel-fill { animation-play-state: paused; }
+@keyframes reel-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+.reel-scene { opacity: 0.45; transition: opacity 0.5s ease, box-shadow 0.5s ease; }
+.reel-step[data-active="true"] .reel-scene { opacity: 1; box-shadow: inset 0 0 0 1px oklch(0.19 0.008 40 / 0.3); }
+.reel-scene .b { stroke: var(--brand); }
+.reel-scene .s.paper { fill: var(--paper); }
+.reel-scene .w, .reel-scene .tick { fill: none; stroke: currentColor; stroke-width: 1.25; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 0; }
+.reel-scene .tick { stroke: var(--brand); stroke-width: 1.6; stroke-linejoin: round; }
+.reel-scene .sw { fill: currentColor; }
+.reel-scene .sw-b { fill: var(--brand); }
+.reel-scene .bar { fill: var(--brand); transform-box: fill-box; transform-origin: left center; }
+.reel-scene .lbl { fill: currentColor; font-size: 9px; font-weight: 500; letter-spacing: 0.14em; }
+.reel-scene .deck-l, .reel-scene .deck-r { transform-origin: 50% 100%; }
+.reel-step[data-active="true"] .deck-l { transform: translateX(-10px) rotate(-8deg); }
+.reel-step[data-active="true"] .deck-r { transform: translateX(10px) rotate(8deg); }
+
+/* Continuous loops run while the reel is on screen, frozen in place on the steps not playing */
+.reel[data-live="true"] .pan { animation: reel-pan 9s linear infinite; }
+.reel[data-live="true"] .rec { animation: reel-blink 1.2s steps(1) infinite; }
+.reel[data-live="true"] .focus { animation: reel-focus 2.6s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; }
+.reel[data-live="true"] .head { animation: reel-head var(--dur, 4.2s) linear infinite; }
+.reel[data-live="true"] .sun { animation: reel-sun 2.4s ease-in-out infinite alternate; }
+.reel-step[data-active="false"] :is(.pan, .rec, .focus, .head, .sun) { animation-play-state: paused; }
+
+/* Sequences replay from the start each time their step plays */
+.reel[data-live="true"] .reel-step[data-active="true"] .w { animation: reel-write var(--dur, 4.2s) cubic-bezier(0.65, 0, 0.35, 1) both; animation-delay: calc(var(--i) * 0.4s); }
+.reel[data-live="true"] .reel-step[data-active="true"] .dart { animation: reel-dart var(--dur, 4.2s) cubic-bezier(0.2, 0.8, 0.2, 1) both; }
+.reel[data-live="true"] .reel-step[data-active="true"] .ring { animation: reel-ring var(--dur, 4.2s) ease both; }
+.reel[data-live="true"] .reel-step[data-active="true"] .sw { animation: reel-swatch 2.4s cubic-bezier(0.2, 0.8, 0.2, 1) infinite; animation-delay: calc(0.6s + var(--i) * 0.2s); }
+.reel[data-live="true"] .reel-step[data-active="true"] .shot { animation: reel-shot var(--dur, 4.2s) ease both; animation-delay: calc(0.4s + var(--i) * 1s); }
+.reel[data-live="true"] .reel-step[data-active="true"] .bar { animation: reel-bar var(--dur, 4.2s) cubic-bezier(0.65, 0, 0.35, 1) both; }
+.reel[data-live="true"] .reel-step[data-active="true"] .tick { animation: reel-tick var(--dur, 4.2s) ease both; }
+
+@keyframes reel-write { 0% { stroke-dashoffset: 1; } 18%, 100% { stroke-dashoffset: 0; } }
+@keyframes reel-dart { 0% { transform: translate(-26px, 26px); opacity: 0; } 12% { opacity: 1; } 30% { transform: translate(0, 0); } 34% { transform: translate(2px, -2px); } 40%, 100% { transform: translate(0, 0); opacity: 1; } }
+@keyframes reel-ring { 0%, 30% { transform: scale(1); } 40% { transform: scale(1.14); } 56%, 100% { transform: scale(1); } }
+@keyframes reel-swatch { 0%, 30%, 100% { transform: scale(1); } 12% { transform: scale(1.35); } }
+@keyframes reel-pan { to { transform: translateX(-120px); } }
+@keyframes reel-blink { 50% { opacity: 0.15; } }
+@keyframes reel-focus { 0%, 100% { transform: scale(1); } 35% { transform: scale(0.84); } 52% { transform: scale(1.06); } 64% { transform: scale(1); } }
+@keyframes reel-head { from { transform: translateX(0); } to { transform: translateX(160px); } }
+@keyframes reel-sun { from { transform: translateY(8px); } to { transform: translateY(-2px); } }
+@keyframes reel-shot { 0% { fill-opacity: 0.07; } 14%, 100% { fill: var(--brand); fill-opacity: 0.9; } }
+@keyframes reel-bar { 0% { transform: scaleX(0); } 72%, 100% { transform: scaleX(1); } }
+@keyframes reel-tick { 0%, 72% { stroke-dashoffset: 1; } 86%, 100% { stroke-dashoffset: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: 0.01ms !important; animation: none !important; }

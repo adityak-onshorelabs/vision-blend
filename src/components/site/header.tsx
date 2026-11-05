@@ -19,7 +19,8 @@ export function Header({ lang, nav, cta }: Props) {
   useEffect(() => {
     const onScroll = () => {
       setScrolled(window.scrollY > 8);
-      const hero = document.querySelector<HTMLElement>("[data-hero]");
+      // Next keeps left pages in the DOM (hidden), so take the hero that is actually showing
+      const hero = Array.from(document.querySelectorAll<HTMLElement>("[data-hero]")).find((el) => el.offsetHeight > 0);
       setPastHero(!hero || window.scrollY > hero.offsetHeight - 77);
     };
     onScroll();
