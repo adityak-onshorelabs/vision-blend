@@ -6,8 +6,8 @@
   points, the four-step process and the closing are the doc's exact wording. FAQs are left as they
   were (their keep/remove/rewrite decision is still open with the studio). Titles drop a final full
   stop because the page adds the brand one; *stars* mark the highlighted key word. The hero photo
-  (public/images/real-estate-hero.jpg, from a Pinterest pin the team picked, upscaled 4x from
-  735x490) was chosen by the team and carries no placeholder tag; the
+  (public/images/real-estate-hero-glass.jpg, 1536x1024, a cleaner version of the glass-corner shot
+  the team picked) was chosen by the team and carries no placeholder tag; the
   Branding still (Unsplash, public/placeholder/) is a stand-in, tagged as a placeholder.
 
   D2C, Services, Hospitality, Automobile: still PLACEHOLDER copy. Their approved copy is in the
@@ -33,7 +33,7 @@ const details: Record<string, Extra> = {
       headline: "Real Estate, *Articulated*",
       lead: "An exploration of spaces, identities and experiences through brand films, design and communication.",
       hero: {
-        src: "/images/real-estate-hero.jpg",
+        src: "/images/real-estate-hero-glass.jpg",
         alt: "Black-and-white view looking up at the glass corner of an office building against an overcast sky",
       },
       // The Introduction section was removed in the 4 Nov review: no intro paragraphs
