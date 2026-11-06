@@ -12,7 +12,13 @@
 
   D2C, Hospitality & Services, Automobile: see the note above their entries below.
 
-  No client names, testimonials, metrics or results here: none have been approved for these pages.
+  No testimonials, metrics or results here: none have been approved for these pages. The one
+  exception on client names is the Real Estate logo strip, from the studio's real estate logos
+  folder (Drive, shared 5 Nov 2026): 19 files, each turned into a one-colour mask (white on
+  transparent, trimmed to the mark) in public/images/clients/real-estate/. Mitkar's white windows,
+  the black frame around Metro & Satyam, and the overlap of Meghna's text on its gold "1" were
+  cleaned up in that step. Brego Land's file is 198x23 px, so it is soft: replace it with a larger
+  file when the studio has one.
 */
 import { media } from "@/lib/media";
 import type { Industry, IndustryDetail } from "./types";
@@ -26,6 +32,15 @@ const reClip = (name: string, alt: string) => ({ src: media(`/videos/real-estate
 const ig = "https://www.instagram.com/";
 /** Drive's own thumbnail of a file, as a poster until a loop is cut from it */
 const driveThumb = (id: string) => `https://lh3.googleusercontent.com/d/${id}=w1200`;
+/** A client logo mask from public/images/clients/<industry>/, with its measured size */
+const logo = (industry: string, slug: string, name: string, w: number, h: number, scale?: number) => ({
+  name,
+  logo: `/images/clients/${industry}/${slug}.png`,
+  ratio: [w, h] as [number, number],
+  ...(scale ? { scale } : {}),
+});
+// `scale` evens out weight by eye: bold wordmarks down, the faint two-tone Meghna up
+const reLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("real-estate", slug, name, w, h, scale);
 
 /* Shared by every sector page (the doc's wording, as on Real Estate) */
 const PROCESS = {
@@ -61,6 +76,31 @@ const details: Record<string, Extra> = {
       },
       // The Introduction section was removed in the 4 Nov review: no intro paragraphs
       paragraphs: [],
+      // Two rows in the strip: the first ten, then the rest. Mixed so neither row is all wordmarks.
+      clients: {
+        title: "Brands we've *worked with*",
+        logos: [
+          reLogo("hiranandani-communities", "Hiranandani Communities", 674, 220),
+          reLogo("paradise-group", "Paradise Group", 521, 220),
+          reLogo("aakasa", "Aakasa Shivaji Park", 748, 220),
+          reLogo("sanghvi-realty", "Sanghvi Realty", 264, 220),
+          reLogo("millennium", "Millennium", 900, 156),
+          reLogo("meghna-realty", "Meghna Realty", 331, 220, 1.15),
+          reLogo("krisala", "Krisala", 871, 159, 0.9),
+          reLogo("delta", "Delta", 315, 220),
+          reLogo("platinum-corp", "Platinum Corp", 900, 163, 0.85),
+          reLogo("shelter", "Shelter Group", 282, 220),
+          reLogo("house-of-hiranandani", "House of Hiranandani", 900, 158),
+          reLogo("akshar", "Akshar", 340, 220),
+          reLogo("presidence", "Presidence", 575, 220),
+          reLogo("dream-developers", "Dream Developers", 433, 220),
+          reLogo("platinum-group", "Platinum Group", 672, 139),
+          reLogo("aura-realtors", "Aura Realtors", 266, 220),
+          reLogo("metro-satyam", "Metro Group & Satyam Developers", 661, 220),
+          reLogo("mitkar", "Mitkar Builders & Developers", 545, 220),
+          reLogo("brego-land", "Brego Land", 198, 23, 0.72),
+        ],
+      },
       servicesTitle: "What we make for *real estate*",
       // Ten content categories, in the approved order. Public text is the title and subtitle only.
       // `assets` is the studio's Drive folder for each one (internal, never shown on the page).

@@ -99,7 +99,10 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
     // Industries in code set which pages exist and their order; saved ones replace their content
     c.industries = c.industries.map((i) => {
       const saved = docs.industries?.find((s) => s.slug === i.slug);
-      return saved ? { ...i, ...saved } : i;
+      if (!saved) return i;
+      // A page saved before the client logos were added keeps the logos from code
+      const clients = saved.detail?.clients ?? i.detail?.clients;
+      return { ...i, ...saved, ...(saved.detail && clients ? { detail: { ...saved.detail, clients } } : {}) };
     });
   }
 
