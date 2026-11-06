@@ -324,6 +324,32 @@
   /* Panels on industry pages: a frosted cell over the page background */
   .panel { background: oklch(0.975 0.003 85 / 0.6); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); box-shadow: inset 0 0 0 1px var(--rule); }
 
+  /* Client logo strip on industry pages (client-logos.tsx): one-colour masks tinted to the text */
+  .logo-strip { display: grid; gap: clamp(28px, 4vw, 52px); --logo-size: clamp(3.3rem, 2.6rem + 2.2vw, 4.5rem); }
+  .logo-row {
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .logo-track { display: flex; align-items: center; width: max-content; animation: logo-drift var(--dur, 60s) linear infinite; }
+  .logo-row[data-reverse] .logo-track { animation-direction: reverse; }
+  .logo-row:hover .logo-track { animation-play-state: paused; }
+  .logo-cell { flex: none; padding-inline-end: clamp(44px, 5.5vw, 88px); }
+  .logo-mask {
+    display: block; width: calc(var(--logo-size) * var(--w));
+    color: var(--ink); opacity: 0.72; background-color: currentColor;
+    -webkit-mask: var(--logo) center / contain no-repeat; mask: var(--logo) center / contain no-repeat;
+    transition: color 0.3s ease, opacity 0.3s ease;
+  }
+  .logo-cell:hover .logo-mask { color: var(--brand); opacity: 1; }
+  @keyframes logo-drift { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) {
+    .logo-row { -webkit-mask-image: none; mask-image: none; }
+    .logo-track { animation: none; width: auto; flex-wrap: wrap; justify-content: center; row-gap: 36px; }
+    .logo-cell { padding-inline: clamp(20px, 2.75vw, 44px); }
+    .logo-cell[aria-hidden] { display: none; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .ind-card::before, .ind-card-go svg { transition: none; }
   }

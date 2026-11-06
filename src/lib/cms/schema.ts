@@ -205,6 +205,14 @@ export const industryDetailSchema = z.object({
   enquiry: z.object({ prompt: req(80), placeholder: req(200) }).optional(),
   meta: z.object({ title: req(70), description: req(170) }).optional(),
   work: z.object({ title: req(80), lead: req(240), items: z.array(workItemSchema).max(120) }).optional(),
+  clients: z
+    .object({
+      title: opt(80),
+      logos: z
+        .array(z.object({ name: req(60), logo: mediaUrl, ratio: ratioSchema, scale: z.coerce.number().min(0.5).max(2).optional() }))
+        .max(40),
+    })
+    .optional(),
 });
 
 export const industrySchema = z.object({

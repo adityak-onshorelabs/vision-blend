@@ -3,6 +3,7 @@ import type { CSSProperties } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { ClientLogos } from "@/components/site/client-logos";
 import { IndustryArt } from "@/components/site/industry-art";
 import { HeroHeader } from "@/components/site/hero-header";
 import { IndustryCard } from "@/components/site/industry-card";
@@ -228,6 +229,16 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
           </div>
         </div>
       </section>
+      )}
+
+      {/* The brands the studio has worked with in this industry, straight under the hero */}
+      {detail?.clients && detail.clients.logos.length > 0 && (
+        <section className="band" aria-labelledby="clients-title">
+          <div className="frame">
+            <SectionHead id="clients-title" label="Clients" title={detail.clients.title ?? "Brands we've *worked with*"} />
+            <ClientLogos logos={detail.clients.logos} />
+          </div>
+        </section>
       )}
 
       {detail && detail.paragraphs.length > 0 && (

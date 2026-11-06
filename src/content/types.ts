@@ -70,6 +70,22 @@ export type IndustryDetail = {
   meta?: { title: string; description: string };
   /** Portfolio subpage (/industries/<slug>/work). Absent: the industry has no subpage. */
   work?: { title: string; lead: string; items: WorkItem[] };
+  /** Client logo strip under the hero. Absent: no strip. */
+  clients?: { title?: string; logos: ClientLogo[] };
+};
+
+/**
+ * A client's logo as a one-colour mask: white on transparent, trimmed to the mark. The page tints it
+ * to the text colour, so every logo reads the same on light or dark and none clashes with the brand.
+ */
+export type ClientLogo = {
+  name: string;
+  /** Site path or https link to the mask PNG */
+  logo: string;
+  /** The mask's width and height, so the strip can size every logo to the same visual area */
+  ratio: [number, number];
+  /** Nudges a logo that reads too heavy or too light next to the others (1 = as measured) */
+  scale?: number;
 };
 
 /**
