@@ -30,8 +30,6 @@ const reImg = (name: string, alt: string) => ({ src: `/placeholder/real-estate/$
 const clip = (name: string) => media(`/videos/real-estate/${name}.mp4`);
 const reClip = (name: string, alt: string) => ({ src: media(`/videos/real-estate/${name}.jpg`), alt });
 const ig = "https://www.instagram.com/";
-/** Drive's own thumbnail of a file, as a poster until a loop is cut from it */
-const driveThumb = (id: string) => `https://lh3.googleusercontent.com/d/${id}=w1200`;
 /** A client logo mask from public/images/clients/<industry>/, with its measured size */
 const logo = (industry: string, slug: string, name: string, w: number, h: number, scale?: number) => ({
   name,
@@ -289,9 +287,10 @@ const details: Record<string, Extra> = {
 
     D2C media: the first link in each category row leads the card, the rest go to the work page
     (studio's instruction). Instagram links play in Instagram's own embed. Product & AI's first
-    link (Drive) does not open publicly, so its Instagram reel leads instead; Model-led's first
-    Drive file shows its thumbnail until a loop is cut (the doc asks the studio to confirm that
-    file). Offer Creatives has no link yet. Hospitality & Services and Automobile have no links
+    link (Drive) does not open publicly, so its Instagram reel leads instead. Model-led leads with
+    a 12-second loop (public/videos/d2c/, 6-18 s of the centre Drive file, 1uWBG_iXqgcrGezrzCefu5I6DF70HGB-p,
+    a private file shared with the team); the left file is the one the doc flags as the wrong
+    film, so it is not used. Offer Creatives has no link yet. Hospitality & Services and Automobile have no links
     yet: every card is a marked placeholder, and the heroes use the copper key visual as a
     stand-in until the studio's sector photos are in.
   */
@@ -313,8 +312,9 @@ const details: Record<string, Extra> = {
           title: "Model-led / UGC Content",
           subtitle: "Products through personal experience",
           text: "",
-          image: { src: driveThumb("1UiEh2FgpCu8K5we1cPNelFMOYVXc2x5T"), alt: "A still from a vertical product film", placeholder: true },
+          image: { src: media("/videos/d2c/model-led-ugc.jpg"), alt: "A man in a brown shirt talking to camera about a fragrance, from a vertical reel" },
           ratio: [9, 16],
+          video: media("/videos/d2c/model-led-ugc.mp4"),
         },
         { title: "Festive Campaigns", subtitle: "Brand stories within cultural occasions", text: "", instagram: `${ig}reel/DQCF4txiXQh/` },
         { title: "Informative Carousels", subtitle: "Product knowledge, in sequence", text: "", instagram: `${ig}p/DQwf1RMki7a/` },
