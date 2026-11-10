@@ -11,13 +11,65 @@
     scope film 2.35:1. Nothing is cropped, letterboxed or padded with a blurred fill.
   - Instagram (`instagram`): Instagram's own player fills the slot instead, cropped to the media.
   - Nothing at all yet: a marked staging placeholder, so a missing asset is never mistaken for work.
+  - Served from ImageKit (NEXT_PUBLIC_MEDIA_URL): the clip streams as adaptive HLS, attached only
+    on first play so lazy loading holds. Safari plays the manifest natively; elsewhere hls.js
+    (loaded on demand) caps the rendition at the player's size. If the manifest fails (ImageKit
+    answers 202 while it is still generating renditions), the plain MP4 plays instead.
 */
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
+import type HlsType from "hls.js";
 import type { Photo } from "@/content/types";
 import { cn } from "@/lib/utils";
 import { embedKindOf, InstagramMedia } from "./instagram-media";
+
+const MEDIA_BASE = (process.env.NEXT_PUBLIC_MEDIA_URL ?? "").replace(/\/+$/, "");
+const LADDER = "sr-480_720_1080_1440_2160";
+const streams = (video: string) => !!MEDIA_BASE && video.startsWith(`${MEDIA_BASE}/`);
+const isSafari = () => /^((?!chrome|chromium|android|crios|fxios|edg).)*safari/i.test(navigator.userAgent);
+
+/** Per-element stream state: which source is attached, the hls.js instance, whether it should be playing */
+type Stream = { mode?: "hls" | "mp4"; hls?: HlsType; want: boolean };
+
+function toMp4(v: HTMLVideoElement, video: string, s: Stream) {
+  s.hls?.destroy();
+  s.hls = undefined;
+  s.mode = "mp4";
+  v.src = video;
+  if (s.want) v.play().catch(() => {});
+}
+
+/** Attaches the source the first time the clip should play; later calls are no-ops */
+async function attach(v: HTMLVideoElement, video: string, s: Stream) {
+  if (s.mode) return;
+  if (!streams(video)) {
+    s.mode = "mp4"; // the plain MP4 is already the element's src
+    return;
+  }
+  s.mode = "hls";
+  const url = `${video}/ik-master.m3u8?tr=${LADDER}`;
+  if (isSafari() && v.canPlayType("application/vnd.apple.mpegurl")) {
+    v.src = url; // a failed manifest surfaces as the element's error event (onError below)
+    return;
+  }
+  const { default: Hls } = await import("hls.js");
+  if (s.mode !== "hls") return; // fell back or unmounted while loading
+  if (!Hls.isSupported()) return toMp4(v, video, s);
+  const hls = new Hls({ capLevelToPlayerSize: true });
+  s.hls = hls;
+  hls.on(Hls.Events.ERROR, (_e, data) => {
+    if (data.fatal) toMp4(v, video, s);
+  });
+  hls.loadSource(url);
+  hls.attachMedia(v);
+}
+
+async function start(v: HTMLVideoElement, video: string, s: Stream) {
+  s.want = true;
+  await attach(v, video, s);
+  if (s.want) v.play().catch(() => {});
+}
 
 type Props = { video?: string; instagram?: string; title?: string; poster?: Photo; ratio?: [number, number]; sizes: string; className?: string };
 
@@ -35,22 +87,43 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
   const ref = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const stream = useRef<Stream>({ want: false });
   const hasVideo = !!video && !failed;
+
+  // Tear down hls.js when the clip changes or the card unmounts
+  useEffect(() => {
+    const s = stream.current;
+    return () => {
+      s.hls?.destroy();
+      s.mode = undefined; // also stops an attach still waiting on the hls.js import
+      s.want = false;
+      stream.current = { want: false };
+    };
+  }, [video]);
 
   useEffect(() => {
     const el = box.current;
     const v = ref.current;
-    if (!el || !v || !hasVideo || reduce) return;
+    if (!el || !v || !video || !hasVideo || reduce) return;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+        if (e.isIntersecting) start(v, video, stream.current);
+        else {
+          stream.current.want = false;
+          v.pause();
+        }
       },
       { threshold: 0.35 },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [hasVideo, reduce]);
+  }, [video, hasVideo, reduce]);
+
+  const onError = () => {
+    const v = ref.current;
+    if (v && video && stream.current.mode === "hls") toMp4(v, video, stream.current);
+    else setFailed(true);
+  };
 
   return (
     <div
@@ -75,7 +148,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && (
         <video
           ref={ref}
-          src={video}
+          src={streams(video!) ? undefined : video}
           muted
           loop
           playsInline
@@ -83,7 +156,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
           aria-label={poster?.alt}
           onPlaying={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
-          onError={() => setFailed(true)}
+          onError={onError}
           className="absolute inset-0 size-full object-cover"
         />
       )}
@@ -92,7 +165,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && reduce && !playing ? (
         <button
           type="button"
-          onClick={() => ref.current?.play().catch(() => {})}
+          onClick={() => ref.current && video && start(ref.current, video, stream.current)}
           className="absolute inset-0 grid place-items-center"
           aria-label="Play the film"
         >
