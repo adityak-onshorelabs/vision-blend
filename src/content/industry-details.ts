@@ -13,12 +13,17 @@
   D2C, Hospitality & Services, Automobile: see the note above their entries below.
 
   No testimonials, metrics or results here: none have been approved for these pages. The one
-  exception on client names is the Real Estate logo strip, from the studio's real estate logos
-  folder (Drive, shared 5 Nov 2026): 19 files, each turned into a one-colour mask (white on
-  transparent, trimmed to the mark) in public/images/clients/real-estate/. Mitkar's white windows,
-  the black frame around Metro & Satyam, and the overlap of Meghna's text on its gold "1" were
-  cleaned up in that step. Brego Land's file is 198x23 px, so it is soft: replace it with a larger
-  file when the studio has one.
+  exception on client names is the logo strip on each sector page, from the studio's logos folders
+  on Drive (Real Estate shared 5 Nov 2026; D2C, Hospitality & Services and Automobile 9 Nov 2026).
+  Each file is turned into a one-colour mask (white on transparent, trimmed to the mark, at most
+  900x220) in public/images/clients/<industry>/.
+  - Real Estate: Mitkar's white windows, the black frame around Metro & Satyam, and the overlap of
+    Meghna's text on its gold "1" were cleaned up in that step.
+  - White text inside a solid shape is cut out of the mask (Revital, Neulife, Nova Fresh, Wedding
+    Destination); Cup-ji and Dot came as JPGs on a solid ground, so only the mark was kept. ICE
+    College and Mirana keep only their dark line work, MuscleBlaze's yellow "B" is a lighter tone.
+  - Soft for want of larger files: Brego Land (198x23), Tata 1mg (320 px), Scratchgard (236x65),
+    MuscleBlaze (404x316), Fang (200 px). Replace them when the studio has bigger ones.
 */
 import { media } from "@/lib/media";
 import type { Industry, IndustryDetail } from "./types";
@@ -39,6 +44,9 @@ const logo = (industry: string, slug: string, name: string, w: number, h: number
 });
 // `scale` evens out weight by eye: bold wordmarks down, the faint two-tone Meghna up
 const reLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("real-estate", slug, name, w, h, scale);
+const d2cLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("d2c", slug, name, w, h, scale);
+const hsLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("hospitality-services", slug, name, w, h, scale);
+const autoLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("automobile", slug, name, w, h, scale);
 
 /* Shared by every sector page (the doc's wording, as on Real Estate) */
 const PROCESS = {
@@ -283,7 +291,8 @@ const details: Record<string, Extra> = {
     Reference" doc (5 Nov 2026), one tab per sector, built on the Real Estate layout. Hero,
     category titles and subtitles, purpose points, process and closing are the doc's wording.
     FAQs keep the current text until the studio approves the doc's drafts (the merged Hospitality
-    & Services page has no current text, so it uses the drafts). Client names stay internal.
+    & Services page has no current text, so it uses the drafts). Client names stay out of the
+    work titles; the logo strips (see the top of this file) are the only place clients are named.
 
     D2C media: the first link in each category row leads the card, the rest go to the work page
     (studio's instruction). Instagram links play in Instagram's own embed. Product & AI's first
@@ -302,6 +311,34 @@ const details: Record<string, Extra> = {
       lead: "An exploration of products, identities and everyday rituals through brand films, design and communication.",
       hero: STAND_IN_HERO,
       paragraphs: [],
+      // Two rows of eleven, wordmarks and marks mixed in each
+      clients: {
+        title: "Brands we've *worked with*",
+        logos: [
+          d2cLogo("tata-1mg", "Tata 1mg", 288, 64, 0.9),
+          d2cLogo("frido", "Frido", 634, 220),
+          d2cLogo("wellbeing-nutrition", "Wellbeing Nutrition", 233, 220),
+          d2cLogo("bonkers-corner", "Bonkers Corner", 900, 214, 0.95),
+          d2cLogo("muscleblaze", "MuscleBlaze", 174, 123, 0.85),
+          d2cLogo("minimalist", "Minimalist", 900, 149, 0.9),
+          d2cLogo("nova-fresh", "Nova Fresh", 229, 220),
+          d2cLogo("paris-belle", "Paris Belle", 488, 220, 1.1),
+          d2cLogo("neulife", "Neulife", 431, 220, 0.9),
+          d2cLogo("supply6", "Supply6", 791, 220, 0.9),
+          d2cLogo("cup-ji", "Cup-ji", 220, 220, 0.85),
+          d2cLogo("truebasics", "TrueBasics", 900, 202, 0.9),
+          d2cLogo("esbeda", "Esbeda", 295, 220),
+          d2cLogo("chuckle", "Chuckle", 825, 220),
+          d2cLogo("ajmal", "Ajmal", 121, 220, 1.05),
+          d2cLogo("revital", "Revital", 736, 220),
+          d2cLogo("onyc", "ONYC", 640, 220),
+          d2cLogo("dot", "Dot", 279, 206, 0.9),
+          d2cLogo("baller-athletik", "Baller Athletik", 900, 172),
+          d2cLogo("smart-pet", "Smart Pet", 749, 173, 0.9),
+          d2cLogo("ashiesh-shah", "Ashiesh Shah Architect", 900, 147, 1.1),
+          d2cLogo("fang", "Fang", 200, 105, 0.8),
+        ],
+      },
       servicesTitle: "What we make for *D2C brands*",
       offerings: [
         { title: "Product & AI Content", subtitle: "Products in imagined and observed settings", text: "", instagram: `${ig}reel/DSfe26BgY_b/` },
@@ -357,6 +394,22 @@ const details: Record<string, Extra> = {
       lead: "An exploration of places, expertise and human experiences through brand films, design and communication.",
       hero: STAND_IN_HERO,
       paragraphs: [],
+      clients: {
+        title: "Brands we've *worked with*",
+        logos: [
+          hsLogo("itc-hotels", "ITC Hotels", 416, 220, 1.1),
+          hsLogo("oneabove-fitness", "Oneabove Fitness", 900, 213, 0.95),
+          hsLogo("baker-street-cake", "Baker Street Cake", 231, 220, 1.1),
+          hsLogo("cfosme", "CFOSME", 900, 194, 0.85),
+          hsLogo("ice-college", "ICE College", 398, 220),
+          hsLogo("cafe-basilico", "Café Basilico", 442, 220),
+          hsLogo("ceo-rules", "CEO Rules", 900, 111),
+          hsLogo("mirana", "Mirana", 301, 220, 0.9),
+          hsLogo("shred-x-fitnest", "Shred X Fitnest", 899, 220),
+          hsLogo("up-dentist", "Up Dentist", 330, 220, 1.05),
+          hsLogo("wedding-destination", "Wedding Destination", 221, 220, 0.85),
+        ],
+      },
       servicesTitle: "What we make for *hospitality & service brands*",
       offerings: [
         { title: "Social Media", subtitle: "Your brand's digital presence", text: "", ratio: [9, 16] },
@@ -388,6 +441,16 @@ const details: Record<string, Extra> = {
       lead: "An exploration of design, performance and ownership through films, visual content and communication.",
       hero: STAND_IN_HERO,
       paragraphs: [],
+      clients: {
+        title: "Brands we've *worked with*",
+        logos: [
+          autoLogo("mercedes-benz", "Mercedes-Benz", 869, 220, 1.1),
+          autoLogo("cartronics", "Cartronics", 900, 170),
+          autoLogo("garnet-motors", "Garnet Motors", 591, 220),
+          autoLogo("60k-cars", "60k Cars", 900, 137, 0.85),
+          autoLogo("scratchgard", "Scratchgard", 236, 65),
+        ],
+      },
       servicesTitle: "What we make for *automotive brands*",
       offerings: [
         { title: "Events", subtitle: "Launches and experiences, documented", text: "", ratio: [16, 9] },
