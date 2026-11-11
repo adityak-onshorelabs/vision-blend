@@ -67,7 +67,20 @@ const designedToDo = (awareness: string, sales: string) => ({
   ],
 });
 /** Until the studio sends sector photos: the copper key visual, tagged as a placeholder */
-const STAND_IN_HERO = { src: "/images/hero-copper.jpg", alt: "Copper key visual, standing in for the sector photo", placeholder: true };
+/*
+  Sector heroes, in the Real Estate hero's manner (black and white, one calm detail, room for the
+  heading). The brief leaves hero media to the studio ("editor to add an approved sector still or
+  film"); none has been supplied, so these are Unsplash License photos, converted to B&W and resized
+  to 2560 wide, until the studio sends its own: D2C, a stoneware bottle (Tom Crew, unsplash.com/photos/E64Hv5Ab_nQ);
+  Hospitality & Services, a restaurant table (Michael Wave, unsplash.com/photos/gVkAiPchYhY);
+  Automobile, car bodywork (Quentin Martinez, unsplash.com/photos/V8H-K2032Kc).
+*/
+const D2C_HERO = { src: "/images/d2c-hero-bottle.jpg", alt: "Black-and-white still life of a stoneware bottle on a table against a dark wall" };
+const HOSPITALITY_HERO = {
+  src: "/images/hospitality-services-hero-table.jpg",
+  alt: "Black-and-white restaurant table in sunlight, with glassware casting long shadows across the cloth",
+};
+const AUTOMOBILE_HERO = { src: "/images/automobile-hero-bodywork.jpg", alt: "Black-and-white close-up of the curve of glossy car bodywork" };
 
 const details: Record<string, Extra> = {
   "real-estate": {
@@ -300,8 +313,7 @@ const details: Record<string, Extra> = {
     a 12-second loop (public/videos/d2c/, 6-18 s of the centre Drive file, 1uWBG_iXqgcrGezrzCefu5I6DF70HGB-p,
     a private file shared with the team); the left file is the one the doc flags as the wrong
     film, so it is not used. Offer Creatives has no link yet. Hospitality & Services and Automobile have no links
-    yet: every card is a marked placeholder, and the heroes use the copper key visual as a
-    stand-in until the studio's sector photos are in.
+    yet: every card is a marked placeholder. Heroes: see the note above the hero constants.
   */
   d2c: {
     summary: "Product shoots, feeds and ads that turn scrolling into buying.",
@@ -309,7 +321,7 @@ const details: Record<string, Extra> = {
       eyebrow: "Creative & marketing for D2C",
       headline: "D2C, *Considered*",
       lead: "An exploration of products, identities and everyday rituals through brand films, design and communication.",
-      hero: STAND_IN_HERO,
+      hero: D2C_HERO,
       paragraphs: [],
       // Two rows of eleven, wordmarks and marks mixed in each
       clients: {
@@ -392,7 +404,7 @@ const details: Record<string, Extra> = {
       eyebrow: "Creative & marketing for hospitality & services",
       headline: "Hospitality & Services, *Articulated*",
       lead: "An exploration of places, expertise and human experiences through brand films, design and communication.",
-      hero: STAND_IN_HERO,
+      hero: HOSPITALITY_HERO,
       paragraphs: [],
       clients: {
         title: "Brands we've *worked with*",
@@ -439,7 +451,7 @@ const details: Record<string, Extra> = {
       eyebrow: "Creative & marketing for automotive",
       headline: "Automotive, *In Detail*",
       lead: "An exploration of design, performance and ownership through films, visual content and communication.",
-      hero: STAND_IN_HERO,
+      hero: AUTOMOBILE_HERO,
       paragraphs: [],
       clients: {
         title: "Brands we've *worked with*",
