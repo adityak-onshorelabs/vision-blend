@@ -46,6 +46,27 @@ npx tsc --noEmit && npm run lint
 
 Without the Resend variables, development logs each brief to the console and production answers 503 so no brief is silently lost.
 
+## Adding portfolio videos and images
+
+Portfolio media is hosted on ImageKit and plays as uploaded (`src/lib/stream.ts`): ImageKit's own
+video processing is not used, so the monthly video processing units do not limit it. To add files
+from the studio's Drive:
+
+```bash
+npm run media:import -- --industry real-estate <drive file link> [<drive file link> ...]
+npm run media:import -- --industry d2c --loop-at 14 <drive file link>   # also cut a 12 s card loop
+npm run media:import -- --industry d2c --drive <drive link> ./downloaded-private-file.mp4
+npm run media:import -- --help
+```
+
+It downloads each file (shared "anyone with the link"), warns when it is below 1080p, keeps the
+studio's encode where it fits ImageKit's 100 MB upload cap (re-encoding only what does not), saves the
+film's card frame to `public/images/work/<industry>/`, uploads to ImageKit and prints the lines for
+`src/content/hosted-work.ts` and `src/content/industry-details.ts`. Needs ffmpeg and ffprobe, and
+`NEXT_PUBLIC_MEDIA_URL` and `IMAGEKIT_PRIVATE_KEY` in `.env.local` (the private key stays local: never
+commit it or add it to Vercel). Upload under a new name rather than `--overwrite`: the CDN can keep
+serving the old file under an old name.
+
 ## Admin (separate deployment)
 
 The admin is its own app and Vercel project (`../admin`, see its README). The Vision Blend team edits the hero (label, tagline, intro, with length limits), Work projects (add, edit, reorder, feature, cover image), series episodes (from 5 the row scrolls sideways), and studio details (team size, email, CC, phone). Long-form copy stays in `src/content/en.ts`; saved values are merged over it.
