@@ -18,26 +18,38 @@
 import { media } from "@/lib/media";
 
 const re = (name: string) => media(`/work/real-estate/${name}`);
+/*
+  Card frames for the films: 1 s into each file, in public/images/work/real-estate/. Kept on the
+  site rather than ImageKit's ik-thumbnail, which is a video transformation and stops when the
+  month's video processing units run out. FIFA and Meghna have their own posters (industry-details.ts).
+*/
+const frame = (name: string) => `/images/work/real-estate/${name}.jpg`;
 
-export const HOSTED_WORK: Record<string, string> = {
+/** The hosted file, and for films the card frame */
+export type Hosted = { src: string; poster?: string };
+
+const film = (name: string, poster = true): Hosted => ({ src: re(`${name}.mp4`), ...(poster ? { poster: frame(name) } : {}) });
+const still = (name: string): Hosted => ({ src: re(`${name}.png`) });
+
+export const HOSTED_WORK: Record<string, Hosted> = {
   // Real Estate films
-  "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv": re("presidence-one-walkthrough-hq.mp4"),
-  "1EkolrQ1iLk_ctjj1Lca7VE33HN8rkiWQ": re("where-vision-meets-vista-1080.mp4"),
-  "1H7Ff4uay6LEawRH_Ay_vlhc0B_WFKsEG": re("fifa-sai-world-empire.mp4"),
-  "11xZkFbKV8wTJH8gR2TcIRJWgBgRInOgK": re("what-home-means-to-me.mp4"),
-  "1AkTnxyxJ0dJX6CHPz2hrJftqJWG1a2pz": re("upper-kharghar-growth-area-1080.mp4"),
-  "1dqmYNyH-Pwce1PFTWms9VCyDTq4kYtHN": re("presidence-one-launch.mp4"),
-  "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z": re("meghna-one-brand-film-hq.mp4"),
-  "1iGBXHQDvv7D3STZZ2JqWWAS4lxtzeGkF": re("site-supervisor.mp4"),
+  "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv": film("presidence-one-walkthrough-hq"),
+  "1EkolrQ1iLk_ctjj1Lca7VE33HN8rkiWQ": film("where-vision-meets-vista-1080"),
+  "1H7Ff4uay6LEawRH_Ay_vlhc0B_WFKsEG": film("fifa-sai-world-empire", false),
+  "11xZkFbKV8wTJH8gR2TcIRJWgBgRInOgK": film("what-home-means-to-me"),
+  "1AkTnxyxJ0dJX6CHPz2hrJftqJWG1a2pz": film("upper-kharghar-growth-area-1080"),
+  "1dqmYNyH-Pwce1PFTWms9VCyDTq4kYtHN": film("presidence-one-launch"),
+  "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z": film("meghna-one-brand-film-hq", false),
+  "1iGBXHQDvv7D3STZZ2JqWWAS4lxtzeGkF": film("site-supervisor"),
   // Real Estate stills (Meghna Realty carousel slides)
-  "1M_l_jlRKSJE4hXv4tJDpNFeC3RpWfNGT": re("where-better-work-begins.png"),
-  "1OPcuhfV8kOCfRkNVke8jQ2_FGcztnciM": re("prime-business-address.png"),
-  "1ZHBWoN_SG5YY7crDp5C_OlCzPAREmiXd": re("igbc-sustainable-landmark.png"),
-  "1QZ8Njg2TvIIIpygOeKdvDAJ-nMY6gTqY": re("your-office-your-way.png"),
-  "1OlhEiTcdKJGAt5_NEKBxzWcXcAMMg2TX": re("smoother-start-every-workday.png"),
-  "18ffMNJCo-xpfWW5VIXYEHD_vWQHbyi4a": re("wellness-beyond-workplace.png"),
-  "1NPcP56ChH6UOrCUdJoFsKsud0-zoiPu5": re("your-own-personal-rainforest.png"),
+  "1M_l_jlRKSJE4hXv4tJDpNFeC3RpWfNGT": still("where-better-work-begins"),
+  "1OPcuhfV8kOCfRkNVke8jQ2_FGcztnciM": still("prime-business-address"),
+  "1ZHBWoN_SG5YY7crDp5C_OlCzPAREmiXd": still("igbc-sustainable-landmark"),
+  "1QZ8Njg2TvIIIpygOeKdvDAJ-nMY6gTqY": still("your-office-your-way"),
+  "1OlhEiTcdKJGAt5_NEKBxzWcXcAMMg2TX": still("smoother-start-every-workday"),
+  "18ffMNJCo-xpfWW5VIXYEHD_vWQHbyi4a": still("wellness-beyond-workplace"),
+  "1NPcP56ChH6UOrCUdJoFsKsud0-zoiPu5": still("your-own-personal-rainforest"),
 };
 
 /** The hosted file for a Drive id, when there is one and ImageKit is configured */
-export const hostedOf = (drive?: string) => (drive && process.env.NEXT_PUBLIC_MEDIA_URL ? HOSTED_WORK[drive] : undefined);
+export const hostedOf = (drive?: string): Hosted | undefined => (drive && process.env.NEXT_PUBLIC_MEDIA_URL ? HOSTED_WORK[drive] : undefined);

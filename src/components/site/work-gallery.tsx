@@ -14,7 +14,7 @@
     the full image. Prev/next (and the arrow keys) move through the pieces in the current filter.
   - "Open in Drive" (or "on Instagram") is offered for when the player is blocked.
   - Hosted pieces (src/content/hosted-work.ts, keyed by Drive id) come from ImageKit instead: the card
-    shows ImageKit's frame of the film (or the image), and the lightbox plays the full film in our
+    shows a frame of the film (or the image), and the lightbox plays the full film in our
     own player, streamed at up to 1080p and above (film-player.tsx). Nothing of them loads from
     Drive, so the studio's folder can stay private, and there is no "Open in Drive" link.
 */
@@ -36,10 +36,10 @@ const keyOf = (w: WorkItem) => w.drive ?? w.instagram ?? w.title;
 const thumb = (id: string, width: number) => `https://lh3.googleusercontent.com/d/${id}=w${width}`;
 const preview = (id: string) => `https://drive.google.com/file/d/${id}/preview`;
 const view = (id: string) => `https://drive.google.com/file/d/${id}/view`;
-/** The card image: a set poster, else ImageKit's frame of a hosted film (or the hosted image), else Drive's thumbnail */
+/** The card image: a set poster, else the hosted film's frame (or the hosted image), else Drive's thumbnail */
 const imageOf = (w: WorkItem, width: number) => {
-  const src = hostedOf(w.drive);
-  return w.poster ?? (src ? (w.kind === "film" ? `${src}/ik-thumbnail.jpg` : src) : thumb(w.drive ?? "", width));
+  const h = hostedOf(w.drive);
+  return w.poster ?? (h ? (h.poster ?? h.src) : thumb(w.drive ?? "", width));
 };
 
 const ALL = "All";
@@ -217,7 +217,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 {current.instagram ? (
                   <InstagramMedia key={current.instagram} url={current.instagram} kind={embedKindOf(current.instagram)} title={current.title} priority className="absolute inset-0 !aspect-auto h-full" />
                 ) : current.kind === "film" && hostedOf(current.drive) ? (
-                  <FilmPlayer key={current.drive} video={hostedOf(current.drive)!} poster={current.poster} title={current.title} />
+                  <FilmPlayer key={current.drive} video={hostedOf(current.drive)!.src} poster={current.poster ?? hostedOf(current.drive)!.poster} title={current.title} />
                 ) : current.kind === "film" && current.drive ? (
                   <>
                     <span className="absolute inset-0 grid place-items-center text-[0.8rem] text-white/60" aria-hidden="true">
@@ -235,7 +235,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 ) : (
                   <Image
                     key={current.drive}
-                    src={hostedOf(current.drive) ?? thumb(current.drive ?? "", 2000)}
+                    src={hostedOf(current.drive)?.src ?? thumb(current.drive ?? "", 2000)}
                     alt={`${current.title}${current.client ? `, ${current.client}` : ""}`}
                     fill
                     sizes="(min-width: 768px) 70vh, 100vw"
