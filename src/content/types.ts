@@ -99,7 +99,7 @@ export type WorkItem = {
   /** The content category it belongs to, e.g. "Ads". The page's filters are built from these. */
   category: string;
   client?: string;
-  /** Drive file id. The file must be shared "anyone with the link". */
+  /** Drive file id. Plays from ImageKit when listed in hosted-work.ts; otherwise from Drive, which needs it shared "anyone with the link". */
   drive?: string;
   /** Instagram post or reel link */
   instagram?: string;
