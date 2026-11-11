@@ -6,11 +6,14 @@
   so the studio's Drive folder can stay private. Pieces not listed here still load from Drive, which
   needs the file shared "anyone with the link".
 
-  Files live under work/<industry>/ in the media library (Onshorelabs/vision-blend/ on ImageKit),
-  uploaded from the studio's Drive at the resolution they were exported. Two were re-encoded to fit
-  ImageKit's 100 MB upload cap: the Presidence One walkthrough (same 1600x700 frame, H.264 CRF 20)
-  and the Meghna One brand film (a 4K master, brought down to 1920x1080, H.264 CRF 19). The Godrej
-  ad is the studio's 1080 re-export (ADS/1080, 10 Nov 2026), re-encoded at CRF 16 for the same cap.
+  Files live under work/<industry>/ in the media library (Onshorelabs/vision-blend/ on ImageKit) and
+  play as uploaded (src/lib/stream.ts), so each file is the quality the visitor gets. Each is the
+  best version in the studio's Drive. Files over ImageKit's 100 MB upload cap were re-encoded with
+  H.264 (slow preset) at the highest bitrate that fits: the Presidence One walkthrough (1600x700,
+  2-pass 3.35 Mbps), the Meghna One brand film (4K master to 1920x1080, 2-pass 4.15 Mbps), the
+  Godrej ad (ADS/1080 re-export, CRF 16) and Upper Kharghar (re-shared 48 Mbps master, CRF 16).
+  The rest are the Drive files untouched. Below 1080p at source: FIFA and Presidence One launch
+  (1276x718), Site Supervisor (848x480).
 */
 import { media } from "@/lib/media";
 
@@ -18,13 +21,13 @@ const re = (name: string) => media(`/work/real-estate/${name}`);
 
 export const HOSTED_WORK: Record<string, string> = {
   // Real Estate films
-  "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv": re("presidence-one-walkthrough.mp4"),
+  "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv": re("presidence-one-walkthrough-hq.mp4"),
   "1EkolrQ1iLk_ctjj1Lca7VE33HN8rkiWQ": re("where-vision-meets-vista-1080.mp4"),
   "1H7Ff4uay6LEawRH_Ay_vlhc0B_WFKsEG": re("fifa-sai-world-empire.mp4"),
   "11xZkFbKV8wTJH8gR2TcIRJWgBgRInOgK": re("what-home-means-to-me.mp4"),
-  "1AkTnxyxJ0dJX6CHPz2hrJftqJWG1a2pz": re("upper-kharghar-growth-area.mp4"),
+  "1AkTnxyxJ0dJX6CHPz2hrJftqJWG1a2pz": re("upper-kharghar-growth-area-1080.mp4"),
   "1dqmYNyH-Pwce1PFTWms9VCyDTq4kYtHN": re("presidence-one-launch.mp4"),
-  "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z": re("meghna-one-brand-film.mp4"),
+  "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z": re("meghna-one-brand-film-hq.mp4"),
   "1iGBXHQDvv7D3STZZ2JqWWAS4lxtzeGkF": re("site-supervisor.mp4"),
   // Real Estate stills (Meghna Realty carousel slides)
   "1M_l_jlRKSJE4hXv4tJDpNFeC3RpWfNGT": re("where-better-work-begins.png"),

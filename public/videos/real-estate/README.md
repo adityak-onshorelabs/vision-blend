@@ -9,3 +9,15 @@ Statics & Carousels is the seven carousel PNGs swiping one to the next (the Driv
 
 To serve these from ImageKit, upload this folder to the same path in the media library and set
 `NEXT_PUBLIC_MEDIA_URL` (see `src/lib/media.ts`).
+
+## Higher-quality versions on ImageKit (11 Nov 2026)
+
+With `NEXT_PUBLIC_MEDIA_URL` set (production), the site plays the copies in ImageKit's
+`Onshorelabs/vision-blend/videos/real-estate/`, not these files. Those are recut from the best
+originals in the studio's Drive at source resolution: H.264 CRF 18 (capped at 6 Mbps), no audio,
+`+faststart`, 12 s from the same start point as these (found by matching each poster frame):
+testimonials 10 s (letterbox cropped to 1920x822), social-media 14 s (Upper Kharghar 48 Mbps master),
+event-launches 26 s, av-films 40 s, ai-films 12 s (Meghna 4K master to 1920x1080),
+construction-updates 20 s, ads 18 s (Godrej ADS/1080). campaign-film and statics-carousels are
+unchanged: FIFA's colour cut is not in the Drive folder, and the carousel is built from stills.
+The files here stay as the light local fallback; the posters (.jpg) are shared.
