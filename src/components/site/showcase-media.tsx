@@ -11,11 +11,14 @@
     scope film 2.35:1. Nothing is cropped, letterboxed or padded with a blurred fill.
   - Instagram (`instagram`): Instagram's own player fills the slot instead, cropped to the media.
   - Nothing at all yet: a marked staging placeholder, so a missing asset is never mistaken for work.
+  - Served from ImageKit (NEXT_PUBLIC_MEDIA_URL): the clip streams as adaptive HLS (src/lib/stream.ts),
+    attached only on first play so lazy loading holds.
 */
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/content/types";
+import { start, stop, streams, toMp4, type Stream } from "@/lib/stream";
 import { cn } from "@/lib/utils";
 import { embedKindOf, InstagramMedia } from "./instagram-media";
 
@@ -35,22 +38,41 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
   const ref = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
+  const stream = useRef<Stream>({ want: false });
   const hasVideo = !!video && !failed;
+
+  // Tear down hls.js when the clip changes or the card unmounts
+  useEffect(() => {
+    const s = stream.current;
+    return () => {
+      stop(s);
+      stream.current = { want: false };
+    };
+  }, [video]);
 
   useEffect(() => {
     const el = box.current;
     const v = ref.current;
-    if (!el || !v || !hasVideo || reduce) return;
+    if (!el || !v || !video || !hasVideo || reduce) return;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
-        else v.pause();
+        if (e.isIntersecting) start(v, video, stream.current);
+        else {
+          stream.current.want = false;
+          v.pause();
+        }
       },
       { threshold: 0.35 },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [hasVideo, reduce]);
+  }, [video, hasVideo, reduce]);
+
+  const onError = () => {
+    const v = ref.current;
+    if (v && video && stream.current.mode === "hls") toMp4(v, video, stream.current);
+    else setFailed(true);
+  };
 
   return (
     <div
@@ -75,7 +97,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && (
         <video
           ref={ref}
-          src={video}
+          src={streams(video!) ? undefined : video}
           muted
           loop
           playsInline
@@ -83,7 +105,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
           aria-label={poster?.alt}
           onPlaying={() => setPlaying(true)}
           onPause={() => setPlaying(false)}
-          onError={() => setFailed(true)}
+          onError={onError}
           className="absolute inset-0 size-full object-cover"
         />
       )}
@@ -92,7 +114,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && reduce && !playing ? (
         <button
           type="button"
-          onClick={() => ref.current?.play().catch(() => {})}
+          onClick={() => ref.current && video && start(ref.current, video, stream.current)}
           className="absolute inset-0 grid place-items-center"
           aria-label="Play the film"
         >

@@ -12,13 +12,19 @@
   - Lightbox: a native modal <dialog>, so focus is held inside, Esc closes and the page behind is
     inert. Films play in Drive's player (/file/d/<id>/preview), loaded only while open; stills show
     the full image. Prev/next (and the arrow keys) move through the pieces in the current filter.
-  - "Open in Drive" (or "on Instagram") is always offered, for when the player is blocked.
+  - "Open in Drive" (or "on Instagram") is offered for when the player is blocked.
+  - Hosted pieces (src/content/hosted-work.ts, keyed by Drive id) come from ImageKit instead: the card
+    shows ImageKit's frame of the film (or the image), and the lightbox plays the full film in our
+    own player, streamed at up to 1080p and above (film-player.tsx). Nothing of them loads from
+    Drive, so the studio's folder can stay private, and there is no "Open in Drive" link.
 */
 import Image from "next/image";
 import type { MouseEvent, ReactNode, Ref } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { hostedOf } from "@/content/hosted-work";
 import type { WorkItem } from "@/content/types";
 import { cn } from "@/lib/utils";
+import { FilmPlayer } from "./film-player";
 import { embedKindOf, embedRatioOf, InstagramMedia } from "./instagram-media";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -30,6 +36,11 @@ const keyOf = (w: WorkItem) => w.drive ?? w.instagram ?? w.title;
 const thumb = (id: string, width: number) => `https://lh3.googleusercontent.com/d/${id}=w${width}`;
 const preview = (id: string) => `https://drive.google.com/file/d/${id}/preview`;
 const view = (id: string) => `https://drive.google.com/file/d/${id}/view`;
+/** The card image: a set poster, else ImageKit's frame of a hosted film (or the hosted image), else Drive's thumbnail */
+const imageOf = (w: WorkItem, width: number) => {
+  const src = hostedOf(w.drive);
+  return w.poster ?? (src ? (w.kind === "film" ? `${src}/ik-thumbnail.jpg` : src) : thumb(w.drive ?? "", width));
+};
 
 const ALL = "All";
 
@@ -131,7 +142,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 <InstagramMedia url={w.instagram} kind={embedKindOf(w.instagram)} title={w.title} preview className="absolute inset-0 !aspect-auto h-full" />
               ) : (
                 <Image
-                  src={w.poster ?? thumb(w.drive ?? "", 1600)}
+                  src={imageOf(w, 1600)}
                   alt=""
                   fill
                   // The first row is above the fold (it is the page's largest image)
@@ -205,6 +216,8 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
               <div className="relative bg-black" style={{ aspectRatio: String(r), width: `min(100%, calc((100dvh - 10.5rem) * ${r}))` }}>
                 {current.instagram ? (
                   <InstagramMedia key={current.instagram} url={current.instagram} kind={embedKindOf(current.instagram)} title={current.title} priority className="absolute inset-0 !aspect-auto h-full" />
+                ) : current.kind === "film" && hostedOf(current.drive) ? (
+                  <FilmPlayer key={current.drive} video={hostedOf(current.drive)!} poster={current.poster} title={current.title} />
                 ) : current.kind === "film" && current.drive ? (
                   <>
                     <span className="absolute inset-0 grid place-items-center text-[0.8rem] text-white/60" aria-hidden="true">
@@ -222,7 +235,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 ) : (
                   <Image
                     key={current.drive}
-                    src={thumb(current.drive ?? "", 2000)}
+                    src={hostedOf(current.drive) ?? thumb(current.drive ?? "", 2000)}
                     alt={`${current.title}${current.client ? `, ${current.client}` : ""}`}
                     fill
                     sizes="(min-width: 768px) 70vh, 100vw"
@@ -240,14 +253,16 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                 </span>
                 <span className="text-[clamp(1.15rem,1rem+0.6vw,1.6rem)] font-[340] tracking-[-0.02em]">{current.title}</span>
               </div>
-              <a
-                href={current.instagram ?? view(current.drive ?? "")}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="cta cta-sm cta-line border-white/60 text-white hover:border-white hover:bg-white hover:text-[var(--night)] focus-visible:outline-white"
-              >
-                {current.instagram ? "Open on Instagram" : "Open in Drive"} <span className="arr" aria-hidden="true">&#8599;</span>
-              </a>
+              {(current.instagram || !hostedOf(current.drive)) && (
+                <a
+                  href={current.instagram ?? view(current.drive ?? "")}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="cta cta-sm cta-line border-white/60 text-white hover:border-white hover:bg-white hover:text-[var(--night)] focus-visible:outline-white"
+                >
+                  {current.instagram ? "Open on Instagram" : "Open in Drive"} <span className="arr" aria-hidden="true">&#8599;</span>
+                </a>
+              )}
             </div>
           </div>
         )}
