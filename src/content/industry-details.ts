@@ -317,8 +317,16 @@ const details: Record<string, Extra> = {
     link (Drive) does not open publicly, so its Instagram reel leads instead. Model-led leads with
     a 12-second loop (public/videos/d2c/, 6-18 s of the centre Drive file, 1uWBG_iXqgcrGezrzCefu5I6DF70HGB-p,
     a private file shared with the team); the left file is the one the doc flags as the wrong
-    film, so it is not used. Offer Creatives has no link yet. Hospitality & Services and Automobile have no links
-    yet: every card is a marked placeholder. Heroes: see the note above the hero constants.
+    film, so it is not used. Offer Creatives has no link yet. Heroes: see the note above the hero
+    constants.
+
+    Final content (studio's portfolio Drive, 12 Nov 2026): Hospitality & Services and Automobile get
+    their portfolios and lead card loops (12 s, cut by npm run media:import) from the category
+    folders; categories whose folders are still empty (H&S Brand Films, Events & Launches,
+    Branding, Statics; Automobile Ads, Statics) keep their placeholder cards. Automobile gains an
+    AI Videos category from its Drive folder. Several automotive and one H&S film are the studio's
+    Instagram downloads (360p-720p); ask for 1080p exports. Titles are ours, from the file names,
+    kept free of client names.
   */
   d2c: {
     summary: "Product shoots, feeds and ads that turn scrolling into buying.",
@@ -429,14 +437,54 @@ const details: Record<string, Extra> = {
       },
       servicesTitle: "What we make for *hospitality & service brands*",
       offerings: [
-        { title: "Social Media", subtitle: "Your brand's digital presence", text: "", ratio: [9, 16] },
-        { title: "Ads", subtitle: "To bring you enquiries, bookings and sales", text: "", ratio: [16, 9] },
+        {
+          title: "Social Media",
+          subtitle: "Your brand's digital presence",
+          text: "",
+          image: { src: media("/videos/hospitality-services/one-above-gym-borivali-cinematic.jpg"), alt: "A gym interior with a mural of a muscular back on a pillar, from a vertical reel" },
+          ratio: [1080, 1920],
+          video: media("/videos/hospitality-services/one-above-gym-borivali-cinematic.mp4"),
+        },
+        {
+          title: "Ads",
+          subtitle: "To bring you enquiries, bookings and sales",
+          text: "",
+          image: { src: media("/videos/hospitality-services/one-above-reel-2-ad-group-classes-one-above-kharghar.jpg"), alt: "The entrance of a fitness studio under a lit sign, from a vertical ad" },
+          ratio: [1080, 1920],
+          video: media("/videos/hospitality-services/one-above-reel-2-ad-group-classes-one-above-kharghar.mp4"),
+        },
         { title: "Brand Films", subtitle: "The people, places and thinking behind your brand", text: "", ratio: [16, 9] },
         { title: "Events & Launches", subtitle: "Key moments in your brand's story", text: "", ratio: [16, 9] },
         { title: "Branding", subtitle: "A visual identity for your brand", text: "", ratio: [3, 4] },
-        { title: "AI Videos", subtitle: "Your vision, without a production shoot", text: "", ratio: [16, 9] },
+        {
+          title: "AI Videos",
+          subtitle: "Your vision, without a production shoot",
+          text: "",
+          image: { src: media("/videos/hospitality-services/wedding-destination-ai-video-9-a-rose-tinted-wedding-dream.jpg"), alt: "Pink roses and white hydrangeas in a wedding arch, from an AI-generated reel" },
+          ratio: [1080, 1920],
+          video: media("/videos/hospitality-services/wedding-destination-ai-video-9-a-rose-tinted-wedding-dream.mp4"),
+        },
         { title: "Statics & Carousels", subtitle: "Narratives in composition", text: "", ratio: [4, 5] },
       ],
+      work: {
+        title: "Work for *hospitality & services*",
+        lead: "Films, reels, ads and AI videos made for venues and service businesses, each one in full.",
+        items: [
+          { title: "Inside the gym", category: "Social Media", drive: "1-aG_ztgcatNJeVBXj-5DVcgS106NZFiN", kind: "film", ratio: [1080, 1920] },
+          { title: "What you see inside", category: "Social Media", drive: "1uvJxTVWt5OVjTBZH-aC_Wj5jnQwTqNBR", kind: "film", ratio: [1080, 1920] },
+          { title: "The art of bespoke", category: "Social Media", drive: "1GY961oxLTh4HKbv-ueiEWzNJJgAKYXuj", kind: "film", ratio: [720, 1280] },
+          { title: "Two sides of a morning", category: "Social Media", drive: "1z9BGsWchV3Bz4UhfDQJbR8IXubUMfJXn", kind: "film", ratio: [1920, 1080] },
+          { title: "Before and after", category: "Social Media", drive: "1FTqTDOvyDtnIODfrcEtSd06A-khkYaEZ", kind: "film", ratio: [3840, 2160] },
+          { title: "Group classes", category: "Ads", drive: "1Mb_0Zagi7SznhjTvm1Tf7fOnHg7t6ku6", kind: "film", ratio: [1080, 1920] },
+          { title: "Space and equipment", category: "Ads", drive: "1BcSo5gbwlRMX0m4niHPcWauC2wWOoomY", kind: "film", ratio: [1080, 1920] },
+          { title: "Five cash-flow mistakes", category: "Ads", drive: "1TaQw8_wjIhPo1YB74K72152XQR_oPGVH", kind: "film", ratio: [1080, 1920] },
+          { title: "Budget vs forecasting", category: "Ads", drive: "1d7n1NAquAF20sbM10sZ2IVr5uwHuO4rB", kind: "film", ratio: [1080, 1920] },
+          { title: "A rose-tinted wedding", category: "AI Videos", drive: "1OrFsm7E8U8yMj84100jI0JnAWMOy7KZR", kind: "film", ratio: [1080, 1920] },
+          { title: "A South Indian dream", category: "AI Videos", drive: "1jIuG0OREseTVdq_M0dF-YFE54llv-atC", kind: "film", ratio: [1080, 1920] },
+          { title: "A home that grows with you", category: "AI Videos", drive: "1BCoShUXKCZmd_xBivVuyEzmO1sROvSCn", kind: "film", ratio: [1080, 1920] },
+          { title: "Spaces that inspire", category: "AI Videos", drive: "1PPtk37URN6RMKR-yqglLnrG1494tbnTc", kind: "film", ratio: [1080, 1920] },
+        ],
+      },
       value: designedToDo("Establish a distinct presence for your brand, its expertise and experience.", "Turn interest into enquiries, bookings and sales opportunities."),
       challenges: [],
       process: STANDARD_PROCESS,
@@ -470,11 +518,48 @@ const details: Record<string, Extra> = {
       },
       servicesTitle: "What we make for *automotive brands*",
       offerings: [
-        { title: "Events", subtitle: "Launches and experiences, documented", text: "", ratio: [16, 9] },
-        { title: "Social Media", subtitle: "Your brand's digital presence", text: "", ratio: [9, 16] },
+        {
+          title: "Events",
+          subtitle: "Launches and experiences, documented",
+          text: "",
+          image: { src: media("/videos/automobile/the-wait-is-over-the-all-new-skoda-kodiaq-has-officially-lan.jpg"), alt: "A projected launch-event logo on a dark wall, from a vertical reel" },
+          ratio: [360, 640],
+          video: media("/videos/automobile/the-wait-is-over-the-all-new-skoda-kodiaq-has-officially-lan.mp4"),
+        },
+        {
+          title: "Social Media",
+          subtitle: "Your brand's digital presence",
+          text: "",
+          image: { src: media("/videos/automobile/this-festive-season-bring-home-new-beginnings-and-a-brand-ne.jpg"), alt: "A man in a yellow kurta beside a new car outside a showroom, from a festive reel" },
+          ratio: [720, 1280],
+          video: media("/videos/automobile/this-festive-season-bring-home-new-beginnings-and-a-brand-ne.mp4"),
+        },
+        // Added 12 Nov 2026: the studio's Drive has an AI Videos folder for automotive
+        {
+          title: "AI Videos",
+          subtitle: "Your vision, without a production shoot",
+          text: "",
+          image: { src: media("/videos/automobile/scratchgard-reel-3-before-it-becomes-ppf-it-becomes-data.jpg"), alt: "A black saloon under strip lights in a dark garage, from an AI-generated reel" },
+          ratio: [1080, 1920],
+          video: media("/videos/automobile/scratchgard-reel-3-before-it-becomes-ppf-it-becomes-data.mp4"),
+        },
         { title: "Ads", subtitle: "To bring you enquiries and sales", text: "", ratio: [16, 9] },
         { title: "Statics & Carousels", subtitle: "Design and detail in composition", text: "", ratio: [4, 5] },
       ],
+      work: {
+        title: "Work for *automotive brands*",
+        lead: "Launch films, festive reels and AI videos made for automotive brands, each one in full.",
+        items: [
+          { title: "The new Kodiaq arrives", category: "Events", drive: "1bwnDGnzAkycwWOJdQB7G3wmVrqEM91gc", kind: "film", ratio: [360, 640] },
+          { title: "A showroom relaunch", category: "Events", drive: "1TwIf9X5ztN44CopWl4nxKVpK52tXPDlF", kind: "film", ratio: [360, 640] },
+          { title: "Festive season", category: "Social Media", drive: "1oS_RcDIHKmeKNZc-wH7rFVNPvRH4YqVP", kind: "film", ratio: [720, 1280] },
+          { title: "Raksha Bandhan", category: "Social Media", drive: "1J1qAgcieK8Z1Ftwve7nIHloRm4ASzq99", kind: "film", ratio: [720, 1280] },
+          { title: "Before it becomes PPF", category: "AI Videos", drive: "1vC40P7WuoPap8OiYskLZOgy95J7sVQzN", kind: "film", ratio: [1080, 1920] },
+          { title: "A closer look at the topcoat", category: "AI Videos", drive: "14ncPnjU2LUcTkOF4Cgp2vdUCbQItVlnS", kind: "film", ratio: [720, 1280] },
+          { title: "Low mileage is not enough", category: "AI Videos", drive: "1tYduhOJSt3NtFKL839xJO75cKuGk9WQT", kind: "film", ratio: [1080, 1920] },
+          { title: "Your shortlist starts with your day", category: "AI Videos", drive: "16jsdb0EgsKl8_mMn8TmhmK6ZMcZE8iRZ", kind: "film", ratio: [1080, 1920] },
+        ],
+      },
       value: designedToDo("Establish a distinct presence for your brand and its vehicles.", "Turn vehicle interest into test-drive enquiries and sales opportunities."),
       challenges: [],
       process: STANDARD_PROCESS,

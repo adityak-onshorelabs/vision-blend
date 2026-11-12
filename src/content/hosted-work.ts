@@ -52,6 +52,29 @@ export const HOSTED_WORK: Record<string, Hosted> = {
   "1OlhEiTcdKJGAt5_NEKBxzWcXcAMMg2TX": still("real-estate", "smoother-start-every-workday.png"),
   "18ffMNJCo-xpfWW5VIXYEHD_vWQHbyi4a": still("real-estate", "wellness-beyond-workplace.png"),
   "1NPcP56ChH6UOrCUdJoFsKsud0-zoiPu5": still("real-estate", "your-own-personal-rainforest.png"),
+  // Hospitality & Services films (final content, 12 Nov 2026)
+  "1-aG_ztgcatNJeVBXj-5DVcgS106NZFiN": film("hospitality-services", "one-above-gym-borivali-cinematic"),
+  "1uvJxTVWt5OVjTBZH-aC_Wj5jnQwTqNBR": film("hospitality-services", "one-above-what-you-see-inside-01"),
+  "1GY961oxLTh4HKbv-ueiEWzNJJgAKYXuj": film("hospitality-services", "ceo-rules-the-art-of-bespoke-at-ceo-rules-001"),
+  "1z9BGsWchV3Bz4UhfDQJbR8IXubUMfJXn": film("hospitality-services", "basilico-video-1-two-sides-of-a-basilico-morning-morning"),
+  "1FTqTDOvyDtnIODfrcEtSd06A-khkYaEZ": film("hospitality-services", "wd-after-vs-before-horizontala-video-01"),
+  "1Mb_0Zagi7SznhjTvm1Tf7fOnHg7t6ku6": film("hospitality-services", "one-above-reel-2-ad-group-classes-one-above-kharghar"),
+  "1BcSo5gbwlRMX0m4niHPcWauC2wWOoomY": film("hospitality-services", "one-above-reel-4-ad-space-and-equipment-one-above-kharghar"),
+  "1TaQw8_wjIhPo1YB74K72152XQR_oPGVH": film("hospitality-services", "cfo-sme-top-5-cashflow-mistakes-that-kill-bus"),
+  "1d7n1NAquAF20sbM10sZ2IVr5uwHuO4rB": film("hospitality-services", "cfosme-budget-vs-forecasting-whata-s-the-difference-1"),
+  "1OrFsm7E8U8yMj84100jI0JnAWMOy7KZR": film("hospitality-services", "wedding-destination-ai-video-9-a-rose-tinted-wedding-dream"),
+  "1jIuG0OREseTVdq_M0dF-YFE54llv-atC": film("hospitality-services", "wedding-destination-ai-video-7-a-south-indian-dream-1"),
+  "1BCoShUXKCZmd_xBivVuyEzmO1sROvSCn": film("hospitality-services", "myrrah-7-a-home-that-grows-with-you-d2"),
+  "1PPtk37URN6RMKR-yqglLnrG1494tbnTc": film("hospitality-services", "myrrah-spaces-that-inspire"),
+  // Automobile films (final content, 12 Nov 2026)
+  "1bwnDGnzAkycwWOJdQB7G3wmVrqEM91gc": film("automobile", "the-wait-is-over-the-all-new-skoda-kodiaq-has-officially-lan"),
+  "1TwIf9X5ztN44CopWl4nxKVpK52tXPDlF": film("automobile", "a-new-beginning-the-same-trust-garnet-motors-proudly-relaunc"),
+  "1oS_RcDIHKmeKNZc-wH7rFVNPvRH4YqVP": film("automobile", "this-festive-season-bring-home-new-beginnings-and-a-brand-ne"),
+  "1J1qAgcieK8Z1Ftwve7nIHloRm4ASzq99": film("automobile", "some-bonds-deserve-more-than-just-a-thread-a-i-this-raksha-b"),
+  "1vC40P7WuoPap8OiYskLZOgy95J7sVQzN": film("automobile", "scratchgard-reel-3-before-it-becomes-ppf-it-becomes-data"),
+  "14ncPnjU2LUcTkOF4Cgp2vdUCbQItVlnS": film("automobile", "choosing-ppf-take-a-closer-look-at-its-topcoat-depending-on"),
+  "1tYduhOJSt3NtFKL839xJO75cKuGk9WQT": film("automobile", "60k-cars-video-03-a-low-mileage-is-not-enough-d2"),
+  "16jsdb0EgsKl8_mMn8TmhmK6ZMcZE8iRZ": film("automobile", "60k-cars-video-8-your-shortlist-starts-with-your-day"),
 };
 
 /** The hosted file for a Drive id, when there is one and ImageKit is configured */
