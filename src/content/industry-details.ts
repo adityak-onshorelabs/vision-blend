@@ -77,14 +77,15 @@ const designedToDo = (awareness: string, sales: string) => ({
   film"); none has been supplied, so these are Unsplash License photos, converted to B&W and resized
   to 2560 wide, until the studio sends its own: D2C, a stoneware bottle (Tom Crew, unsplash.com/photos/E64Hv5Ab_nQ);
   Hospitality & Services, a restaurant table (Michael Wave, unsplash.com/photos/gVkAiPchYhY);
-  Automobile, car bodywork (Quentin Martinez, unsplash.com/photos/V8H-K2032Kc).
+  Automobile, a macro of a luxury saloon's LED headlight (Eyosias G, unsplash.com/photos/0ELj1YumPAI;
+  swapped in 12 Nov 2026 for the earlier bodywork shot).
 */
 const D2C_HERO = { src: "/images/d2c-hero-bottle.jpg", alt: "Black-and-white still life of a stoneware bottle on a table against a dark wall" };
 const HOSPITALITY_HERO = {
   src: "/images/hospitality-services-hero-table.jpg",
   alt: "Black-and-white restaurant table in sunlight, with glassware casting long shadows across the cloth",
 };
-const AUTOMOBILE_HERO = { src: "/images/automobile-hero-bodywork.jpg", alt: "Black-and-white close-up of the curve of glossy car bodywork" };
+const AUTOMOBILE_HERO = { src: "/images/automobile-hero-headlight.jpg", alt: "Black-and-white macro of a luxury car's LED headlight under the bonnet line" };
 
 const details: Record<string, Extra> = {
   "real-estate": {

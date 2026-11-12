@@ -1,10 +1,12 @@
+import Image from "next/image";
 import Link from "next/link";
 import { IndustryArt } from "@/components/site/industry-art";
 import type { Industry } from "@/content/types";
 import { cn } from "@/lib/utils";
 
 /**
- * A preview of one industry page: the drawing in a panel, the page's address under it, the name,
+ * A preview of one industry page: the sector's photo (its page hero) in a panel, or its drawing
+ * while it has no real photo, the page's address under it, the name,
  * the one-line summary and a round "open" button. The whole card is the link. Hover draws the brown
  * top rule, tints the border, fills the button and plays the drawing's own motion.
  */
@@ -25,6 +27,8 @@ export function IndustryCard({
 }) {
   const href = `/${lang}/industries/${s.slug}`;
   const count = s.detail?.offerings.length ?? s.services.length;
+  // The sector's own hero photo; the copper placeholder is not a sector photo, so the drawing stays
+  const photo = s.detail?.hero && !s.detail.hero.placeholder ? s.detail.hero : null;
 
   return (
     <Link href={href} className={cn("ind-card group", className)} aria-label={`${s.name}: open the industry page`}>
@@ -39,10 +43,25 @@ export function IndustryCard({
               : "aspect-[16/10] md:aspect-auto md:h-[clamp(140px,20svh,200px)]",
         )}
       >
-        <span className="absolute start-4 top-4 text-[0.74rem] font-medium tracking-[0.12em] tabular-nums text-[var(--faint)]">
+        {photo ? (
+          <Image
+            src={photo.src}
+            alt=""
+            fill
+            sizes={size === "sm" ? "(min-width: 1024px) 30vw, (min-width: 768px) 45vw, 100vw" : "(min-width: 1024px) 50vw, 100vw"}
+            className="object-cover transition-transform duration-[1200ms] ease-[var(--ease)] group-hover:scale-[1.05] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
+          />
+        ) : (
+          <IndustryArt slug={s.slug} className={cn("h-auto max-h-[72%] text-ink", size === "sm" ? "w-[62%]" : "w-[70%] max-w-[420px]")} />
+        )}
+        <span
+          className={cn(
+            "absolute start-4 top-4 z-[1] text-[0.74rem] font-medium tracking-[0.12em] tabular-nums text-[var(--faint)]",
+            photo && "rounded-full bg-[oklch(0.975_0.003_85/0.85)] px-2.5 py-1 shadow-[inset_0_0_0_1px_var(--rule)]",
+          )}
+        >
           <b className="font-medium text-brand">{String(index + 1).padStart(2, "0")}</b> / {String(total).padStart(2, "0")}
         </span>
-        <IndustryArt slug={s.slug} className={cn("h-auto max-h-[72%] text-ink", size === "sm" ? "w-[62%]" : "w-[70%] max-w-[420px]")} />
         <span className="ind-card-path" aria-hidden="true">
           /industries/<b>{s.slug}</b>
         </span>
