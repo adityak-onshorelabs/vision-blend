@@ -313,7 +313,8 @@ export const filmSchema = z.object({
   status: z.enum(["preparing", "live", "failed"]),
   requestedAt: z.string(),
   updatedAt: z.string().optional(),
-  base: z.url().optional(),
+  /** https on R2; a /films/… site path when prepared locally in development (scripts/films/local-run.sh) */
+  base: z.string().regex(/^(\/films\/\S+|https:\/\/\S+)$/).optional(),
   sizes: z.array(z.number().int().positive()).optional(),
   width: z.number().int().positive().optional(),
   height: z.number().int().positive().optional(),

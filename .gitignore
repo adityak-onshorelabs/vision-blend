@@ -43,3 +43,6 @@ next-env.d.ts
 
 # local admin storage when DATABASE_URL is not set (written by ../admin)
 .cms-dev.json
+
+# films prepared locally by scripts/films/local-run.sh (production films are on R2)
+/public/films/

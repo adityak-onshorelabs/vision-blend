@@ -18,7 +18,9 @@ if (!FILMS_CALLBACK || !FILMS_SECRET) {
   process.exit(1);
 }
 
-const body = { key: FILM_KEY, status, run: `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}` };
+const body = { key: FILM_KEY, status };
+// Absent when the pipeline runs locally (local-run.sh)
+if (GITHUB_RUN_ID) body.run = `${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}`;
 if (status === "live") {
   Object.assign(body, JSON.parse(readFileSync(`${FILM_OUT}/meta.json`, "utf8")), { base: FILM_BASE });
 } else {
