@@ -19,7 +19,7 @@ type Props = {
   tagline: string;
   copy: Content["home"];
   services: { slug: string; name: string }[];
-  labels: { startProject: string; seeWork: string };
+  labels: { startProject: string };
 };
 
 export function Hero({ lang, tagline, copy, services, labels }: Props) {
@@ -62,9 +62,6 @@ export function Hero({ lang, tagline, copy, services, labels }: Props) {
             <div className="flex flex-wrap justify-center gap-2.5 hero-fade" style={{ "--i": 2 } as CSSProperties}>
               <Link href={`/${lang}/contact`} className="cta">
                 {labels.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
-              </Link>
-              <Link href={`/${lang}/work`} className="cta cta-line">
-                {labels.seeWork} <span className="arr" aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           </div>

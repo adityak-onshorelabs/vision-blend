@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ClientLogos } from "@/components/site/client-logos";
+import { PortfolioGate } from "@/components/site/forms/portfolio-gate";
 import { IndustryArt } from "@/components/site/industry-art";
 import { HeroHeader } from "@/components/site/hero-header";
 import { IndustryCard } from "@/components/site/industry-card";
@@ -124,8 +125,9 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
   // Both routes into an enquiry carry the industry, so the studio knows which page it came from
   const contact = industryContactHref(lang, s);
   const brief = industryGmail(c.company, s);
-  // The portfolio subpage, when the industry has one
+  // The portfolio subpage, when the industry has one. Every way in goes through the enquiry form.
   const work = detail?.work ? `/${lang}/industries/${s.slug}/work` : null;
+  const gateFor = { slug: s.slug, name: s.name };
 
   return (
     <>
@@ -166,9 +168,9 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                       {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                     </Link>
                     {work && (
-                      <Link href={work} className="cta cta-line">
+                      <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line" autoOpen>
                         See our work <span className="arr" aria-hidden="true">&rarr;</span>
-                      </Link>
+                      </PortfolioGate>
                     )}
                     <a href="#industry-services" className="cta cta-line">
                       Explore our services <span className="arr" aria-hidden="true">&darr;</span>
@@ -211,9 +213,9 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                   {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                 </Link>
                 {work && (
-                  <Link href={work} className="cta cta-line">
+                  <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line" autoOpen>
                     See our work <span className="arr" aria-hidden="true">&rarr;</span>
-                  </Link>
+                  </PortfolioGate>
                 )}
                 <a href="#industry-services" className="cta cta-line">
                   Explore our services <span className="arr" aria-hidden="true">&darr;</span>
@@ -354,9 +356,9 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
           {work && detail?.work && (
             <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
               <span className="t-label">{pad(detail.work.items.length)} pieces, played in full</span>
-              <Link href={work} className="cta cta-line">
-                See the work <span className="arr" aria-hidden="true">&rarr;</span>
-              </Link>
+              <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line">
+                See our work <span className="arr" aria-hidden="true">&rarr;</span>
+              </PortfolioGate>
             </div>
           )}
         </div>
@@ -487,9 +489,6 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
             ))}
           </ul>
           <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-t border-border pt-6">
-            <Link href={`/${lang}/work`} className="t-label u text-ink">
-              {c.ui.seeWork} &rarr;
-            </Link>
             <Link href={`/${lang}/about`} className="t-label u text-ink">
               About the studio &rarr;
             </Link>

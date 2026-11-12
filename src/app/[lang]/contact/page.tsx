@@ -1,17 +1,17 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Suspense } from "react";
-import { ByIndustry } from "@/components/site/by-industry";
-import { ContactCard } from "@/components/site/contact-card";
-import { ProjectArt } from "@/components/site/project-art";
+import { ProjectForm } from "@/components/site/forms/project-form";
 import { Reach } from "@/components/site/reach";
-import { ServiceIllustration } from "@/components/site/service-illustration";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
 import { hl } from "@/lib/highlight";
-import { industryGmail } from "@/lib/industry-enquiry";
 import { siteUrl } from "@/lib/site";
+
+/*
+  Contact: the enquiry form first, WhatsApp second (brief, 11 Nov 2026), then the plain details.
+  INTERIM layout until Gursimar's visual reference and final copy arrive. Arriving from an industry
+  page (?industry=<slug>), the form names the industry and sends it with the enquiry.
+*/
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/contact">): Promise<Metadata> {
   const { lang } = await params;
@@ -25,135 +25,50 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
   if (!hasLocale(lang)) notFound();
   const c = await getContent(lang);
   const cp = c.contactPage;
-  const exploreArt = [
-    <ProjectArt key="work" slug="fifa-x-paradise" className="w-full" />,
-    <ServiceIllustration key="services" slug="branding" className="h-auto w-full" />,
-    <ProjectArt key="about" slug="people-files" className="w-full" />,
-  ];
+  const wa = c.company.whatsapp;
 
   return (
     <>
-      {/* 1. The brief: what happens next on the left, the email card on the right. */}
       <section className="band" aria-labelledby="contact-title">
         <div className="frame">
           <div className="index-row">
             <span className="t-label marker">Contact</span>
-            <span className="count">{c.company.instagramHandle}</span>
           </div>
           <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
-            <div className="grid content-start gap-10 lg:col-span-5">
-              <div className="grid gap-6">
-                <h1 id="contact-title" className="t-display max-w-[9ch]">
-                  {hl(cp.title)}
-                  <span className="stop">.</span>
-                </h1>
-                <p className="t-lead max-w-[30ch] text-muted-foreground">{cp.lead}</p>
-              </div>
-
-              <div className="grid gap-4">
-                <h2 className="t-label marker">{cp.next.title}</h2>
-                <ol className="border-t border-border">
-                  {cp.next.steps.map((s, i) => (
-                    <li key={s.title} className="group grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-border py-4">
-                      <span className="pt-1 text-[0.78rem] font-medium text-[var(--faint)] transition-colors group-hover:text-brand">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="grid gap-1">
-                        <span className="text-[1.05rem]">{s.title}</span>
-                        <span className="text-[0.94rem] text-muted-foreground">{s.text}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ol>
-              </div>
+            <div className="grid content-start gap-6 lg:col-span-4">
+              <h1 id="contact-title" className="t-display max-w-[9ch]">
+                {hl(cp.title)}
+                <span className="stop">.</span>
+              </h1>
+              <p className="t-lead max-w-[30ch] text-muted-foreground">{cp.lead}</p>
             </div>
-
-            <div className="lg:col-span-7 lg:col-start-6">
-              {/* Open on the page, like the steps beside it: a box here floated over the gradient */}
-              <div className="border-t-2 border-brand pt-6 sm:pt-8">
-                {/* Arriving from an industry page (?industry=slug): name the industry, ask that
-                    page's question, and pre-fill the industry in the emailed brief */}
-                <Suspense fallback={<ContactCard content={c} />}>
-                  <ByIndustry
-                    variants={Object.fromEntries(
-                      c.industries.map((ind) => [
-                        ind.slug,
-                        <div key={ind.slug} className="grid gap-10">
-                          <div className="grid gap-3">
-                            <span className="t-label marker">{ind.name}</span>
-                            {ind.detail?.enquiry && (
-                              <>
-                                <h2 className="t-h3">{ind.detail.enquiry.prompt}</h2>
-                                <p className="max-w-[46ch] text-muted-foreground">{ind.detail.enquiry.placeholder}</p>
-                              </>
-                            )}
-                          </div>
-                          <ContactCard content={c} gmail={industryGmail(c.company, ind) ?? undefined} />
-                        </div>,
-                      ]),
-                    )}
-                  >
-                    <ContactCard content={c} />
-                  </ByIndustry>
-                </Suspense>
-              </div>
+            <div className="border-t-2 border-brand pt-6 sm:pt-8 lg:col-span-7 lg:col-start-6">
+              <ProjectForm copy={c.forms} industriesFromUrl={c.industries.map(({ slug, name }) => ({ slug, name }))} idPrefix="contact" />
             </div>
           </div>
         </div>
       </section>
 
-      {/* 2. Rather talk: Instagram first, then the plain contact details. */}
       <section className="band band-dark" aria-labelledby="talk-title">
         <div className="frame">
           <div className="index-row">
-            <span className="t-label marker">Talk</span>
-            <span className="count">{c.company.website}</span>
+            <span className="t-label marker">WhatsApp</span>
           </div>
           <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-6">
             <div className="grid content-start gap-6 lg:col-span-6">
               <h2 id="talk-title" className="t-h2">
-                {hl(cp.talk.title.replace(/\?$/, ""))}
+                {hl(wa.title.replace(/\?$/, ""))}
                 <span className="stop">?</span>
               </h2>
-              <p className="t-lead max-w-[32ch] text-muted-foreground">{cp.talk.text}</p>
-              <a href={c.company.instagram} target="_blank" rel="noopener noreferrer" className="cta justify-self-start">
-                {cp.talk.cta} <span className="arr" aria-hidden="true">↗</span>
+              <p className="t-lead max-w-[32ch] text-muted-foreground">{wa.text}</p>
+              <a href={wa.url} target="_blank" rel="noopener noreferrer" className="cta justify-self-start">
+                {wa.cta} <span className="arr" aria-hidden="true">↗</span>
               </a>
             </div>
             <div className="lg:col-span-5 lg:col-start-8">
               <Reach content={c} />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* 3. Not ready yet: three ways back into the site, so the page never dead-ends. */}
-      <section className="band band-tint" aria-labelledby="explore-title">
-        <div className="frame">
-          <div className="index-row">
-            <span className="t-label marker">Explore</span>
-          </div>
-          <h2 id="explore-title" className="t-h2 mb-[clamp(32px,4vw,56px)]">
-            {hl(cp.explore.title.replace(/\?$/, ""))}
-            <span className="stop">?</span>
-          </h2>
-          <ul className="grid gap-4 md:grid-cols-3 md:gap-6">
-            {cp.explore.links.map((l, i) => (
-              <li key={l.href}>
-                <Link
-                  href={`/${lang}${l.href}`}
-                  className="group relative grid h-full content-start gap-4 surface pb-2 pt-6 before:absolute before:inset-x-0 before:top-0 before:h-0.5 before:origin-left before:scale-x-0 before:bg-brand before:transition-transform before:duration-[600ms] hover:before:scale-x-100 focus-visible:before:scale-x-100"
-                >
-                  <span className="grid aspect-[3/2] place-items-center well p-3 text-ink">{exploreArt[i]}</span>
-                  <span className="flex items-baseline justify-between gap-3">
-                    <span className="t-h3">{l.title}</span>
-                    <span aria-hidden="true" className="transition-transform duration-300 group-hover:translate-x-1">&rarr;</span>
-                  </span>
-                  <span className="text-[0.95rem] text-muted-foreground">{l.text}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
     </>

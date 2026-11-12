@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { Footer } from "@/components/site/footer";
 import { Header } from "@/components/site/header";
 import { PageTransition } from "@/components/site/page-transition";
+import { WhatsAppButton } from "@/components/site/whatsapp-button";
 import { getContent } from "@/content";
 import { hasLocale, localeDir, locales } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
@@ -65,6 +66,7 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
           {children}
         </main>
         <Footer lang={lang} content={c} />
+        <WhatsAppButton label={c.company.whatsapp.label} name={c.company.whatsapp.name} url={c.company.whatsapp.url} />
         <PageTransition
           lang={lang}
           labels={{ home: c.company.name, work: "Work", industries: "Industries", about: "About", contact: c.ui.startProject }}

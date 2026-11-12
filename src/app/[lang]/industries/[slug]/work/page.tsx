@@ -48,6 +48,8 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
     description: d.work.lead,
     alternates: { canonical: url },
     openGraph: { title, description: d.work.lead, url },
+    // Behind the enquiry form (src/lib/gate.ts), so kept out of search results
+    robots: { index: false, follow: false },
   };
 }
 

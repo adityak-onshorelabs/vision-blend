@@ -44,7 +44,12 @@ const imageOf = (w: WorkItem, width: number) => {
 
 const ALL = "All";
 
-export function WorkGallery({ items }: { items: WorkItem[] }) {
+/**
+ * `films`: the home page's brand films, a plain two-column grid of horizontal films with no filters
+ * (the portfolio default is the filterable masonry).
+ */
+export function WorkGallery({ items, variant = "portfolio" }: { items: WorkItem[]; variant?: "portfolio" | "films" }) {
+  const films = variant === "films";
   // Categories in the order they first appear, with a count each
   const categories = useMemo(() => {
     const counts = new Map<string, number>();
@@ -111,22 +116,26 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
 
   return (
     <>
-      <div role="group" aria-label="Filter by category" className="mb-8 flex flex-wrap gap-2 md:mb-10">
-        {[[ALL, items.length] as const, ...categories].map(([name, count]) => (
-          <button key={name} type="button" className="chip" aria-pressed={filter === name} onClick={() => setFilter(name)}>
-            {name}
-            <span className="tabular-nums opacity-60">{count}</span>
-          </button>
-        ))}
-      </div>
+      {!films && (
+        <>
+          <div role="group" aria-label="Filter by category" className="mb-8 flex flex-wrap gap-2 md:mb-10">
+            {[[ALL, items.length] as const, ...categories].map(([name, count]) => (
+              <button key={name} type="button" className="chip" aria-pressed={filter === name} onClick={() => setFilter(name)}>
+                {name}
+                <span className="tabular-nums opacity-60">{count}</span>
+              </button>
+            ))}
+          </div>
 
-      <p className="sr-only" aria-live="polite">
-        {shown.length} pieces shown
-      </p>
+          <p className="sr-only" aria-live="polite">
+            {shown.length} pieces shown
+          </p>
+        </>
+      )}
 
-      <ul className="columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4">
+      <ul className={films ? "grid gap-5 sm:grid-cols-2" : "columns-1 gap-5 sm:columns-2 lg:columns-3 xl:columns-4"}>
         {shown.map((w, j) => (
-          <li key={keyOf(w)} className="mb-5 break-inside-avoid">
+          <li key={keyOf(w)} className={films ? "grid" : "mb-5 break-inside-avoid"}>
             <button
               ref={(el) => {
                 if (el) cards.current.set(keyOf(w), el);
@@ -136,7 +145,8 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
               onClick={() => setOpen(j)}
               aria-haspopup="dialog"
               className="group relative block w-full overflow-hidden bg-[var(--night)] text-start text-white"
-              style={{ aspectRatio: `${frameOf(w)[0]} / ${frameOf(w)[1]}` }}
+              // Brand films share one 16:9 frame, so the grid reads as one row of films
+              style={{ aspectRatio: films ? "16 / 9" : `${frameOf(w)[0]} / ${frameOf(w)[1]}` }}
             >
               {w.instagram && !w.poster ? (
                 <InstagramMedia url={w.instagram} kind={embedKindOf(w.instagram)} title={w.title} preview className="absolute inset-0 !aspect-auto h-full" />
@@ -147,7 +157,7 @@ export function WorkGallery({ items }: { items: WorkItem[] }) {
                   fill
                   // The first row is above the fold (it is the page's largest image)
                   loading={j < 4 ? "eager" : undefined}
-                  sizes="(min-width: 1360px) 310px, (min-width: 1280px) 23vw, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"
+                  sizes={films ? "(min-width: 1360px) 660px, (min-width: 640px) 48vw, 100vw" : "(min-width: 1360px) 310px, (min-width: 1280px) 23vw, (min-width: 1024px) 31vw, (min-width: 640px) 48vw, 100vw"}
                   className="object-cover transition-transform duration-[900ms] ease-[var(--ease)] group-hover:scale-[1.04] motion-reduce:transition-none motion-reduce:group-hover:scale-100"
                 />
               )}

@@ -35,7 +35,8 @@ export function Header({ lang, nav, cta }: Props) {
     return () => window.removeEventListener("keydown", onKey);
   }, [open]);
 
-  const isCurrent = (path: string) => pathname === `/${lang}${path}` || pathname.startsWith(`/${lang}${path}/`);
+  // Home ("") is current only on the home page itself
+  const isCurrent = (path: string) => pathname === `/${lang}${path}` || (path !== "" && pathname.startsWith(`/${lang}${path}/`));
 
   return (
     <header

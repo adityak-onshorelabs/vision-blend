@@ -29,7 +29,6 @@ export function Reach({ content: c }: { content: Content }) {
         )}
         {c.company.location && <Row k="Studio">{c.company.location}</Row>}
       </dl>
-      <p className="text-[0.95rem] text-muted-foreground">{c.contactPage.collaborate}</p>
     </div>
   );
 }

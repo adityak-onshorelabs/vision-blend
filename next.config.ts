@@ -19,6 +19,9 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       { source: "/:lang/services", destination: "/:lang/industries", permanent: true },
+      // The standalone Work page was removed (brief, 11 Nov 2026): the work now lives in each
+      // industry's portfolio, behind its enquiry form
+      { source: "/:lang/work", destination: "/:lang/industries", permanent: false },
       // Hospitality and Services became one page (5 Nov 2026 brief)
       { source: "/:lang/industries/:old(hospitality|services)", destination: "/:lang/industries/hospitality-services", permanent: true },
       { source: "/:lang/industries/:old(hospitality|services)/:rest*", destination: "/:lang/industries/hospitality-services/:rest*", permanent: true },

@@ -1,90 +1,84 @@
-import { existsSync } from "node:fs";
-import path from "node:path";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Beliefs } from "@/components/site/beliefs";
-import { ContactCard } from "@/components/site/contact-card";
-import { IndustryCards } from "@/components/site/industry-cards";
+import { ClientLogos } from "@/components/site/client-logos";
+import { ProjectForm } from "@/components/site/forms/project-form";
 import { Hero } from "@/components/site/hero";
-import { ProcessRail } from "@/components/site/process-rail";
-import { Reach } from "@/components/site/reach";
-import { SeriesLinks } from "@/components/site/series-links";
-import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
-import { Showreel } from "@/components/site/showreel";
-import { ShowreelEmbed } from "@/components/site/showreel-embed";
-import { WorkIndex } from "@/components/site/work-index";
+import { SeriesLinks } from "@/components/site/series-links";
+import { WorkGallery } from "@/components/site/work-gallery";
 import { getContent } from "@/content";
+import type { ClientLogo, Content, WorkItem } from "@/content/types";
 import { hasLocale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
+
+/*
+  Home, in the confirmed order (brief, 11 Nov 2026): hero, our clients, brand films, A Week at
+  Vision Blend, start a project. The work index, industries, beliefs and process sections were
+  removed; the standalone Work page is gone, and industry portfolios sit behind their enquiry form.
+*/
 
 export async function generateMetadata({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   return { alternates: { canonical: `${siteUrl}/${lang}` } };
 }
 
-const TOTAL = 6;
+const TOTAL = 4;
+
+/** Every sector's client logos, taken in turn from each sector so the strip mixes them, without repeats */
+function mixedLogos(c: Content): ClientLogo[] {
+  const lists = c.industries.map((s) => s.detail?.clients?.logos ?? []);
+  const seen = new Set<string>();
+  const out: ClientLogo[] = [];
+  for (let i = 0; i < Math.max(0, ...lists.map((l) => l.length)); i++) {
+    for (const list of lists) {
+      const logo = list[i];
+      const key = logo?.name.trim().toLowerCase();
+      if (!logo || !key || seen.has(key)) continue;
+      seen.add(key);
+      out.push(logo);
+    }
+  }
+  return out;
+}
+
+/** The brand films, in the order picked, from the industry portfolios */
+function brandFilms(c: Content): WorkItem[] {
+  const all = c.industries.flatMap((s) => s.detail?.work?.items ?? []);
+  return c.home.films.picks.map((id) => all.find((w) => w.drive === id)).filter((w): w is WorkItem => !!w);
+}
 
 export default async function Home({ params }: PageProps<"/[lang]">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
   const c = await getContent(lang);
   const h = c.home;
-  // Self-hosted film plays silently on loop; until the file exists, use Instagram's player.
-  const hasFilm = existsSync(path.join(process.cwd(), "public", h.showreel.src.replace(/^\//, "")));
+  const logos = mixedLogos(c);
+  const films = brandFilms(c);
 
   return (
     <>
-      <Hero
-        lang={lang}
-        tagline={c.company.tagline}
-        copy={h}
-        services={c.industries}
-        labels={{ startProject: c.ui.startProject, seeWork: c.ui.seeWork }}
-      />
+      <Hero lang={lang} tagline={c.company.tagline} copy={h} services={c.industries} labels={{ startProject: c.ui.startProject }} />
 
-      {hasFilm ? <Showreel copy={h.showreel} /> : <ShowreelEmbed copy={h.showreel} />}
-
-      <section className="band" aria-labelledby="work-title">
-        <div className="frame">
-          <SectionHead id="work-title" label={h.work.label} index={1} total={TOTAL} title={h.work.title} text={h.work.text} />
-          <WorkIndex
-            projects={c.projects}
-            labels={{ viewOnInstagram: c.ui.viewOnInstagram, realProject: c.ui.realProject, slot: "Slot", placeholder: c.ui.placeholderImage }}
-          />
-          <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[0.88rem] text-muted-foreground">
-            <span className="inline-flex items-center gap-2"><span className="size-1.5 rounded-full bg-brand" /> {c.ui.realProject}</span>
-            <Link href={`/${lang}/work`} className="u ms-auto text-ink">All work &rarr;</Link>
+      {logos.length > 0 && (
+        <section className="band" aria-labelledby="clients-title">
+          <div className="frame">
+            <SectionHead id="clients-title" label={h.clients.label} index={1} total={TOTAL} title={h.clients.title} />
+            <ClientLogos logos={logos} />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      <section className="band band-tint" aria-labelledby="services-title">
-        <div className="frame">
-          <SectionHead id="services-title" label={h.services.label} index={2} total={TOTAL} title={h.services.title} text={h.services.text} />
-          <Reveal>
-            <IndustryCards industries={c.industries} lang={lang} linkLabel="More on this" />
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="band" aria-labelledby="beliefs-title">
-        <div className="frame">
-          <SectionHead id="beliefs-title" label={h.beliefs.label} index={3} total={TOTAL} title={h.beliefs.title} text={h.beliefs.text} />
-          <Beliefs beliefs={c.beliefs} />
-        </div>
-      </section>
-
-      <section className="band band-tint" aria-labelledby="process-title">
-        <div className="frame">
-          <SectionHead id="process-title" label={h.process.label} index={4} total={TOTAL} title={h.process.title} text={h.process.text} />
-          <ProcessRail steps={c.process} />
-        </div>
-      </section>
+      {films.length > 0 && (
+        <section className="band" aria-labelledby="films-title">
+          <div className="frame">
+            <SectionHead id="films-title" label={h.films.label} index={2} total={TOTAL} title={h.films.title} text={h.films.text} />
+            <WorkGallery items={films} variant="films" />
+          </div>
+        </section>
+      )}
 
       <section className="band band-dark" aria-labelledby="series-title">
         <div className="frame">
-          <SectionHead id="series-title" label={h.series.label} index={5} total={TOTAL} title={h.series.title} text={h.series.text} />
+          <SectionHead id="series-title" label={h.series.label} index={3} total={TOTAL} title={h.series.title} text={h.series.text} />
           <SeriesLinks episodes={c.episodes.filter((e) => e.ep > 0)} openLabel="Watch on Instagram" />
           <div className="mt-6 flex flex-wrap justify-between gap-3 text-[0.88rem] text-muted-foreground">
             <span>Previews load from Instagram</span>
@@ -98,14 +92,9 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
 
       <section className="band" aria-labelledby="contact-title">
         <div className="frame">
-          <SectionHead id="contact-title" label={h.contact.label} index={6} total={TOTAL} title={h.contact.title} text={h.contact.text} />
-          <div className="grid gap-12 lg:grid-cols-12 lg:gap-6">
-            <div className="lg:col-span-4">
-              <Reach content={c} />
-            </div>
-            <div className="lg:col-span-7 lg:col-start-6">
-              <ContactCard content={c} />
-            </div>
+          <SectionHead id="contact-title" label={h.contact.label} index={4} total={TOTAL} title={h.contact.title} text={h.contact.text} />
+          <div className="max-w-[860px]">
+            <ProjectForm copy={c.forms} idPrefix="home" />
           </div>
         </div>
       </section>

@@ -488,7 +488,8 @@
 .hero-center .t-lead { max-width: 34rem; }
 /* max-width keeps the two lines of the mockup: "Building brands / with taste." */
 .t-hero { max-width: 7.6em; font-size: min(clamp(3.25rem, 0.4rem + 8.4vw, 8.5rem), 14svh); line-height: 0.95; letter-spacing: -0.045em; font-weight: 300; text-wrap: balance; }
-.hero-foot { padding-block: 22px 30px; border-top: 1px solid var(--rule); }
+/* Room on the end side for the floating WhatsApp button (whatsapp-button.tsx), so it never covers a link */
+.hero-foot { padding-block: 22px 30px; padding-inline-end: 168px; border-top: 1px solid var(--rule); }
 /* What the studio makes, each with the brand dot, spread across the foot rule */
 .hero-services { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 24px; margin: 0; padding: 0; list-style: none; font-size: clamp(0.95rem, 0.85rem + 0.3vw, 1.06rem); font-weight: 340; }
 .hero-services li { display: flex; align-items: center; gap: 12px; }
@@ -496,7 +497,7 @@
 @media (max-width: 759px) {
   .hero-center .flex { flex-direction: column; align-self: stretch; }
   .hero-center .cta { justify-content: center; min-height: 48px; }
-  .hero-foot { padding-block: 18px 26px; }
+  .hero-foot { padding-block: 18px 76px; padding-inline-end: 0; }
   .hero-services { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 16px; font-size: 0.94rem; }
   .hero-services li { min-height: 44px; }
 }

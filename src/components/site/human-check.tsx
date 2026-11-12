@@ -7,9 +7,9 @@
   checkbox only shows, framed by our hairlines, when it wants a real interaction.
 */
 import { useEffect, useRef, useState } from "react";
-import type { Content } from "@/content/types";
+import type { FormCopy } from "@/content/types";
 
-type Copy = Content["contactPage"]["form"]["verify"];
+type Copy = FormCopy["verify"];
 type State = "checking" | "interactive" | "verified" | "error";
 type Turnstile = {
   render: (el: HTMLElement, options: Record<string, unknown>) => string;

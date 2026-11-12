@@ -73,13 +73,97 @@ export const en: Content = {
       { name: "Gursimar", number: "+91 89282 79852" },
     ],
     location: "Mumbai",
+    // Brief, 11 Nov 2026. FROM SIMAR: confirm this is Aquib's WhatsApp number.
+    whatsapp: {
+      label: "Get in touch",
+      name: "Aquib",
+      number: "+91 90045 01607",
+      url: "https://wa.me/919004501607",
+      // The secondary option on Contact
+      title: "Rather *talk* first?",
+      text: "Message Aquib on WhatsApp.",
+      cta: "Message on WhatsApp",
+    },
   },
+  // Four primary pages; the standalone Work page was removed (brief, 11 Nov 2026)
   nav: [
-    { href: "/work", label: "Work" },
+    { href: "", label: "Home" },
     { href: "/industries", label: "Industries" },
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ],
+  navMore: [
+    { href: "/careers", label: "Careers" },
+    { href: "/partners", label: "Partner with us" },
+  ],
+  forms: {
+    optional: "Optional",
+    sending: "Sending",
+    verifying: "Verifying",
+    verify: {
+      checking: "Checking you're human",
+      interactive: "One quick check before we send",
+      verified: "Verified",
+      error: "We couldn't verify this browser.",
+      retry: "Try again",
+    },
+    privacy: "We use these details only to reply to you. We don't share them.",
+    failed: "This could not be sent. Please try again, or message us on WhatsApp.",
+    labels: {
+      name: "Name",
+      email: "Email",
+      phone: "Phone number",
+      business: "Your business",
+      about: "Tell us about your project",
+      company: "Company / agency",
+      partnerType: "Partnership type",
+      opportunityAbout: "Tell us about the opportunity",
+      city: "City",
+      discipline: "Discipline",
+      opportunity: "Opportunity",
+      portfolio: "Portfolio or work-sample link",
+      cv: "CV",
+    },
+    placeholders: { about: "What you need, and when.", portfolio: "https://" },
+    cvHint: "PDF or Word, up to 3 MB.",
+    errors: {
+      name: "Add your name.",
+      email: "Add an email address like you@brand.com.",
+      phone: "Add a phone number with at least 7 digits.",
+      business: "Add your business or brand name.",
+      company: "Add your company or agency.",
+      partnerType: "Choose how you'd like to partner.",
+      opportunityAbout: "Tell us a little about the opportunity.",
+      city: "Add your city.",
+      discipline: "Choose a discipline.",
+      opportunity: "Choose full-time or internship.",
+      portfolio: "Add a link to your work, starting with https://",
+      cv: "Attach your CV as a PDF or Word file.",
+      cvSize: "The CV must be 3 MB or smaller.",
+    },
+    project: {
+      submit: "Send enquiry",
+      sentTitle: "Enquiry received",
+      sent: "Thank you. Your enquiry is with the studio, and we'll be in touch.",
+    },
+    portfolio: {
+      title: "See our work",
+      intro: "Share a few details to explore our {industry} portfolio.",
+      submit: "Submit & view work",
+      close: "Close",
+      opening: "Opening the portfolio",
+    },
+    partner: {
+      submit: "Discuss a partnership",
+      sentTitle: "Thank you",
+      sent: "Your enquiry is with the studio, and we'll be in touch to discuss it.",
+    },
+    careers: {
+      submit: "Send application",
+      sentTitle: "Application received",
+      sent: "Thank you for your interest in Vision Blend. We'll be in touch if there's a fit.",
+    },
+  },
   ui: {
     startProject: "Start a project",
     seeWork: "See the work",
@@ -93,7 +177,7 @@ export const en: Content = {
     metaDescription:
       "Vision Blend is a marketing studio for brands that want to be remembered, not just seen. Branding, film and production, and content, made by one team since 2023.",
     eyebrow: "Marketing studio · Est. 2023",
-    lead: "Vision Blend is a marketing studio for brands that want to be remembered, not just seen. Identity, production and content, made by one team.",
+    lead: "Vision Blend is a marketing studio for brands that want to be remembered, not just seen.",
     facts: [
       { label: "Since", value: "2023" },
       { label: "Team", value: TEAM },
@@ -152,7 +236,22 @@ export const en: Content = {
     contact: {
       label: "Contact",
       title: "Start a *project*",
-      text: "Tell us about the brand and what it needs. We read every brief and reply with next steps.",
+      text: "Tell us about your business and what it needs.",
+    },
+    clients: { label: "Our Clients", title: "A selection of client *partnerships*" },
+    films: {
+      label: "Brand films",
+      title: "Selected *films*",
+      text: "Press play on any of them.",
+      // INTERIM until Simar supplies the 3 to 4 horizontal films and their order: the Real Estate
+      // portfolio's horizontal films (Meghna One, FIFA at Sai World Empire, What Home Means to Me,
+      // the Presidence One walkthrough).
+      picks: [
+        "1Ys0ngz8WtmjmcvsRndVa9-olFvUeFy9Z",
+        "1H7Ff4uay6LEawRH_Ay_vlhc0B_WFKsEG",
+        "11xZkFbKV8wTJH8gR2TcIRJWgBgRInOgK",
+        "1qxhFkqv3Ubzqy_Bbfmbep2RjBNDqnxZv",
+      ],
     },
   },
   projects: [
@@ -298,12 +397,171 @@ export const en: Content = {
     lead: "Pick an industry to see how we work with brands in it.",
     metaDescription: "Films, social media, ads, branding and launches for real estate, D2C, service businesses, hospitality and automobile brands.",
     title: "Four industries, *one team*",
+    // Brief, 11 Nov 2026. FROM SIMAR: verify the content count before launch.
+    // *stars* mark the figure
+    stats: ["*10,000+* content pieces created", "*₹50 Cr+* revenue generated", "*4* industries"],
+  },
+  // About Us, approved website copy (brief, 11 Nov 2026). Portraits FROM SIMAR.
+  aboutCopy: {
+    title: "Creative thinking. *Commercial intent*",
+    paragraphs: [
+      "Founded in 2023, Vision Blend brings together business strategy, creative storytelling, and performance marketing to help brands grow.",
+      "We believe compelling content earns attention. When it reaches the right audience with a clear purpose, it can shape perception, influence decisions, and create demand.",
+      "Our work connects what a brand says, how it is seen, and what happens next.",
+    ],
+    founders: {
+      title: "Our *founders*",
+      people: [
+        {
+          name: "Aquib Shaikh",
+          role: "Founder & CEO",
+          bio: [
+            "Aquib leads business strategy, sales, and operations at Vision Blend.",
+            "Previously Chief Business Officer at Brego Business, formerly Savage & Palmer, he built and scaled its marketing vertical. He brings a commercial perspective to the studio, connecting creative ambition with business priorities.",
+          ],
+        },
+        {
+          name: "Gursimar Anand",
+          role: "Co-founder & Creative Director",
+          bio: [
+            "Gursimar leads creative strategy, storytelling, and content at Vision Blend.",
+            "His experience includes work with CarWale and Mercedes-Benz, alongside building his own content presence. His approach combines a creator’s instinct with a brand’s perspective: work that captures attention and gives people a reason to remember.",
+          ],
+        },
+      ],
+    },
+    partner: {
+      label: "Our performance partner",
+      name: "DigiNerd",
+      line: "Strategy, media, and measurement",
+      text: "DigiNerd leads Vision Blend’s performance marketing vertical, spanning digital advertising, media buying, lead generation, campaign optimisation, and analytics.",
+      people: [
+        {
+          name: "Abhilash Gaur",
+          role: "Co-founder, DigiNerd",
+          bio: ["Abhilash brings expertise in growth strategy, performance marketing, and business development, helping align campaigns with broader commercial objectives."],
+        },
+        {
+          name: "Dilip Gehlot",
+          role: "Co-founder, DigiNerd",
+          bio: ["Dilip specialises in campaign execution, optimisation, and analytics, with a focus on improving advertising efficiency and returns."],
+        },
+      ],
+    },
+    advisory: {
+      title: "Investment & *advisory*",
+      people: [
+        {
+          name: "Abdul Rehman Gani Dadan",
+          role: "Strategic Investor",
+          bio: [
+            "A real estate entrepreneur with approximately three decades of experience, Mr Dadan brings expertise in development, investment, and business expansion.",
+            "A Director at Space Realty and Neelkanth Group, he contributes industry insight and a long-term commercial perspective to Vision Blend.",
+          ],
+        },
+        {
+          name: "Inderpal Anand",
+          role: "Strategic Advisor",
+          bio: [
+            "With approximately three decades of business leadership across automotive, petroleum, and other industries, Mr Anand advises Vision Blend on growth, sales, marketing, and operations.",
+            "As CEO of Garnet Motors, he brings practical experience in building businesses and strengthening their market presence.",
+          ],
+        },
+      ],
+    },
+    approach: {
+      title: "One connected *approach*",
+      paragraphs: [
+        "Business understanding shapes the strategy. Creative thinking gives it expression. Performance marketing brings distribution, measurement, and refinement.",
+        "Together, we work towards stronger brands, qualified enquiries, and sustainable growth.",
+      ],
+    },
+    // FROM SIMAR: confirm the current team names and roles, and supply portraits
+    team: { label: "Studio team", title: "The *studio*", text: "The people who make the work, day to day." },
+    more: {
+      title: "Work *with us*",
+      links: [
+        { href: "/careers", title: "Careers", text: "Full-time roles and internships, in the studio." },
+        { href: "/partners", title: "Partner with us", text: "Refer a client, or bring us into your agency's next brief." },
+      ],
+    },
+  },
+  // WORKING COPY (brief, 11 Nov 2026): full-time roles, internships, in-studio work and the six disciplines are confirmed
+  careersPage: {
+    metaTitle: "Careers",
+    metaDescription: "Full-time roles and internships at Vision Blend, in the studio in Mumbai.",
+    title: "Good work begins with *good people*",
+    line: "For people with a point of view, and the craft to express it.",
+    lead: "Explore opportunities at Vision Blend.",
+    model: "Full-time roles and internships · In-studio",
+    // The six disciplines and their descriptions, as confirmed in the brief
+    disciplines: [
+      { title: "Strategy & Ideation", text: "Content strategy, concepts and ideation." },
+      { title: "Film & Production", text: "Cinematographer and cinematography assistant." },
+      { title: "Post-production", text: "Video editor." },
+      { title: "Design", text: "Designer." },
+      { title: "Social Media", text: "Social media manager." },
+      { title: "Studio Operations", text: "Operations and coordination." },
+    ],
+    culture: {
+      label: "Culture",
+      title: "Beyond the *brief*",
+      text: "Studio days, shared milestones, and time away from the desk. A glimpse of the people and moments that make Vision Blend.",
+    },
+    // FROM SIMAR: recognition images, captions, names and dates
+    people: {
+      label: "People in focus",
+      title: "People in *focus*",
+      text: "Recognition and milestones from the studio.",
+      features: [{ label: "Employee of the Month" }],
+    },
+    apply: {
+      label: "Apply",
+      title: "Find your place at *Vision Blend*",
+      text: "Share your experience, your interests, and a selection of your work.",
+      openings: "Open applications",
+      openingsText: "We hire across these areas through the year. Apply, and we'll be in touch when there's a fit.",
+    },
+  },
+  // WORKING COPY (brief, 11 Nov 2026): client referrals, agency partnerships, individually agreed terms
+  partnersPage: {
+    metaTitle: "Partner with us",
+    metaDescription: "Refer a client or collaborate as an agency. Partnerships with Vision Blend, on individually agreed terms.",
+    title: "Partnerships, with *purpose*",
+    lead: "Introduce a brand. Extend your agency’s capabilities. Create something together.",
+    line: "Let’s explore where our work meets yours.",
+    ways: {
+      label: "Ways to partner",
+      title: "Two ways to *work together*",
+      items: [
+        {
+          title: "Refer a client",
+          text: "Connect us with a business looking for branding, films, content, or performance marketing. We’ll discuss the opportunity and agree the partnership terms with you.",
+        },
+        {
+          title: "Collaborate as an agency",
+          text: "Bring Vision Blend into your next client brief. From creative development to production and content, we can shape a scope around the project.",
+        },
+      ],
+    },
+    bring: {
+      label: "What we bring",
+      title: "What we *bring*",
+      text: "Brand identity, films, content, and production, with performance marketing delivered through our strategic partner, DigiNerd.",
+    },
+    steps: {
+      label: "How it begins",
+      title: "How it *begins*",
+      items: ["Introduce yourself", "Discuss the opportunity", "Agree the scope and terms"],
+      note: "Commercial terms are agreed individually. Project-specific ownership, scope and referral recognition are settled with each partner.",
+    },
+    form: { label: "Partnership enquiry", title: "Start a *conversation*", text: "Tell us who you are and what you have in mind." },
   },
   contactPage: {
     metaTitle: "Start a project",
     metaDescription: "Tell Vision Blend about your brand and what it needs.",
     title: "Start a *project*",
-    lead: "Tell us about the brand and what it needs. We read every brief and reply with next steps.",
+    lead: "Tell us about your business and what it needs.",
     collaborate: "Creatives looking to collaborate on future projects can DM us on Instagram.",
     email: {
       label: "Email the studio",

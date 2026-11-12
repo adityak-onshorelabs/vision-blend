@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { Content } from "@/content/types";
 
 export function Footer({ lang, content }: { lang: string; content: Content }) {
-  const { company, nav } = content;
+  const { company, nav, navMore } = content;
   return (
     // brand-soft: the brown link underlines need the lighter brown on night
     <footer className="bg-night text-[var(--on-night)] [--brand:var(--brand-soft)]">
@@ -14,7 +14,7 @@ export function Footer({ lang, content }: { lang: string; content: Content }) {
             <p className="text-[var(--on-night-muted)]">{company.tagline} Since {company.founded}.</p>
           </div>
           <nav aria-label="Footer" className="grid grid-cols-2 gap-x-6 gap-y-2.5 md:col-span-4 md:col-start-9">
-            {nav.map((item) => (
+            {[...nav, ...navMore].map((item) => (
               <Link key={item.href} href={`/${lang}${item.href}`} className="u justify-self-start">
                 {item.label}
               </Link>

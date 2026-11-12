@@ -158,6 +158,55 @@ export type Episode = {
 
 export type NavItem = { href: string; label: string };
 
+/** A person on About (founders, partners, advisors). No photo: an initials tile stands in. */
+export type Person = { name: string; role: string; bio: string[]; photo?: string };
+
+/** Copy shared by every form on the site (src/components/site/forms) */
+export type FormCopy = {
+  optional: string;
+  sending: string;
+  verifying: string;
+  verify: { checking: string; interactive: string; verified: string; error: string; retry: string };
+  privacy: string;
+  failed: string;
+  labels: {
+    name: string;
+    email: string;
+    phone: string;
+    business: string;
+    about: string;
+    company: string;
+    partnerType: string;
+    opportunityAbout: string;
+    city: string;
+    discipline: string;
+    opportunity: string;
+    portfolio: string;
+    cv: string;
+  };
+  placeholders: { about: string; portfolio: string };
+  cvHint: string;
+  errors: {
+    name: string;
+    email: string;
+    phone: string;
+    business: string;
+    company: string;
+    partnerType: string;
+    opportunityAbout: string;
+    city: string;
+    discipline: string;
+    opportunity: string;
+    portfolio: string;
+    cv: string;
+    cvSize: string;
+  };
+  project: { submit: string; sentTitle: string; sent: string };
+  portfolio: { title: string; intro: string; submit: string; close: string; opening: string };
+  partner: { submit: string; sentTitle: string; sent: string };
+  careers: { submit: string; sentTitle: string; sent: string };
+};
+
 export type Content = {
   company: {
     name: string;
@@ -175,8 +224,14 @@ export type Content = {
     enquiryGmail: string;
     phones: Phone[];
     location: string | null;
+    /** The floating "Get in touch" button on every page */
+    whatsapp: { label: string; name: string; number: string; url: string; title: string; text: string; cta: string };
   };
+  /** Primary navigation (header) */
   nav: NavItem[];
+  /** Supporting pages: in the footer and linked from About */
+  navMore: NavItem[];
+  forms: FormCopy;
   ui: {
     startProject: string;
     seeWork: string;
@@ -212,6 +267,12 @@ export type Content = {
     process: { label: string; title: string; text: string };
     series: { label: string; title: string; text: string };
     contact: { label: string; title: string; text: string };
+    clients: { label: string; title: string };
+    /**
+     * Brand films after the client logos: horizontal films only. `picks` are Drive ids of portfolio
+     * pieces (any industry's work), in order. INTERIM picks until the studio supplies its 3 to 4 films.
+     */
+    films: { label: string; title: string; text: string; picks: string[] };
   };
   projects: Project[];
   industries: Industry[];
@@ -241,7 +302,42 @@ export type Content = {
     ctaTitle: string;
     ctaText: string;
   };
-  industriesPage: { metaTitle: string; metaDescription: string; title: string; lead: string };
+  /** `stats` is the overview headline (brief, 11 Nov 2026); `title` stays for the admin */
+  industriesPage: { metaTitle: string; metaDescription: string; title: string; lead: string; stats: string[] };
+  /** About, in the approved wording (brief, 11 Nov 2026). Not editable in the admin. */
+  aboutCopy: {
+    title: string;
+    paragraphs: string[];
+    founders: { title: string; people: Person[] };
+    partner: { label: string; name: string; line: string; text: string; people: Person[] };
+    advisory: { title: string; people: Person[] };
+    approach: { title: string; paragraphs: string[] };
+    team: { label: string; title: string; text: string };
+    more: { title: string; links: { href: string; title: string; text: string }[] };
+  };
+  careersPage: {
+    metaTitle: string;
+    metaDescription: string;
+    title: string;
+    line: string;
+    lead: string;
+    model: string;
+    disciplines: { title: string; text: string }[];
+    culture: { label: string; title: string; text: string };
+    people: { label: string; title: string; text: string; features: { label: string; name?: string; date?: string; caption?: string; photo?: string }[] };
+    apply: { label: string; title: string; text: string; openings: string; openingsText: string };
+  };
+  partnersPage: {
+    metaTitle: string;
+    metaDescription: string;
+    title: string;
+    lead: string;
+    line: string;
+    ways: { label: string; title: string; items: { title: string; text: string }[] };
+    bring: { label: string; title: string; text: string };
+    steps: { label: string; title: string; items: string[]; note: string };
+    form: { label: string; title: string; text: string };
+  };
   contactPage: {
     metaTitle: string;
     metaDescription: string;

@@ -7,7 +7,6 @@ import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
-import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +15,18 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
   if (!hasLocale(lang)) return {};
   const c = await getContent(lang);
   return { title: c.industriesPage.metaTitle, description: c.industriesPage.metaDescription, alternates: { canonical: `${siteUrl}/${lang}/industries` } };
+}
+
+/** "*10,000+* content pieces created": the starred figure large, the rest under it */
+function StatFigure({ text }: { text: string }) {
+  const m = text.match(/^\*([^*]+)\*\s*(.*)$/);
+  if (!m) return <span className="t-h2">{text}</span>;
+  return (
+    <>
+      <span className="t-h1 text-brand">{m[1]}</span>{" "}
+      <span className="t-lead">{m[2]}</span>
+    </>
+  );
 }
 
 export default async function IndustriesPage({ params }: PageProps<"/[lang]/industries">) {
@@ -35,12 +46,20 @@ export default async function IndustriesPage({ params }: PageProps<"/[lang]/indu
             </span>
           </div>
 
-          <div className="mb-[clamp(40px,5vw,72px)] grid items-end gap-6 md:grid-cols-12">
-            <h1 id="industries-title" className="t-h1 md:col-span-8">
-              {hl(c.industriesPage.title)}
-              <span className="stop">.</span>
+          {/* The headline is the studio's three figures (brief, 11 Nov 2026), one per line on phones */}
+          <div className="mb-[clamp(40px,5vw,72px)] grid gap-8">
+            <h1 id="industries-title" className="grid border-t border-border md:grid-cols-3">
+              {c.industriesPage.stats.map((s, i) => (
+                <span
+                  key={s}
+                  className="grid content-start gap-2 border-b border-border py-6 md:border-b-0 md:border-s md:px-6 md:py-8 md:first:border-s-0 md:first:ps-0"
+                >
+                  <StatFigure text={s} />
+                  {i < c.industriesPage.stats.length - 1 && <span className="sr-only">,</span>}
+                </span>
+              ))}
             </h1>
-            <p className="t-lead text-muted-foreground md:col-span-4">{c.industriesPage.lead}</p>
+            <p className="t-lead max-w-[40ch] text-muted-foreground">{c.industriesPage.lead}</p>
           </div>
 
           {/* Each card is a preview of that industry's own page. Four sit two by two; five run two large, then three. */}
