@@ -120,10 +120,13 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
                   {hl(a.title)}
                   <span className="stop">.</span>
                 </h1>
-                <div className="grid max-w-[60ch] gap-5">
-                  <p className="t-lead text-ink">{a.paragraphs[0]}</p>
+                {/* One fixed measure for every paragraph, so the right edges line up instead of
+                    stepping in and out; the lead's lines are balanced and the body avoids
+                    one-word last lines */}
+                <div className="grid max-w-[34rem] gap-5">
+                  <p className="t-lead text-balance text-ink">{a.paragraphs[0]}</p>
                   {a.paragraphs.slice(1).map((p) => (
-                    <p key={p} className="leading-[1.65] text-muted-foreground">
+                    <p key={p} className="text-pretty leading-[1.65] text-muted-foreground">
                       {p}
                     </p>
                   ))}
