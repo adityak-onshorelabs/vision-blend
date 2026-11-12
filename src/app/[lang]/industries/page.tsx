@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { IndustryCard } from "@/components/site/industry-card";
-import { ProcessRail } from "@/components/site/process-rail";
+import { ProcessReel } from "@/components/site/process-reel";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
 import { getContent } from "@/content";
+import { STANDARD_PROCESS } from "@/content/industry-details";
 import { hasLocale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -81,7 +82,8 @@ export default async function IndustriesPage({ params }: PageProps<"/[lang]/indu
       <section className="band band-tint" aria-labelledby="process-title">
         <div className="frame">
           <SectionHead id="process-title" label={c.home.process.label} title={c.home.process.title} text={c.home.process.text} />
-          <ProcessRail steps={c.process} />
+          {/* The standard stages, not c.process: an older admin save could still hold another version */}
+          <ProcessReel steps={STANDARD_PROCESS.steps} />
           <Link href={`/${lang}/contact`} className="cta mt-16">
             {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
           </Link>

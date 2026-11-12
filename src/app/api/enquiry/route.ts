@@ -1,18 +1,20 @@
 import { NextResponse } from "next/server";
 import { getContent } from "@/content";
 import { defaultLocale } from "@/i18n/config";
-import { CV_MAX_BYTES, CV_TYPES, enquirySchema, type Enquiry, type EnquiryKind } from "@/lib/enquiry";
-import { gateCookie, gateToken } from "@/lib/gate";
+import { CAREERS_CONTACT, CV_MAX_BYTES, CV_TYPES, enquirySchema, type Enquiry, type EnquiryKind } from "@/lib/enquiry";
+import { KNOWN_COOKIE, LEAD_COOKIE, LEAD_MAX_AGE, leadToken } from "@/lib/gate";
 import { saveToSheet, sheetsConfigured, type SheetFile } from "@/lib/sheets";
 
 /*
   Every form on the site lands here (see src/lib/enquiry.ts for the kinds). Each enquiry goes to the
-  studio's Google Sheet (src/lib/sheets.ts) and, when Resend is set up, by email as well. It counts as
-  saved once either accepts it, and only then does a portfolio enquiry unlock that industry's work
-  (src/lib/gate.ts).
+  studio's Google Sheet (src/lib/sheets.ts) and, when Resend is set up, by email as well. Until then,
+  Careers applications are emailed to HR by the sheet itself (with the CV attached). It counts as
+  saved once either accepts it, and only then is a business enquiry (project or portfolio)
+  remembered as a lead, which opens every industry's portfolio in this browser (src/lib/gate.ts).
 
-  Recipients: ENQUIRY_TO, or per kind PORTFOLIO_TO, PARTNERS_TO, CAREERS_TO when set (the studio is
-  still confirming which inbox each should reach).
+  Recipients: ENQUIRY_TO, or per kind PORTFOLIO_TO, PARTNERS_TO, CAREERS_TO when set. Careers
+  applications, with the CV attached, always go to HR (CAREERS_CONTACT in src/lib/enquiry.ts), plus CAREERS_TO when set
+  (final changes, 12 Nov 2026).
 */
 
 const escape = (s: string) =>
@@ -172,7 +174,9 @@ export async function POST(request: Request) {
   const rows = rowsOf(enquiry, industry);
   const { RESEND_API_KEY, ENQUIRY_FROM } = process.env;
   const envKey = RECIPIENT_ENV[enquiry.kind];
-  const to = (envKey && process.env[envKey]) || process.env.ENQUIRY_TO;
+  const kindTo = envKey ? process.env[envKey] : undefined;
+  // Careers always reaches HR; CAREERS_TO can only add inboxes
+  const to = enquiry.kind === "careers" ? [CAREERS_CONTACT.email, kindTo].filter(Boolean).join(",") : kindTo || process.env.ENQUIRY_TO;
   const emailConfigured = !!(RESEND_API_KEY && to && ENQUIRY_FROM);
 
   if (!emailConfigured && !sheetsConfigured()) {
@@ -209,20 +213,25 @@ export async function POST(request: Request) {
 
   // The sheet keeps the CV as a Drive link rather than "Attached"
   const sheetRows = rows.filter(([k]) => k !== "CV");
-  const [sheeted, emailed] = await Promise.all([saveToSheet(enquiry.kind, sheetRows, sheetFile), sendEmail()]);
+  // Without Resend, the sheet emails HR the application itself (with the CV attached)
+  const notify = enquiry.kind === "careers" && !emailConfigured ? { to: to!, subject: subjectOf(enquiry), replyTo: enquiry.email } : undefined;
+  const [sheeted, emailed] = await Promise.all([saveToSheet(enquiry.kind, sheetRows, sheetFile, notify), sendEmail()]);
   if (!sheeted && !emailed) return fail("Delivery failed", 502);
   return unlock(NextResponse.json({ ok: true, delivered: true, sheet: sheeted, email: emailed }), enquiry);
 }
 
-/** A delivered portfolio enquiry opens that industry's work for the rest of the session */
+/** A saved business enquiry makes the visitor a known lead in this browser (src/lib/gate.ts) */
 function unlock(res: NextResponse, enquiry: Enquiry) {
-  if (enquiry.kind !== "portfolio") return res;
-  const token = gateToken(enquiry.industry);
-  if (!token) return fail("Portfolio access is not configured", 503);
-  res.cookies.set(gateCookie(enquiry.industry), token, {
-    path: "/",
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
-  });
+  if (enquiry.kind !== "project" && enquiry.kind !== "portfolio") return res;
+  const { name, email, phone, business } = enquiry;
+  const token = leadToken({ name, email: email.toLowerCase(), phone, business });
+  if (!token) {
+    // The enquiry is saved either way; only a portfolio enquiry needs the cookie to go on
+    if (enquiry.kind === "portfolio") return fail("Portfolio access is not configured", 503);
+    return res;
+  }
+  const options = { path: "/", sameSite: "lax", secure: process.env.NODE_ENV === "production", maxAge: LEAD_MAX_AGE } as const;
+  res.cookies.set(LEAD_COOKIE, token, { ...options, httpOnly: true });
+  res.cookies.set(KNOWN_COOKIE, "1", options);
   return res;
 }

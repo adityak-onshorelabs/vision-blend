@@ -7,6 +7,7 @@ import { PageTransition } from "@/components/site/page-transition";
 import { WhatsAppButton } from "@/components/site/whatsapp-button";
 import { getContent } from "@/content";
 import { hasLocale, localeDir, locales } from "@/i18n/config";
+import { CAREERS_CONTACT } from "@/lib/enquiry";
 import { siteUrl } from "@/lib/site";
 import "../globals.css";
 
@@ -61,12 +62,17 @@ export default async function LangLayout({ children, params }: LayoutProps<"/[la
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:start-4 focus:top-4 focus:z-50 focus:bg-ink focus:px-4 focus:py-3 focus:text-paper">
           {c.ui.skip}
         </a>
-        <Header lang={lang} nav={c.nav} cta={c.ui.startProject} />
+        <Header lang={lang} nav={c.nav} more={{ label: c.navMoreLabel, items: c.navMore }} cta={c.ui.startProject} />
         <main id="main" tabIndex={-1} className="outline-none">
           {children}
         </main>
         <Footer lang={lang} content={c} />
-        <WhatsAppButton label={c.company.whatsapp.label} name={c.company.whatsapp.name} url={c.company.whatsapp.url} />
+        <WhatsAppButton
+          label={c.company.whatsapp.label}
+          name={c.company.whatsapp.name}
+          url={c.company.whatsapp.url}
+          careers={{ name: "the careers team", url: CAREERS_CONTACT.whatsapp }}
+        />
         <PageTransition
           lang={lang}
           labels={{ home: c.company.name, work: "Work", industries: "Industries", about: "About", contact: c.ui.startProject }}

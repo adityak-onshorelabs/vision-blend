@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import type { FormEvent } from "react";
 import type { FormCopy } from "@/content/types";
-import { EMAIL_RE, PARTNER_TYPES, isPhone } from "@/lib/enquiry";
+import { PARTNER_TYPES, isBusinessEmail, isPhone } from "@/lib/enquiry";
 import { Check, Chips, Field, Honeypot, Sent, Submit, TextArea, focusFirstError, useSubmit } from "./kit";
 
 type Data = { name: string; company: string; email: string; phone: string; type: string; about: string; website: string };
@@ -23,7 +23,7 @@ export function PartnerForm({ copy }: { copy: FormCopy }) {
     const e: Errors = {};
     if (!data.name.trim()) e.name = copy.errors.name;
     if (!data.company.trim()) e.company = copy.errors.company;
-    if (!EMAIL_RE.test(data.email.trim())) e.email = copy.errors.email;
+    if (!isBusinessEmail(data.email)) e.email = copy.errors.businessEmail;
     if (!isPhone(data.phone)) e.phone = copy.errors.phone;
     if (!data.type) e.type = copy.errors.partnerType;
     if (!data.about.trim()) e.about = copy.errors.opportunityAbout;

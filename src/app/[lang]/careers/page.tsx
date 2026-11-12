@@ -5,6 +5,7 @@ import { SectionHead, Tbc } from "@/components/site/section-head";
 import { SeriesLinks } from "@/components/site/series-links";
 import { getContent } from "@/content";
 import { hasLocale } from "@/i18n/config";
+import { CAREERS_CONTACT } from "@/lib/enquiry";
 import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
 
@@ -13,6 +14,8 @@ import { siteUrl } from "@/lib/site";
   focus, apply. Structure after bregobusiness.com/careers, in Vision Blend's own material.
   - Full-time roles and internships only, all in the studio. "Open applications" until the studio
     confirms live vacancies; no timelines or benefits are stated.
+  - Applications and CVs go to HR; the phone and WhatsApp here reach the CRM number, not the
+    studio's enquiry line (final changes, 12 Nov 2026; CAREERS_CONTACT in src/lib/enquiry.ts).
   - Beyond the brief: the studio's own A Week at Vision Blend reels stand in until Gursimar's
     montage of outings and celebrations is in.
   - People in focus: one slot per feature until the studio sends names, dates, photos and captions.
@@ -136,6 +139,18 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
               <div className="grid gap-2 border-t border-border pt-5">
                 <span className="t-label !text-ink">{p.apply.openings}</span>
                 <p className="text-[0.95rem] text-muted-foreground">{p.apply.openingsText}</p>
+              </div>
+              <div className="grid gap-2 border-t border-border pt-5">
+                <span className="t-label !text-ink">Questions about applying</span>
+                <ul className="grid gap-1.5 text-[0.95rem]">
+                  <li>
+                    <a className="u" href={`mailto:${CAREERS_CONTACT.email}`}>{CAREERS_CONTACT.email}</a>
+                  </li>
+                  <li className="flex flex-wrap gap-x-5 gap-y-1.5">
+                    <a className="u" href={`tel:${CAREERS_CONTACT.phone.replace(/\s/g, "")}`}>Call {CAREERS_CONTACT.phone}</a>
+                    <a className="u" href={CAREERS_CONTACT.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                  </li>
+                </ul>
               </div>
             </div>
             <div className="lg:col-span-8 lg:col-start-5">

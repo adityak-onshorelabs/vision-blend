@@ -9,13 +9,15 @@ import type { Person } from "@/content/types";
 import { hasLocale } from "@/i18n/config";
 import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
-import { cn } from "@/lib/utils";
 
 /*
   About, in the approved wording (brief, 11 Nov 2026): opening, founders, DigiNerd, investment &
   advisory, the connected approach. Then the studio team, kept apart from founders, partners and
-  advisors, and the way to Careers and Partner with us. Portraits come from the studio; until then
-  each person has an initials tile.
+  advisors, and the way to Careers and Partner with us.
+  Final changes (12 Nov 2026): clearer structure, no cutouts. Every person (founders, DigiNerd,
+  advisory) has the same profile: a rule, a small square monogram (a rectangular photo once the
+  studio supplies one), name, roles on their own lines, then the bio. No large empty portrait
+  frames while photos are pending.
 */
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/about">): Promise<Metadata> {
@@ -28,34 +30,43 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/about">): 
 const initials = (name: string) =>
   name
     .split(" ")
-    .filter((w) => /^[A-Z]/.test(w))
+    .filter((w) => /^[A-Z]/.test(w) && !/^(Mr|Mrs|Ms|Dr)\.?$/.test(w))
     .map((w) => w[0])
     .slice(0, 2)
     .join("");
 
-function Portrait({ person, className }: { person: Person; className?: string }) {
+function Monogram({ person }: { person: Person }) {
   return (
-    <div className={cn("relative aspect-[4/5] overflow-hidden bg-[var(--well)]", className)}>
-      {person.photo ? (
-        <Image src={person.photo} alt={person.name} fill sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 100vw" className="object-cover" />
-      ) : (
-        <span aria-hidden="true" className="absolute inset-0 grid place-items-center text-[clamp(2.5rem,1.6rem+3vw,4.5rem)] font-[250] tracking-[-0.04em] text-[var(--faint)]">
-          {initials(person.name)}
-        </span>
-      )}
-    </div>
+    <span aria-hidden="true" className="grid size-14 shrink-0 place-items-center bg-[var(--well)] text-[1.05rem] font-[400] tracking-[0.02em] text-muted-foreground">
+      {initials(person.name)}
+    </span>
   );
 }
 
-function PersonCard({ person, portrait = true }: { person: Person; portrait?: boolean }) {
+/** One person: rule, monogram (or photo), name, each role on its own line, bio */
+function PersonCard({ person }: { person: Person }) {
+  const roles = person.role.split(" | ");
   return (
-    <li className="grid content-start gap-5">
-      {portrait && <Portrait person={person} className="max-w-[420px]" />}
-      <div className="grid gap-1">
-        <h3 className="t-h3">{person.name}</h3>
-        <p className="t-label">{person.role}</p>
+    <li className="grid content-start gap-5 border-t border-border pt-6">
+      {person.photo && (
+        <div className="relative aspect-[4/5] max-w-[360px] overflow-hidden bg-[var(--well)]">
+          <Image src={person.photo} alt={person.name} fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
+        </div>
+      )}
+      <div className="flex items-start gap-4">
+        {!person.photo && <Monogram person={person} />}
+        <div className="grid min-w-0 gap-1.5 pt-0.5">
+          <h3 className="t-h3">{person.name}</h3>
+          <p className="grid gap-0.5">
+            {roles.map((role) => (
+              <span key={role} className="t-label">
+                {role}
+              </span>
+            ))}
+          </p>
+        </div>
       </div>
-      <div className="grid max-w-[52ch] gap-3 text-muted-foreground">
+      <div className="grid max-w-[54ch] gap-3 text-muted-foreground">
         {person.bio.map((p) => (
           <p key={p}>{p}</p>
         ))}
@@ -101,7 +112,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
       <section className="band" aria-labelledby="founders-title">
         <div className="frame">
           <SectionHead id="founders-title" label="Founders" title={a.founders.title} />
-          <ul className="grid gap-14 md:grid-cols-2 md:gap-6">
+          <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
             {a.founders.people.map((p) => (
               <PersonCard key={p.name} person={p} />
             ))}
@@ -116,7 +127,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
             <span className="t-label marker">{a.partner.label}</span>
           </div>
           <div className="grid gap-14 lg:grid-cols-12 lg:gap-6">
-            <div className="grid content-start gap-5 lg:col-span-5">
+            <div className="grid content-start gap-5 lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
               <h2 id="partner-title" className="t-h1">
                 {a.partner.name}
                 <span className="stop">.</span>
@@ -124,7 +135,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
               <p className="t-label">{a.partner.line}</p>
               <p className="t-lead max-w-[40ch] text-muted-foreground">{a.partner.text}</p>
             </div>
-            <ul className="grid content-start gap-10 sm:grid-cols-2 sm:gap-6 lg:col-span-6 lg:col-start-7">
+            <ul className="grid content-start gap-10 lg:col-span-6 lg:col-start-7">
               {a.partner.people.map((p) => (
                 <PersonCard key={p.name} person={p} />
               ))}
@@ -137,7 +148,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
       <section className="band" aria-labelledby="advisory-title">
         <div className="frame">
           <SectionHead id="advisory-title" label="Investment & advisory" title={a.advisory.title} />
-          <ul className="grid gap-14 md:grid-cols-2 md:gap-6">
+          <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
             {a.advisory.people.map((p) => (
               <PersonCard key={p.name} person={p} />
             ))}

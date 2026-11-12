@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { PortfolioVisit } from "@/components/site/portfolio-visit";
 import { WorkGallery } from "@/components/site/work-gallery";
 import { getContent } from "@/content";
 import { hasLocale, locales } from "@/i18n/config";
@@ -63,6 +64,7 @@ export default async function IndustryWorkPage({ params }: PageProps<"/[lang]/in
 
   return (
     <>
+      <PortfolioVisit industry={s.slug} />
       <section className="band" aria-labelledby="work-title">
         <div className="frame">
           <div className="index-row">

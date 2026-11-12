@@ -156,7 +156,7 @@ export type Episode = {
   crop: Crop;
 };
 
-export type NavItem = { href: string; label: string };
+export type NavItem = { href: string; label: string; /** One line under the link in a dropdown */ text?: string };
 
 /** A person on About (founders, partners, advisors). No photo: an initials tile stands in. */
 export type Person = { name: string; role: string; bio: string[]; photo?: string };
@@ -189,6 +189,8 @@ export type FormCopy = {
   errors: {
     name: string;
     email: string;
+    /** Business enquiries: a free or personal mailbox, or not an address at all */
+    businessEmail: string;
     phone: string;
     business: string;
     company: string;
@@ -240,8 +242,9 @@ export type Content = {
   };
   /** Primary navigation (header) */
   nav: NavItem[];
-  /** Supporting pages: in the footer and linked from About */
+  /** "Work with us" in the top bar (a dropdown after Industries) and in the footer */
   navMore: NavItem[];
+  navMoreLabel: string;
   forms: FormCopy;
   ui: {
     startProject: string;

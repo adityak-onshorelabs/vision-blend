@@ -48,8 +48,12 @@ const d2cLogo = (slug: string, name: string, w: number, h: number, scale?: numbe
 const hsLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("hospitality-services", slug, name, w, h, scale);
 const autoLogo = (slug: string, name: string, w: number, h: number, scale?: number) => logo("automobile", slug, name, w, h, scale);
 
-/* Shared by every sector page (the doc's wording, as on Real Estate) */
-const PROCESS = {
+/*
+  The one project process, shared by every sector page (the doc's wording, as on Real Estate) and
+  the Industries overview. Final changes (12 Nov 2026): these four stages, in this order, wherever
+  the process appears.
+*/
+export const STANDARD_PROCESS = {
   title: "Process",
   steps: [
     { name: "Strategy & Script", text: "Define the communication strategy and develop the script around the brand's purpose." },
@@ -372,7 +376,7 @@ const details: Record<string, Extra> = {
       ],
       value: designedToDo("Establish a distinct presence for your brand and its products.", "Turn product interest into purchases."),
       challenges: [],
-      process: PROCESS,
+      process: STANDARD_PROCESS,
       faqs: [
         { q: "Do you run the ads as well as make them?", a: "Yes, we can plan, make and run campaigns, or hand creative to your team." },
         { q: "How many creatives a month?", a: "It depends on the plan. We agree the number up front and stick to it." },
@@ -434,7 +438,7 @@ const details: Record<string, Extra> = {
       ],
       value: designedToDo("Establish a distinct presence for your brand, its expertise and experience.", "Turn interest into enquiries, bookings and sales opportunities."),
       challenges: [],
-      process: PROCESS,
+      process: STANDARD_PROCESS,
       // DRAFT from the doc: no current wording exists for the merged page
       faqTitle: "A few things you might *want to know*",
       faqs: [
@@ -472,7 +476,7 @@ const details: Record<string, Extra> = {
       ],
       value: designedToDo("Establish a distinct presence for your brand and its vehicles.", "Turn vehicle interest into test-drive enquiries and sales opportunities."),
       challenges: [],
-      process: PROCESS,
+      process: STANDARD_PROCESS,
       faqs: [
         { q: "Can you shoot moving cars?", a: "Yes, including tracking and drone shots, with the right permissions." },
         { q: "Do you work with dealerships?", a: "Yes, as well as brands directly." },

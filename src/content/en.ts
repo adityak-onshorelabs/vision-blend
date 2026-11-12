@@ -1,4 +1,4 @@
-import { withDetails } from "./industry-details";
+import { STANDARD_PROCESS, withDetails } from "./industry-details";
 /*
   Vision Blend site content (English).
 
@@ -92,9 +92,11 @@ export const en: Content = {
     { href: "/about", label: "About" },
     { href: "/contact", label: "Contact" },
   ],
+  // "Work with us" in the top bar, next to Industries (final changes, 12 Nov 2026), and in the footer
+  navMoreLabel: "Work with us",
   navMore: [
-    { href: "/careers", label: "Careers" },
-    { href: "/partners", label: "Partner with us" },
+    { href: "/careers", label: "Careers", text: "Full-time roles and internships" },
+    { href: "/partners", label: "Partner with us", text: "Refer a client or collaborate as an agency" },
   ],
   forms: {
     optional: "Optional",
@@ -129,6 +131,7 @@ export const en: Content = {
     errors: {
       name: "Add your name.",
       email: "Add an email address like you@brand.com.",
+      businessEmail: "Please use your business email address, e.g. name@company.com.",
       phone: "Add a phone number with at least 7 digits.",
       business: "Add your business or brand name.",
       company: "Add your company or agency.",
@@ -232,7 +235,7 @@ export const en: Content = {
     process: {
       label: "Process",
       title: "How a project *runs*",
-      text: "Four steps, each ending with something you sign off.",
+      text: "The same four stages on every project, from script to delivery.",
     },
     series: {
       label: "Series",
@@ -248,7 +251,7 @@ export const en: Content = {
     films: {
       label: "Brand films",
       title: "Selected *films*",
-      text: "Press play on any of them.",
+      text: "One at a time. Swipe through, then press play.",
       // INTERIM until Simar supplies the 3 to 4 horizontal films and their order: the Real Estate
       // portfolio's horizontal films (Meghna One, FIFA at Sai World Empire, What Home Means to Me,
       // the Presidence One walkthrough).
@@ -350,12 +353,8 @@ export const en: Content = {
     { text: "Virality isn't the enemy. Chasing it is.", date: "Sep 2026", url: `${ig}p/DdJkd4WII4j/` },
     { text: "Build to be remembered, not just seen.", date: "Aug 2026", url: `${ig}p/DcA9_fKqHeb/` },
   ],
-  process: [
-    { name: "Listen", text: "A call and a short questionnaire about the business, the audience and what is not working yet.", out: "A one-page brief" },
-    { name: "Shape", text: "Concepts, references and a plan, aligned with you before anything is made.", out: "The creative direction" },
-    { name: "Make", text: "Branding, shoots and edits, with production team reviews at set points.", out: "Finished assets" },
-    { name: "Run", text: "Launch, then monthly content and reporting for brands that stay on.", out: "A brand in motion" },
-  ],
+  // The same four stages as every industry page (final changes, 12 Nov 2026)
+  process: STANDARD_PROCESS.steps,
   episodes: [
     { ep: 0, title: "Meet the core team", date: "", url: `${ig}reel/DbvYEMToEz0/`, crop: { pos: "50% 50%", sz: "220%", bw: true } },
     { ep: 1, title: "A week at Vision Blend", date: "30 Aug 2026", url: `${ig}reel/Dcqo2EsIWcu/`, crop: { pos: "85% 88%", sz: "260%", bw: true } },
@@ -458,11 +457,12 @@ export const en: Content = {
       title: "Investment & *advisory*",
       people: [
         {
-          name: "Abdul Rehman Gani Dadan",
-          role: "Strategic Investor",
+          // Approved correction (final changes, 12 Nov 2026): full name, roles in this order, revised bio
+          name: "Mr. Abdul Gani Abdul Rehman Dadan",
+          role: "Director, Dadan Enterprises | Strategic Investor, Vision Blend",
           bio: [
-            "A real estate entrepreneur with approximately three decades of experience, Mr Dadan brings expertise in development, investment, and business expansion.",
-            "A Director at Space Realty and Neelkanth Group, he contributes industry insight and a long-term commercial perspective to Vision Blend.",
+            "A Navi Mumbai-based real estate entrepreneur, Mr Dadan brings expertise in development, land acquisition, and business expansion.",
+            "He also serves as a Director at Space Realty, specialising in plan sanctions and legal operations. At Vision Blend, he contributes industry insight and a long-term commercial perspective.",
           ],
         },
         {

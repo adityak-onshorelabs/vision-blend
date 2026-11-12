@@ -10,7 +10,7 @@
 import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { FormEvent, ReactNode } from "react";
 import type { FormCopy } from "@/content/types";
-import { EMAIL_RE, isPhone } from "@/lib/enquiry";
+import { isBusinessEmail, isPhone } from "@/lib/enquiry";
 import { Check, Field, Honeypot, Sent, Submit, TextArea, focusFirstError, useSubmit } from "./kit";
 
 type Industry = { slug: string; name: string };
@@ -50,7 +50,7 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
   const validate = (): Errors => {
     const e: Errors = {};
     if (!data.name.trim()) e.name = copy.errors.name;
-    if (!EMAIL_RE.test(data.email.trim())) e.email = copy.errors.email;
+    if (!isBusinessEmail(data.email)) e.email = copy.errors.businessEmail;
     if (!isPhone(data.phone)) e.phone = copy.errors.phone;
     if (!data.business.trim()) e.business = copy.errors.business;
     return e;

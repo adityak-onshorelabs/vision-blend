@@ -5,6 +5,7 @@
   leaves the tab order) whenever a form or a video player reaches the lower part of the screen, so it
   never sits over a field, a submit button or video controls. Mark anything else it should avoid with
   data-wa-avoid.
+  On Careers it reaches the CRM number instead of Aquib (`careers`, final changes 12 Nov 2026).
 */
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -12,8 +13,11 @@ import { cn } from "@/lib/utils";
 
 const AVOID = "form, video[controls], [data-wa-avoid]";
 
-export function WhatsAppButton({ label, name, url }: { label: string; name: string; url: string }) {
+type Target = { name: string; url: string };
+
+export function WhatsAppButton({ label, name, url, careers }: { label: string; name: string; url: string; careers?: Target }) {
   const pathname = usePathname();
+  const to = careers && pathname.split("/")[2] === "careers" ? careers : { name, url };
   const [hidden, setHidden] = useState(false);
 
   useEffect(() => {
@@ -59,10 +63,10 @@ export function WhatsAppButton({ label, name, url }: { label: string; name: stri
 
   return (
     <a
-      href={url}
+      href={to.url}
       target="_blank"
       rel="noopener noreferrer"
-      aria-label={`${label}: message ${name} on WhatsApp`}
+      aria-label={`${label}: message ${to.name} on WhatsApp`}
       aria-hidden={hidden || undefined}
       tabIndex={hidden ? -1 : undefined}
       className={cn(

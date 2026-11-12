@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { BeginSteps } from "@/components/site/begin-steps";
 import { PartnerForm } from "@/components/site/forms/partner-form";
 import { SectionHead } from "@/components/site/section-head";
 import { getContent } from "@/content";
@@ -13,6 +14,7 @@ import { siteUrl } from "@/lib/site";
   partnership enquiry. Structure after bregobusiness.com/partners, in Vision Blend's own terms:
   client referrals and agency collaboration carry equal weight, and commercial terms are agreed
   with each partner, so no commissions, tiers or rewards are published.
+  How it begins carries restrained motion graphics (begin-steps.tsx; final changes, 12 Nov 2026).
 */
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/partners">): Promise<Metadata> {
@@ -98,15 +100,8 @@ export default async function PartnersPage({ params }: PageProps<"/[lang]/partne
       <section className="band" aria-labelledby="steps-title">
         <div className="frame">
           <SectionHead id="steps-title" label={p.steps.label} title={p.steps.title} />
-          <ol className="grid border-t border-border md:grid-cols-3">
-            {p.steps.items.map((s, i) => (
-              <li key={s} className="grid grid-cols-[40px_minmax(0,1fr)] gap-3 border-b border-border py-6 md:border-b-0 md:pe-6">
-                <span className="pt-1 text-[0.78rem] font-medium text-brand">{pad(i + 1)}</span>
-                <span className="t-h3">{s}</span>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-8 max-w-[60ch] text-muted-foreground">{p.steps.note}</p>
+          <BeginSteps items={p.steps.items} />
+          <p className="mt-12 max-w-[60ch] text-muted-foreground">{p.steps.note}</p>
         </div>
       </section>
 

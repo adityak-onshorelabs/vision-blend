@@ -6,12 +6,16 @@
   the portfolio. Closing the dialog leaves the portfolio locked; the entries stay if they reopen it.
   The lock itself is on the server (src/lib/gate.ts and src/proxy.ts), so this is only the way in.
 
-  - Already unlocked this session (the industry's cookie is there): straight to the portfolio.
+  - Already a known lead in this browser (any earlier saved enquiry, for any industry): straight
+    to the portfolio, with no form. The work page records the new industry against their lead.
   - Turned away by the proxy (?work=locked): the button with `autoOpen` opens the form at once.
+    The "known" flag is cleared first, since the proxy has just said the lead cookie is not valid,
+    so the button cannot bounce between the two.
 */
 import { useEffect, useId, useRef } from "react";
 import type { ReactNode } from "react";
 import type { FormCopy } from "@/content/types";
+import { markVisit } from "../portfolio-visit";
 import { ProjectForm } from "./project-form";
 
 type Props = {
@@ -23,7 +27,11 @@ type Props = {
   autoOpen?: boolean;
 };
 
-const unlocked = (slug: string) => document.cookie.split("; ").some((c) => c.startsWith(`vb_work_${slug}=`));
+/** vb_known (src/lib/gate.ts): set with the signed lead cookie, readable here */
+const known = () => document.cookie.split("; ").some((c) => c === "vb_known=1");
+const forget = () => {
+  document.cookie = "vb_known=; path=/; max-age=0; samesite=lax";
+};
 /** "real estate", but "D2C" stays as it is */
 const inSentence = (name: string) => (name === name.toUpperCase() ? name : name.toLowerCase());
 
@@ -31,10 +39,14 @@ export function PortfolioGate({ copy, industry, href, className, children, autoO
   const dialog = useRef<HTMLDialogElement>(null);
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
 
-  const open = () => {
-    if (unlocked(industry.slug)) return window.location.assign(href);
+  const showForm = () => {
     dialog.current?.showModal();
     document.documentElement.style.overflow = "hidden";
+  };
+
+  const open = () => {
+    if (known()) return window.location.assign(href);
+    showForm();
   };
 
   useEffect(() => {
@@ -43,8 +55,8 @@ export function PortfolioGate({ copy, industry, href, className, children, autoO
     if (url.searchParams.get("work") !== "locked") return;
     url.searchParams.delete("work");
     window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
-    open();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    forget();
+    showForm();
   }, [autoOpen]);
 
   const onClose = () => {
@@ -87,7 +99,16 @@ export function PortfolioGate({ copy, industry, href, className, children, autoO
               </svg>
             </button>
           </div>
-          <ProjectForm copy={copy} kind="portfolio" industry={industry} idPrefix={id} onSent={() => window.location.assign(href)} />
+          <ProjectForm
+            copy={copy}
+            kind="portfolio"
+            industry={industry}
+            idPrefix={id}
+            onSent={() => {
+              markVisit(industry.slug);
+              window.location.assign(href);
+            }}
+          />
         </div>
       </dialog>
     </>
