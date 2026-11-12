@@ -5,6 +5,7 @@ import { IndustryCard } from "@/components/site/industry-card";
 import { ProcessReel } from "@/components/site/process-reel";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
+import { StatFigure, statCell } from "@/components/site/stats";
 import { getContent } from "@/content";
 import { STANDARD_PROCESS } from "@/content/industry-details";
 import { hasLocale } from "@/i18n/config";
@@ -19,17 +20,6 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
 }
 
 /** "*10,000+* content pieces created": the starred figure large, the rest under it */
-function StatFigure({ text }: { text: string }) {
-  const m = text.match(/^\*([^*]+)\*\s*(.*)$/);
-  if (!m) return <span className="t-h2">{text}</span>;
-  return (
-    <>
-      <span className="t-h1 text-brand">{m[1]}</span>{" "}
-      <span className="t-lead">{m[2]}</span>
-    </>
-  );
-}
-
 export default async function IndustriesPage({ params }: PageProps<"/[lang]/industries">) {
   const { lang } = await params;
   if (!hasLocale(lang)) notFound();
@@ -51,10 +41,7 @@ export default async function IndustriesPage({ params }: PageProps<"/[lang]/indu
           <div className="mb-[clamp(40px,5vw,72px)] grid gap-8">
             <h1 id="industries-title" className="grid border-t border-border md:grid-cols-3">
               {c.industriesPage.stats.map((s, i) => (
-                <span
-                  key={s}
-                  className="grid content-start gap-2 border-b border-border py-6 md:border-b-0 md:border-s md:px-6 md:py-8 md:first:border-s-0 md:first:ps-0"
-                >
+                <span key={s} className={statCell}>
                   <StatFigure text={s} />
                   {i < c.industriesPage.stats.length - 1 && <span className="sr-only">,</span>}
                 </span>
