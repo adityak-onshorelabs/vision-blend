@@ -100,22 +100,21 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
 
   return (
     <>
-      {/* Opening (12 Nov 2026): the headline and the approved opening copy, the wordmark in black
-          beside them, and the founders straight under, so from lg the first screen holds them. min-height, not height: on a
-          short screen the section grows instead of clipping. */}
+      {/* Opening (12 Nov 2026): the headline and the approved opening copy, with the black wordmark
+          beside them, filling the first screen on its own (min-height, so a short screen grows
+          instead of clipping). The founders follow in their own section. */}
       <section className="band" aria-labelledby="about-title">
-        <div className="frame lg:flex lg:min-h-[calc(100svh-var(--header-h))] lg:flex-col lg:!pb-[clamp(28px,4svh,48px)]">
-          <div className="index-row lg:!mb-[clamp(24px,4svh,48px)]">
+        <div className="frame flex min-h-[calc(100svh-var(--header-h))] flex-col">
+          <div className="index-row">
             <span className="t-label marker">About</span>
           </div>
-          {/* Headline and founders stay one group, centred in the space left */}
-          <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">
+          <div className="flex flex-1 flex-col justify-center">
             {/*
               The text is staggered, like an editorial spread, rather than stacked in one block: the
               headline runs wide with the wordmark at its top right; the opening line sits under it on
               the left; the belief is set as a pull quote offset to the right, closed by the last line.
             */}
-            <div className="grid items-start gap-x-6 gap-y-8 lg:grid-cols-12">
+            <div className="grid items-start gap-x-6 gap-y-8 lg:grid-cols-12 lg:gap-y-[clamp(40px,7svh,88px)]">
               <h1 id="about-title" className="t-h1 lg:col-span-8">
                 {hl(a.title)}
                 <span className="stop">.</span>
@@ -129,19 +128,19 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
                 {a.paragraphs[2] && <p className="text-muted-foreground">{a.paragraphs[2]}</p>}
               </blockquote>
             </div>
-
-            <section className="mt-[clamp(48px,7svh,96px)] grid gap-8" aria-labelledby="founders-title">
-              <h2 id="founders-title" className="t-h3">
-                {hl(a.founders.title)}
-                <span className="stop">.</span>
-              </h2>
-              <ul className="grid gap-12 lg:grid-cols-2 lg:gap-x-10">
-                {a.founders.people.map((p) => (
-                  <PersonCard key={p.name} person={p} size="lg" />
-                ))}
-              </ul>
-            </section>
           </div>
+        </div>
+      </section>
+
+      {/* Founders */}
+      <section className="band" aria-labelledby="founders-title">
+        <div className="frame">
+          <SectionHead id="founders-title" label="Founders" title={a.founders.title} />
+          <ul className="grid gap-12 lg:grid-cols-2 lg:gap-x-10">
+            {a.founders.people.map((p) => (
+              <PersonCard key={p.name} person={p} size="lg" />
+            ))}
+          </ul>
         </div>
       </section>
 
