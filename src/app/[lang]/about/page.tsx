@@ -86,34 +86,38 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
 
   return (
     <>
-      {/* Opening (12 Nov 2026): only the headline, with the wordmark in black beside it. No image
-          and no other copy. From lg it fills the screen under the header. */}
+      {/* Opening (12 Nov 2026): the headline with the wordmark in black beside it, and the founders
+          straight under it, so from lg the first screen holds both. min-height, not height: on a
+          short screen the section grows instead of clipping. */}
       <section className="band" aria-labelledby="about-title">
-        <div className="frame lg:flex lg:h-[calc(100svh-var(--header-h))] lg:min-h-[560px] lg:flex-col lg:!pb-[clamp(24px,3vw,40px)]">
-          <div className="index-row">
+        <div className="frame lg:flex lg:min-h-[calc(100svh-var(--header-h))] lg:flex-col lg:!pb-[clamp(28px,4svh,48px)]">
+          <div className="index-row lg:!mb-[clamp(24px,4svh,48px)]">
             <span className="t-label marker">About</span>
           </div>
-          <div className="grid items-center gap-12 lg:flex-1 lg:grid-cols-12 lg:gap-6">
-            <h1 id="about-title" className="t-h1 lg:col-span-7">
-              {hl(a.title)}
-              <span className="stop">.</span>
-            </h1>
-            <div className="lg:col-span-4 lg:col-start-9">
-              <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 32vw, 80vw" className="h-auto w-full max-w-[380px] brightness-0 lg:max-w-[520px]" />
+          {/* Headline and founders stay one group, centred in the space left */}
+          <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">
+            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
+              <h1 id="about-title" className="t-h1 lg:col-span-7">
+                {hl(a.title)}
+                <span className="stop">.</span>
+              </h1>
+              <div className="lg:col-span-4 lg:col-start-9">
+                <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 32vw, 80vw" className="h-auto w-full max-w-[380px] brightness-0 lg:max-w-[460px]" />
+              </div>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Founders */}
-      <section className="band" aria-labelledby="founders-title">
-        <div className="frame">
-          <SectionHead id="founders-title" label="Founders" title={a.founders.title} />
-          <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
-            {a.founders.people.map((p) => (
-              <PersonCard key={p.name} person={p} />
-            ))}
-          </ul>
+            <section className="mt-[clamp(56px,10svh,120px)] grid gap-6" aria-labelledby="founders-title">
+              <h2 id="founders-title" className="t-h3">
+                {hl(a.founders.title)}
+                <span className="stop">.</span>
+              </h2>
+              <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
+                {a.founders.people.map((p) => (
+                  <PersonCard key={p.name} person={p} />
+                ))}
+              </ul>
+            </section>
+          </div>
         </div>
       </section>
 
