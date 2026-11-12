@@ -88,9 +88,10 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
     <>
       {/* Opening: headline with the lead beside it; then the key visual, uncropped, with the rest
           of the copy aligned to its foot (final changes, 12 Nov 2026: clearer grouping, no tall
-          cropped block running past the text) */}
+          cropped block running past the text). From lg the whole opening fits one screen: the
+          section fills the height under the header and the key visual takes the space left. */}
       <section className="band" aria-labelledby="about-title">
-        <div className="frame">
+        <div className="frame lg:flex lg:h-[calc(100svh-var(--header-h))] lg:min-h-[620px] lg:flex-col lg:!pb-[clamp(24px,3vw,40px)]">
           <div className="index-row">
             <span className="t-label marker">About</span>
           </div>
@@ -101,10 +102,10 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
             </h1>
             <p className="t-lead !text-ink">{a.paragraphs[0]}</p>
           </div>
-          <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-6">
-            <figure className="lg:col-span-7">
-              <div className="relative aspect-[3/2] overflow-hidden bg-night">
-                <Image src="/images/key-visual.jpg" alt="Vision Blend wordmark on the copper key visual" fill sizes="(min-width: 1360px) 760px, (min-width: 1024px) 56vw, 100vw" className="object-cover" />
+          <div className="grid items-end gap-10 lg:min-h-0 lg:flex-1 lg:grid-cols-12 lg:grid-rows-1 lg:gap-6">
+            <figure className="lg:col-span-7 lg:h-full lg:self-stretch">
+              <div className="relative aspect-[3/2] overflow-hidden bg-night lg:aspect-auto lg:h-full">
+                <Image src="/images/key-visual.jpg" alt="Vision Blend wordmark on the copper key visual" fill sizes="(min-width: 1360px) 760px, (min-width: 1024px) 56vw, 100vw" className="object-cover object-[50%_62%]" />
               </div>
             </figure>
             <div className="grid content-end gap-5 border-t border-border pt-6 lg:col-span-4 lg:col-start-9">
