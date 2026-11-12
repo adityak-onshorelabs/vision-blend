@@ -15,9 +15,9 @@ import { siteUrl } from "@/lib/site";
   advisory, the connected approach. Then the studio team, kept apart from founders, partners and
   advisors, and the way to Careers and Partner with us.
   Final changes (12 Nov 2026): clearer structure, no cutouts. Every person (founders, DigiNerd,
-  advisory) has the same profile: a rule, a small square monogram (a rectangular photo once the
-  studio supplies one), name, roles on their own lines, then the bio. No large empty portrait
-  frames while photos are pending.
+  advisory) has the same profile: a rule, a square avatar (their photo from public/images/team/,
+  else initials), name, roles on their own lines, then the bio. No large empty portrait frames
+  while photos are pending.
 */
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/about">): Promise<Metadata> {
@@ -35,27 +35,33 @@ const initials = (name: string) =>
     .slice(0, 2)
     .join("");
 
-function Monogram({ person }: { person: Person }) {
+/** The person's square: their photo when the studio has supplied one, else their initials */
+function Avatar({ person }: { person: Person }) {
+  if (person.photo) {
+    return (
+      <span className="relative block size-20 shrink-0 overflow-hidden bg-[var(--well)]">
+        <Image src={person.photo} alt={person.name} fill sizes="80px" className="object-cover object-top" />
+      </span>
+    );
+  }
   return (
-    <span aria-hidden="true" className="grid size-14 shrink-0 place-items-center bg-[var(--well)] text-[1.05rem] font-[400] tracking-[0.02em] text-muted-foreground">
+    <span aria-hidden="true" className="grid size-20 shrink-0 place-items-center bg-[var(--well)] text-[1.2rem] font-[400] tracking-[0.02em] text-muted-foreground">
       {initials(person.name)}
     </span>
   );
 }
 
-/** One person: rule, monogram (or photo), name, each role on its own line, bio */
+/**
+ * One person: rule, square avatar (photo or initials, the same size either way, so a team where
+ * only some photos are in still lines up), name, each role on its own line, bio.
+ */
 function PersonCard({ person }: { person: Person }) {
   const roles = person.role.split(" | ");
   return (
     <li className="grid content-start gap-5 border-t border-border pt-6">
-      {person.photo && (
-        <div className="relative aspect-[4/5] max-w-[360px] overflow-hidden bg-[var(--well)]">
-          <Image src={person.photo} alt={person.name} fill sizes="(min-width: 640px) 360px, 100vw" className="object-cover" />
-        </div>
-      )}
-      <div className="flex items-start gap-4">
-        {!person.photo && <Monogram person={person} />}
-        <div className="grid min-w-0 gap-1.5 pt-0.5">
+      <div className="flex items-center gap-5">
+        <Avatar person={person} />
+        <div className="grid min-w-0 gap-1.5">
           <h3 className="t-h3">{person.name}</h3>
           <p className="grid gap-0.5">
             {roles.map((role) => (
@@ -86,8 +92,8 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
 
   return (
     <>
-      {/* Opening (12 Nov 2026): the headline with the wordmark in black beside it, and the founders
-          straight under it, so from lg the first screen holds both. min-height, not height: on a
+      {/* Opening (12 Nov 2026): the headline and the approved opening copy, the wordmark in black
+          beside them, and the founders straight under, so from lg the first screen holds them. min-height, not height: on a
           short screen the section grows instead of clipping. */}
       <section className="band" aria-labelledby="about-title">
         <div className="frame lg:flex lg:min-h-[calc(100svh-var(--header-h))] lg:flex-col lg:!pb-[clamp(28px,4svh,48px)]">
@@ -97,10 +103,21 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
           {/* Headline and founders stay one group, centred in the space left */}
           <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">
             <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
-              <h1 id="about-title" className="t-h1 lg:col-span-7">
-                {hl(a.title)}
-                <span className="stop">.</span>
-              </h1>
+              <div className="grid content-start gap-7 lg:col-span-7">
+                <h1 id="about-title" className="t-h1">
+                  {hl(a.title)}
+                  <span className="stop">.</span>
+                </h1>
+                {/* The approved opening copy, under the headline */}
+                <div className="grid max-w-[58ch] gap-3">
+                  <p className="t-lead">{a.paragraphs[0]}</p>
+                  {a.paragraphs.slice(1).map((p) => (
+                    <p key={p} className="text-muted-foreground">
+                      {p}
+                    </p>
+                  ))}
+                </div>
+              </div>
               <div className="lg:col-span-4 lg:col-start-9">
                 <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 32vw, 80vw" className="h-auto w-full max-w-[380px] brightness-0 lg:max-w-[460px]" />
               </div>

@@ -420,6 +420,7 @@ export const en: Content = {
         {
           name: "Aquib Shaikh",
           role: "Founder & CEO",
+          photo: "/images/team/aquib-shaikh.jpg",
           bio: [
             "Aquib leads business strategy, sales, and operations at Vision Blend.",
             "Previously Chief Business Officer at Brego Business, formerly Savage & Palmer, he built and scaled its marketing vertical. He brings a commercial perspective to the studio, connecting creative ambition with business priorities.",
@@ -444,6 +445,7 @@ export const en: Content = {
         {
           name: "Abhilash Gaur",
           role: "Co-founder, DigiNerd",
+          photo: "/images/team/abhilash-gaur.jpg",
           bio: ["Abhilash brings expertise in growth strategy, performance marketing, and business development, helping align campaigns with broader commercial objectives."],
         },
         {
