@@ -133,7 +133,15 @@ export type Offering = {
   ratio?: [number, number];
   /** INTERNAL handoff note: the Drive folder the studio put this category's assets in. Never rendered. */
   assets?: string;
+  /** Drive file the film pipeline cuts the loop from (admin), and where the loop starts, in seconds */
+  film?: string;
+  filmStart?: number;
+  /** The prepared loop once the pipeline has it live on R2 (set in src/lib/cms/apply.ts); wins over `video` */
+  clip?: Clip;
 };
+
+/** A showcase loop on R2: `{base}/{size}.mp4` per size (short side in px, ascending) and `{base}/poster.jpg` */
+export type Clip = { base: string; sizes: number[]; width: number; height: number };
 
 /** A photo in public/. `placeholder` marks stock stand-ins until the studio sends its own. */
 export type Photo = { src: string; alt: string; placeholder?: boolean };

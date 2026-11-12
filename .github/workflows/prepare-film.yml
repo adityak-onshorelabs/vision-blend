@@ -1,0 +1,120 @@
+# The film pipeline: turns a client's Drive film into the showcase loop on the industry pages.
+#
+# The admin starts this run when a card's "Film from Drive" is saved (or "Try again" is pressed).
+# It downloads the film with the pipeline's Google account, cuts a 12-second muted loop in up to
+# three sizes plus a poster (scripts/films/encode.sh), stores them on Cloudflare R2 in a new folder,
+# and reports back to the admin, which marks the film Live and refreshes the site.
+#
+# Secrets (Settings → Secrets and variables → Actions):
+#   GOOGLE_SERVICE_ACCOUNT  JSON key of the Google service account clients share films with
+#   R2_ACCOUNT_ID           Cloudflare account id
+#   R2_ACCESS_KEY_ID        R2 API token (Object Read & Write on the bucket)
+#   R2_SECRET_ACCESS_KEY
+#   R2_BUCKET               bucket name
+#   R2_PUBLIC_URL           the bucket's public address: its custom domain (https://media.…) or r2.dev URL
+#   FILMS_SECRET            shared with the admin's FILMS_SECRET (32+ random characters)
+#
+# workflow_dispatch only runs workflows that are on the default branch, so this starts working once
+# it is merged into main.
+
+name: Prepare film
+run-name: Prepare film ${{ inputs.key }}
+
+on:
+  workflow_dispatch:
+    inputs:
+      drive_id:
+        description: Drive file id
+        required: true
+        type: string
+      start:
+        description: Loop start, in seconds
+        required: false
+        type: string
+        default: "0"
+      key:
+        description: Film key in the admin (drive id, or drive id@start)
+        required: true
+        type: string
+      callback:
+        description: The admin's /api/films address
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+# One run per film at a time, so a retry never races the run before it
+concurrency:
+  group: film-${{ inputs.key }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      # Inputs reach the scripts as environment variables, never pasted into shell code
+      DRIVE_ID: ${{ inputs.drive_id }}
+      START: ${{ inputs.start }}
+      FILM_KEY: ${{ inputs.key }}
+      FILMS_CALLBACK: ${{ inputs.callback }}
+      FILMS_SECRET: ${{ secrets.FILMS_SECRET }}
+      FILM_ERROR_FILE: /tmp/film-error.txt
+      FILM_SRC: /tmp/film-source
+      FILM_OUT: /tmp/film-out
+    steps:
+      # First, so the failure report at the end can always run
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: scripts/films
+
+      - name: Check the request
+        run: |
+          [[ "$DRIVE_ID" =~ ^[A-Za-z0-9_-]{20,}$ ]] || { echo "Not a Drive file id." > "$FILM_ERROR_FILE"; exit 1; }
+          [[ "$START" =~ ^[0-9]+$ ]] || { echo "The loop's start time must be whole seconds." > "$FILM_ERROR_FILE"; exit 1; }
+          expected="$DRIVE_ID"; (( START > 0 )) && expected="$DRIVE_ID@$START"
+          [[ "$FILM_KEY" == "$expected" ]] || { echo "The film key doesn't match the file and start time." > "$FILM_ERROR_FILE"; exit 1; }
+          [[ "$FILMS_CALLBACK" =~ ^https://[^/]+/api/films$ ]] || { echo "::error::The callback must be https://<admin>/api/films"; exit 1; }
+
+      - name: Install ffmpeg
+        run: command -v ffmpeg || { sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg; }
+
+      - name: Download from Drive
+        env:
+          GOOGLE_SERVICE_ACCOUNT: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        run: node scripts/films/drive-download.mjs "$DRIVE_ID" "$FILM_SRC"
+
+      - name: Cut the loop
+        run: bash scripts/films/encode.sh "$FILM_SRC" "$START" "$FILM_OUT"
+
+      - name: Store on Cloudflare R2
+        id: store
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: auto
+          # R2 doesn't take the newer default checksum headers of the AWS CLI
+          AWS_REQUEST_CHECKSUM_CALCULATION: when_required
+          AWS_RESPONSE_CHECKSUM_VALIDATION: when_required
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET: ${{ secrets.R2_BUCKET }}
+          R2_PUBLIC_URL: ${{ secrets.R2_PUBLIC_URL }}
+        run: |
+          # A new folder per run: the files are cached for a year, so a new cut never reuses a URL
+          prefix="films/${FILM_KEY/@/-at-}/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          echo "Could not store the film on Cloudflare R2." > "$FILM_ERROR_FILE"
+          aws s3 cp "$FILM_OUT" "s3://$R2_BUCKET/$prefix/" --recursive --exclude meta.json --no-progress \
+            --endpoint-url "https://$R2_ACCOUNT_ID.r2.cloudflarestorage.com" \
+            --cache-control "public, max-age=31536000, immutable"
+          rm "$FILM_ERROR_FILE"
+          echo "base=${R2_PUBLIC_URL%/}/$prefix" >> "$GITHUB_OUTPUT"
+
+      - name: Mark the film live
+        env:
+          FILM_BASE: ${{ steps.store.outputs.base }}
+        run: node scripts/films/callback.mjs live
+
+      - name: Mark the film failed
+        if: failure()
+        run: node scripts/films/callback.mjs failed

@@ -1,5 +1,9 @@
 import type { NextConfig } from "next";
 
+// Posters of films prepared from Drive (the film pipeline) come from Cloudflare R2: its r2.dev
+// address or the bucket's own domain, set as FILMS_PUBLIC_URL (e.g. https://media.visionblend.in)
+const filmsHost = process.env.FILMS_PUBLIC_URL ? new URL(process.env.FILMS_PUBLIC_URL).hostname : null;
+
 const nextConfig: NextConfig = {
   /* config options here */
   cacheComponents: true,
@@ -13,6 +17,8 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "ik.imagekit.io" },
       // Drive thumbnails on the industry portfolio pages (src/components/site/work-gallery.tsx)
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/d/**" },
+      { protocol: "https", hostname: "*.r2.dev", pathname: "/films/**" },
+      ...(filmsHost ? [{ protocol: "https" as const, hostname: filmsHost, pathname: "/films/**" }] : []),
     ],
   },
   partialPrefetching: true,

@@ -42,6 +42,7 @@ npx tsc --noEmit && npm run lint
 | `ENQUIRY_TO` | Recipient(s), comma-separated |
 | `ENQUIRY_FROM` | Verified sender address |
 | `DATABASE_URL` | Railway Postgres the admin writes (Railway → Postgres → Variables → `DATABASE_PUBLIC_URL`), read-only here. Unset locally, the site reads `.cms-dev.json` (gitignored), written by a local admin |
+| `FILMS_PUBLIC_URL` | The R2 bucket's public address when it is on its own domain (e.g. `https://media.visionblend.in`), so film posters can be optimised. `*.r2.dev` is allowed without it |
 | `CMS_SECRET` | 32+ random characters, the same value as the admin's, authorising `/api/cms` (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`). Unset, the endpoint refuses every call |
 
 Without the Resend variables, development logs each brief to the console and production answers 503 so no brief is silently lost.
@@ -66,6 +67,25 @@ film's card frame to `public/images/work/<industry>/`, uploads to ImageKit and p
 `NEXT_PUBLIC_MEDIA_URL` and `IMAGEKIT_PRIVATE_KEY` in `.env.local` (the private key stays local: never
 commit it or add it to Vercel). Upload under a new name rather than `--overwrite`: the CDN can keep
 serving the old file under an old name.
+
+## Showcase films from Drive (the film pipeline)
+
+The client pastes a Drive link on a showcase card in the admin and saves. The admin starts
+`.github/workflows/prepare-film.yml` here, which runs on GitHub Actions (free):
+
+1. `scripts/films/drive-download.mjs` downloads the film as the pipeline's Google service account
+   (the client shares the file or folder with its email once).
+2. `scripts/films/encode.sh` cuts a 12-second muted loop from the chosen start time with ffmpeg, in
+   up to three sizes (short side 720, 1080, 2160 px, never upscaled) and a poster.
+3. The files go to Cloudflare R2 in a new folder per run (cached for a year, never overwritten).
+4. `scripts/films/callback.mjs` reports to the admin's `/api/films`, which stores the result in the
+   `films` row of `content` and refreshes this site.
+
+The card then plays the loop (`src/components/site/showcase-media.tsx`): on first play it measures
+the slot and loads the smallest size that fills it sharply, so a phone never downloads 4K. A newer cut
+replaces the old one only once it is live. The workflow's secrets are listed at the top of the file;
+`workflow_dispatch` only runs workflows on the default branch, so it works once merged to `main`.
+To try the encoder locally: `bash scripts/films/encode.sh film.mp4 0 out/`.
 
 ## Admin (separate deployment)
 

@@ -1,7 +1,7 @@
 import { enquiryDraft } from "@/content/en";
-import type { Content, Crop, Episode, Project } from "@/content/types";
+import type { Content, Crop, Episode, Offering, Project } from "@/content/types";
 import { gmailCompose } from "@/lib/mail";
-import { docSchemas, type DocKey, type Docs } from "./schema";
+import { docSchemas, filmKey, type DocKey, type Docs, type Films } from "./schema";
 import { NUMBER_WORDS as WORDS, teamLine } from "./team";
 
 /*
@@ -71,7 +71,23 @@ export function cmsDefaults(c: Content): Docs {
       industriesPage: c.industriesPage,
       contactPage: (({ metaTitle, metaDescription, title, lead, collaborate, next, talk, explore }) => ({ metaTitle, metaDescription, title, lead, collaborate, next, talk, explore }))(c.contactPage),
     },
+    // Written by the film pipeline through the admin, never edited by hand
+    films: {},
   };
+}
+
+/**
+ * A card whose Drive film has a prepared version plays that loop (also while a newer cut is being
+ * prepared, or after one failed): its frame is the film's own, and the
+ * film's first frame is the poster unless the studio uploaded its own (a stock stand-in gives way).
+ */
+function withClip(o: Offering, films: Films): Offering {
+  if (!o.film) return o;
+  const f = films[filmKey(o.film, o.filmStart)];
+  if (!f?.base || !f.sizes?.length || !f.width || !f.height) return o;
+  const clip = { base: f.base, sizes: [...f.sizes].sort((a, b) => a - b), width: f.width, height: f.height };
+  const image = o.image && !o.image.placeholder ? o.image : { src: `${f.base}/poster.jpg`, alt: o.image?.alt ?? o.title };
+  return { ...o, clip, image, ratio: [f.width, f.height] };
 }
 
 /** Saved page copy over the defaults (arrays are replaced, objects merged key by key). */
@@ -104,6 +120,13 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
       const clients = saved.detail?.clients ?? i.detail?.clients;
       return { ...i, ...saved, ...(saved.detail && clients ? { detail: { ...saved.detail, clients } } : {}) };
     });
+  }
+
+  const films = docs.films;
+  if (films && Object.keys(films).length) {
+    c.industries = c.industries.map((i) =>
+      i.detail?.offerings.some((o) => o.film) ? { ...i, detail: { ...i.detail, offerings: i.detail.offerings.map((o) => withClip(o, films)) } } : i,
+    );
   }
 
   if (docs.team) {

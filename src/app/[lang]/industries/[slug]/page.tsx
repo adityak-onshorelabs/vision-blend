@@ -71,9 +71,9 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/industries
 
 const pad = (n: number) => String(n).padStart(2, "0");
 /** A card's frame: an Instagram card takes the embed's window, a film its own frame */
-const frameOf = (o: { ratio?: [number, number]; instagram?: string; video?: string }): [number, number] =>
-  o.instagram && !o.video ? embedRatioOf(o.instagram) : (o.ratio ?? [16, 9]);
-const aspect = (o: { ratio?: [number, number]; instagram?: string; video?: string }) => {
+type Framed = { ratio?: [number, number]; instagram?: string; video?: string; clip?: unknown };
+const frameOf = (o: Framed): [number, number] => (o.instagram && !o.video && !o.clip ? embedRatioOf(o.instagram) : (o.ratio ?? [16, 9]));
+const aspect = (o: Framed) => {
   const [w, h] = frameOf(o);
   return w / h;
 };
@@ -294,6 +294,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                   >
                     <ShowcaseMedia
                       video={o.video}
+                      clip={o.clip}
                       instagram={o.instagram}
                       title={o.title}
                       poster={o.image}

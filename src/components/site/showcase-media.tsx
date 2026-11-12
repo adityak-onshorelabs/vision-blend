@@ -13,32 +13,52 @@
   - Nothing at all yet: a marked staging placeholder, so a missing asset is never mistaken for work.
   - Served from ImageKit (NEXT_PUBLIC_MEDIA_URL): the clip plays as the uploaded file, not
     ImageKit's re-compression (src/lib/stream.ts).
+  - A film prepared from Drive (`clip`, from the film pipeline on R2) wins over `video`. It comes in
+    up to three sizes; the first time it plays, the slot's width on screen picks the smallest file
+    that still fills it sharply, so a phone never downloads the 4K file.
 */
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
-import type { Photo } from "@/content/types";
+import type { Clip, Photo } from "@/content/types";
 import { sourceOf } from "@/lib/stream";
 import { cn } from "@/lib/utils";
 import { embedKindOf, InstagramMedia } from "./instagram-media";
 
-type Props = { video?: string; instagram?: string; title?: string; poster?: Photo; ratio?: [number, number]; sizes: string; className?: string };
+type Props = { video?: string; clip?: Clip; instagram?: string; title?: string; poster?: Photo; ratio?: [number, number]; sizes: string; className?: string };
+
+/** Pixel density above 2 adds file size without visible gain on a muted loop */
+const MAX_DPR = 2;
+
+/** The smallest rendition whose short side covers the slot on this screen (within 10%), else the largest */
+function clipSource(clip: Clip, slot: HTMLElement) {
+  const px = slot.clientWidth * Math.min(window.devicePixelRatio || 1, MAX_DPR);
+  const short = clip.width >= clip.height ? (px * clip.height) / clip.width : px;
+  const size = clip.sizes.find((s) => s >= short * 0.9) ?? clip.sizes[clip.sizes.length - 1];
+  return `${clip.base}/${size}.mp4`;
+}
 
 export function ShowcaseMedia(props: Props) {
   const { instagram, title, className } = props;
-  if (instagram && !props.video) {
+  if (instagram && !props.video && !props.clip) {
     return <InstagramMedia url={instagram} kind={embedKindOf(instagram)} title={title ?? "Instagram post"} className={className} />;
   }
   return <LoopMedia {...props} />;
 }
 
-function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) {
+function LoopMedia({ video, clip, poster, ratio = [16, 9], sizes, className }: Props) {
   const reduce = useReducedMotion();
   const box = useRef<HTMLDivElement>(null);
   const ref = useRef<HTMLVideoElement>(null);
   const [failed, setFailed] = useState(false);
   const [playing, setPlaying] = useState(false);
-  const hasVideo = !!video && !failed;
+  const hasVideo = (!!clip || !!video) && !failed;
+
+  /** A prepared clip gets its source on first play, sized to the slot as it is then */
+  const play = (v: HTMLVideoElement) => {
+    if (clip && !v.getAttribute("src") && box.current) v.src = clipSource(clip, box.current);
+    v.play().catch(() => {});
+  };
 
   useEffect(() => {
     const el = box.current;
@@ -46,14 +66,16 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
     if (!el || !v || !hasVideo || reduce) return;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) v.play().catch(() => {});
+        if (e.isIntersecting) play(v);
         else v.pause();
       },
       { threshold: 0.35 },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [hasVideo, reduce]);
+    // play reads only clip and the box ref; clip and video also re-key the <video> element
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasVideo, reduce, clip, video]);
 
   return (
     <div
@@ -77,8 +99,9 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       )}
       {hasVideo && (
         <video
+          key={clip?.base ?? video}
           ref={ref}
-          src={sourceOf(video!)}
+          src={clip ? undefined : sourceOf(video!)}
           muted
           loop
           playsInline
@@ -95,7 +118,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && reduce && !playing ? (
         <button
           type="button"
-          onClick={() => ref.current?.play().catch(() => {})}
+          onClick={() => ref.current && play(ref.current)}
           className="absolute inset-0 grid place-items-center"
           aria-label="Play the film"
         >

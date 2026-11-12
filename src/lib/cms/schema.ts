@@ -171,6 +171,14 @@ export const offeringSchema = z.object({
   instagram: optionalInstagram,
   ratio: ratioSchema.optional(),
   assets: driveFolder,
+  /**
+   * The showcase film as a Drive file. The film pipeline cuts a 12-second muted loop from it in
+   * three sizes and stores it on Cloudflare R2 (see `films` below); once it is live it replaces
+   * `video` in the card.
+   */
+  film: driveFile.optional().or(z.literal("").transform(() => undefined)),
+  /** Where the loop starts in the Drive film, in seconds (0 when empty) */
+  filmStart: z.preprocess((v) => (v === "" || v === null ? undefined : v), z.coerce.number().int().min(0).max(36000).optional()),
 });
 
 /** A portfolio piece is a Drive file or an Instagram post/reel */
@@ -290,6 +298,42 @@ export const pagesSchema = z.object({
 export type CmsPages = z.infer<typeof pagesSchema>;
 export type PageKey = keyof CmsPages;
 
+/*
+  Showcase films prepared from Drive by the film pipeline (.github/workflows/prepare-film.yml in the
+  site's repo). One entry per Drive file and start time (filmKey). The admin writes "preparing" when
+  it starts a run; the run reports back to the admin's /api/films with "live" or "failed". `status`
+  is how the latest run went; `base`, `sizes` and the frame are the version on the site, kept while a
+  newer run prepares or after one fails. A version is a folder on R2: {base}/{size}.mp4 for each size
+  (the short side in px) and {base}/poster.jpg. Each run writes a new folder, so a cached old version
+  is never shown.
+*/
+export const filmKey = (drive: string, start?: number) => (start ? `${drive}@${start}` : drive);
+
+export const filmSchema = z.object({
+  status: z.enum(["preparing", "live", "failed"]),
+  requestedAt: z.string(),
+  updatedAt: z.string().optional(),
+  base: z.url().optional(),
+  sizes: z.array(z.number().int().positive()).optional(),
+  width: z.number().int().positive().optional(),
+  height: z.number().int().positive().optional(),
+  error: z.string().optional(),
+  /** The GitHub Actions run, for looking into a failure */
+  run: z.url().optional(),
+});
+export type Film = z.infer<typeof filmSchema>;
+
+/** One bad entry drops only itself, not every film */
+export const filmsSchema = z.record(z.string(), z.unknown()).transform((all) => {
+  const out: Record<string, Film> = {};
+  for (const [key, value] of Object.entries(all)) {
+    const parsed = filmSchema.safeParse(value);
+    if (parsed.success) out[key] = parsed.data;
+  }
+  return out;
+});
+export type Films = Record<string, Film>;
+
 /** One row per key in the content table. */
 export const docSchemas = {
   studio: studioSchema,
@@ -299,6 +343,7 @@ export const docSchemas = {
   episodes: episodesSchema,
   industries: industriesSchema,
   pages: pagesSchema,
+  films: filmsSchema,
 } as const;
 export type DocKey = keyof typeof docSchemas;
 export type Docs = {
@@ -309,6 +354,7 @@ export type Docs = {
   episodes: CmsEpisode[];
   industries: CmsIndustry[];
   pages: CmsPages;
+  films: Films;
 };
 
 /** "my new project" -> "my-new-project" */
