@@ -14,7 +14,7 @@ import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-type Scene = "home" | "work" | "industries" | "about" | "contact";
+type Scene = "home" | "work" | "industries" | "about" | "contact" | "careers" | "partners";
 type Phase = "idle" | "cover" | "hold" | "reveal";
 
 const EASE = [0.76, 0, 0.24, 1] as const;
@@ -24,7 +24,7 @@ const FAILSAFE_MS = 4000;
 
 function sceneFor(pathname: string, lang: string): Scene {
   const rest = pathname.replace(new RegExp(`^/${lang}`), "").split("/")[1] ?? "";
-  return (["work", "industries", "about", "contact"].includes(rest) ? rest : "home") as Scene;
+  return (["work", "industries", "about", "contact", "careers", "partners"].includes(rest) ? rest : "home") as Scene;
 }
 
 export function PageTransition({ lang, labels }: { lang: string; labels: Record<Scene, string> }) {
@@ -196,6 +196,27 @@ function Illustration({ scene }: { scene: Scene }) {
             />
           );
         })}
+      </svg>
+    );
+  }
+  if (scene === "careers") {
+    // A path of rising steps that ends in the full stop: where a career goes next.
+    return (
+      <svg {...common}>
+        <motion.path d="M44 122 H84 V100 H120 V78 H156 V56 H184" {...draw(0)} />
+        <motion.path d="M44 132 H196" strokeOpacity={0.3} {...draw(0.1)} />
+        <motion.circle cx="196" cy="56" r="5" fill={dot} stroke="none" style={{ transformOrigin: "196px 56px" }} {...pop(0.7)} />
+      </svg>
+    );
+  }
+  if (scene === "partners") {
+    // Two lines from either side converge into one and run on together to the full stop.
+    return (
+      <svg {...common}>
+        <motion.path d="M36 46 C84 46 92 80 128 80" {...draw(0)} />
+        <motion.path d="M36 114 C84 114 92 80 128 80" {...draw(0.1)} />
+        <motion.path d="M128 80 H188" {...draw(0.45)} />
+        <motion.circle cx="200" cy="80" r="5" fill={dot} stroke="none" style={{ transformOrigin: "200px 80px" }} {...pop(0.75)} />
       </svg>
     );
   }
