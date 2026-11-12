@@ -110,23 +110,28 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
           </div>
           <div className="flex flex-1 flex-col justify-center">
             {/*
-              The text is staggered, like an editorial spread, rather than stacked in one block: the
-              headline runs wide with the wordmark at its top right; the opening line sits under it on
-              the left; the belief is set as a pull quote offset to the right, closed by the last line.
+              Two columns, one reading order: all the text on the left (headline, the opening line
+              as the lead, then the two supporting paragraphs), and only the black wordmark on the
+              right. Lines are kept to a comfortable measure.
             */}
-            <div className="grid items-start gap-x-6 gap-y-8 lg:grid-cols-12 lg:gap-y-[clamp(40px,7svh,88px)]">
-              <h1 id="about-title" className="t-h1 lg:col-span-8">
-                {hl(a.title)}
-                <span className="stop">.</span>
-              </h1>
-              <div className="lg:col-span-4 lg:flex lg:items-start lg:justify-end lg:pt-[0.6em]">
-                <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 28vw, 70vw" className="h-auto w-full max-w-[300px] brightness-0 lg:max-w-[340px]" />
+            <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-6">
+              <div className="grid content-start gap-8 lg:col-span-7">
+                <h1 id="about-title" className="t-h1">
+                  {hl(a.title)}
+                  <span className="stop">.</span>
+                </h1>
+                <div className="grid max-w-[60ch] gap-5">
+                  <p className="t-lead text-ink">{a.paragraphs[0]}</p>
+                  {a.paragraphs.slice(1).map((p) => (
+                    <p key={p} className="leading-[1.65] text-muted-foreground">
+                      {p}
+                    </p>
+                  ))}
+                </div>
               </div>
-              <p className="t-lead max-w-[34ch] text-ink lg:col-span-5">{a.paragraphs[0]}</p>
-              <blockquote className="grid gap-4 border-s-2 border-[var(--brand)] ps-6 lg:col-span-5 lg:col-start-8 lg:mt-6">
-                <p className="text-[clamp(1.1rem,0.95rem+0.55vw,1.4rem)] font-[340] leading-[1.45] tracking-[-0.01em] text-ink">{a.paragraphs[1]}</p>
-                {a.paragraphs[2] && <p className="text-muted-foreground">{a.paragraphs[2]}</p>}
-              </blockquote>
+              <div className="flex lg:col-span-4 lg:col-start-9 lg:justify-end">
+                <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 30vw, 70vw" className="h-auto w-full max-w-[300px] self-center brightness-0 lg:max-w-[420px]" />
+              </div>
             </div>
           </div>
         </div>
