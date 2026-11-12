@@ -9,6 +9,7 @@ import type { Person } from "@/content/types";
 import { hasLocale } from "@/i18n/config";
 import { hl } from "@/lib/highlight";
 import { siteUrl } from "@/lib/site";
+import { cn } from "@/lib/utils";
 
 /*
   About, in the approved wording (brief, 11 Nov 2026): opening, founders, DigiNerd, investment &
@@ -35,47 +36,54 @@ const initials = (name: string) =>
     .slice(0, 2)
     .join("");
 
-/** The person's square: their photo when the studio has supplied one, else their initials */
-function Avatar({ person }: { person: Person }) {
-  if (person.photo) {
-    return (
-      <span className="relative block size-20 shrink-0 overflow-hidden bg-[var(--well)]">
-        <Image src={person.photo} alt={person.name} fill sizes="80px" className="object-cover object-top" />
-      </span>
-    );
-  }
+/**
+ * The person's portrait, round like the brand's full stop: their photo when the studio has supplied
+ * one, else their initials on a warm tint. The same size either way, so a team where only some
+ * photos are in still lines up. A hairline ring in the brand brown sits just outside it.
+ */
+function Avatar({ person, size = "md" }: { person: Person; size?: "md" | "lg" }) {
+  const box = size === "lg" ? "size-28 sm:size-32" : "size-24";
   return (
-    <span aria-hidden="true" className="grid size-20 shrink-0 place-items-center bg-[var(--well)] text-[1.2rem] font-[400] tracking-[0.02em] text-muted-foreground">
-      {initials(person.name)}
+    <span className={cn("relative block shrink-0 rounded-full p-1 ring-1 ring-[var(--brand)]/25", box)}>
+      {person.photo ? (
+        <span className="relative block size-full overflow-hidden rounded-full bg-[var(--well)]">
+          <Image src={person.photo} alt={`Portrait of ${person.name}`} fill sizes="128px" className="object-cover object-top" />
+        </span>
+      ) : (
+        <span
+          aria-hidden="true"
+          className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_30%_25%,oklch(0.93_0.03_60),oklch(0.86_0.05_50))] text-[1.35rem] font-[360] tracking-[0.04em] text-[var(--brand)]"
+        >
+          {initials(person.name)}
+        </span>
+      )}
     </span>
   );
 }
 
 /**
- * One person: rule, square avatar (photo or initials, the same size either way, so a team where
- * only some photos are in still lines up), name, each role on its own line, bio.
+ * One person, set like a contributor note: the round portrait, then name and role(s) in sentence
+ * case, then the bio flowing beside the portrait on wider screens. No boxes or rules around it.
  */
-function PersonCard({ person }: { person: Person }) {
+function PersonCard({ person, size }: { person: Person; size?: "md" | "lg" }) {
   const roles = person.role.split(" | ");
   return (
-    <li className="grid content-start gap-5 border-t border-border pt-6">
-      <div className="flex items-center gap-5">
-        <Avatar person={person} />
-        <div className="grid min-w-0 gap-1.5">
+    <li className="grid content-start gap-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-7">
+      <Avatar person={person} size={size} />
+      <div className="grid content-start gap-4 sm:pt-2">
+        <div className="grid gap-1">
           <h3 className="t-h3">{person.name}</h3>
-          <p className="grid gap-0.5">
-            {roles.map((role) => (
-              <span key={role} className="t-label">
-                {role}
-              </span>
-            ))}
-          </p>
+          {roles.map((role, i) => (
+            <span key={role} className={cn("text-[0.95rem]", i === 0 ? "text-brand" : "text-muted-foreground")}>
+              {role}
+            </span>
+          ))}
         </div>
-      </div>
-      <div className="grid max-w-[54ch] gap-3 text-muted-foreground">
-        {person.bio.map((p) => (
-          <p key={p}>{p}</p>
-        ))}
+        <div className="grid max-w-[52ch] gap-3 text-muted-foreground">
+          {person.bio.map((p) => (
+            <p key={p}>{p}</p>
+          ))}
+        </div>
       </div>
     </li>
   );
@@ -102,35 +110,34 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
           </div>
           {/* Headline and founders stay one group, centred in the space left */}
           <div className="lg:flex lg:flex-1 lg:flex-col lg:justify-center">
-            <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-6">
-              <div className="grid content-start gap-7 lg:col-span-7">
-                <h1 id="about-title" className="t-h1">
-                  {hl(a.title)}
-                  <span className="stop">.</span>
-                </h1>
-                {/* The approved opening copy, under the headline */}
-                <div className="grid max-w-[58ch] gap-3">
-                  <p className="t-lead">{a.paragraphs[0]}</p>
-                  {a.paragraphs.slice(1).map((p) => (
-                    <p key={p} className="text-muted-foreground">
-                      {p}
-                    </p>
-                  ))}
-                </div>
+            {/*
+              The text is staggered, like an editorial spread, rather than stacked in one block: the
+              headline runs wide with the wordmark at its top right; the opening line sits under it on
+              the left; the belief is set as a pull quote offset to the right, closed by the last line.
+            */}
+            <div className="grid items-start gap-x-6 gap-y-8 lg:grid-cols-12">
+              <h1 id="about-title" className="t-h1 lg:col-span-8">
+                {hl(a.title)}
+                <span className="stop">.</span>
+              </h1>
+              <div className="lg:col-span-4 lg:flex lg:items-start lg:justify-end lg:pt-[0.6em]">
+                <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 28vw, 70vw" className="h-auto w-full max-w-[300px] brightness-0 lg:max-w-[340px]" />
               </div>
-              <div className="lg:col-span-4 lg:col-start-9">
-                <Image src="/images/logo-brown.png" alt="" width={900} height={180} sizes="(min-width: 1024px) 32vw, 80vw" className="h-auto w-full max-w-[380px] brightness-0 lg:max-w-[460px]" />
-              </div>
+              <p className="t-lead max-w-[34ch] text-ink lg:col-span-5">{a.paragraphs[0]}</p>
+              <blockquote className="grid gap-4 border-s-2 border-[var(--brand)] ps-6 lg:col-span-5 lg:col-start-8 lg:mt-6">
+                <p className="text-[clamp(1.1rem,0.95rem+0.55vw,1.4rem)] font-[340] leading-[1.45] tracking-[-0.01em] text-ink">{a.paragraphs[1]}</p>
+                {a.paragraphs[2] && <p className="text-muted-foreground">{a.paragraphs[2]}</p>}
+              </blockquote>
             </div>
 
-            <section className="mt-[clamp(56px,10svh,120px)] grid gap-6" aria-labelledby="founders-title">
+            <section className="mt-[clamp(48px,7svh,96px)] grid gap-8" aria-labelledby="founders-title">
               <h2 id="founders-title" className="t-h3">
                 {hl(a.founders.title)}
                 <span className="stop">.</span>
               </h2>
-              <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
+              <ul className="grid gap-12 lg:grid-cols-2 lg:gap-x-10">
                 {a.founders.people.map((p) => (
-                  <PersonCard key={p.name} person={p} />
+                  <PersonCard key={p.name} person={p} size="lg" />
                 ))}
               </ul>
             </section>
