@@ -149,31 +149,27 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
         </div>
       </section>
 
-      {/*
-        DigiNerd, the performance partner, then investment & advisory. Every people section has the
-        same structure as the founders: a head, then the people side by side in two columns, so
-        nothing stacks down a narrow column like a ladder.
-      */}
+      {/* DigiNerd, the performance partner */}
       <section className="band band-dark" aria-labelledby="partner-title">
         <div className="frame">
           <div className="index-row">
             <span className="t-label marker">{a.partner.label}</span>
           </div>
-          <div className="mb-[clamp(40px,5vw,72px)] grid items-end gap-6 lg:grid-cols-12">
-            <div className="grid gap-3 lg:col-span-6">
+          <div className="grid gap-14 lg:grid-cols-12 lg:gap-6">
+            <div className="grid content-start gap-5 lg:sticky lg:top-28 lg:col-span-5 lg:self-start">
               <h2 id="partner-title" className="t-h1">
                 {a.partner.name}
                 <span className="stop">.</span>
               </h2>
               <p className="t-label">{a.partner.line}</p>
+              <p className="t-lead max-w-[40ch] text-muted-foreground">{a.partner.text}</p>
             </div>
-            <p className="t-lead max-w-[46ch] text-muted-foreground lg:col-span-5 lg:col-start-8">{a.partner.text}</p>
+            <ul className="grid content-start gap-10 lg:col-span-6 lg:col-start-7">
+              {a.partner.people.map((p) => (
+                <PersonCard key={p.name} person={p} />
+              ))}
+            </ul>
           </div>
-          <ul className="grid gap-12 lg:grid-cols-2 lg:gap-x-10">
-            {a.partner.people.map((p) => (
-              <PersonCard key={p.name} person={p} />
-            ))}
-          </ul>
         </div>
       </section>
 
@@ -181,7 +177,7 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
       <section className="band" aria-labelledby="advisory-title">
         <div className="frame">
           <SectionHead id="advisory-title" label="Investment & advisory" title={a.advisory.title} />
-          <ul className="grid gap-12 lg:grid-cols-2 lg:gap-x-10">
+          <ul className="grid gap-12 md:grid-cols-2 md:gap-x-6">
             {a.advisory.people.map((p) => (
               <PersonCard key={p.name} person={p} />
             ))}
