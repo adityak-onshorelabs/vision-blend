@@ -120,16 +120,17 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
                   {hl(a.title)}
                   <span className="stop">.</span>
                 </h1>
-                {/* One fixed measure for every paragraph, so the right edges line up instead of
-                    stepping in and out; the lead's lines are balanced and the body avoids
-                    one-word last lines */}
-                <div className="grid max-w-[34rem] gap-5">
+                {/*
+                  Two pieces of text, not three: the founding line as the statement, then one
+                  supporting paragraph (the two approved sentences run together, wording unchanged).
+                  Fewer, evenly sized blocks at one measure, so the column no longer steps down
+                  like a ladder of shrinking paragraphs.
+                */}
+                <div className="grid max-w-[34rem] gap-6">
                   <p className="t-lead text-balance text-ink">{a.paragraphs[0]}</p>
-                  {a.paragraphs.slice(1).map((p) => (
-                    <p key={p} className="text-pretty leading-[1.65] text-muted-foreground">
-                      {p}
-                    </p>
-                  ))}
+                  {a.paragraphs.length > 1 && (
+                    <p className="text-pretty leading-[1.7] text-muted-foreground">{a.paragraphs.slice(1).join(" ")}</p>
+                  )}
                 </div>
               </div>
               <div className="flex lg:col-span-4 lg:col-start-9 lg:justify-end">
