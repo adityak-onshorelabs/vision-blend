@@ -48,24 +48,21 @@ Without the Resend variables, development logs each brief to the console and pro
 
 ## Adding portfolio videos and images
 
-Portfolio media is hosted on ImageKit and plays as uploaded (`src/lib/stream.ts`): ImageKit's own
-video processing is not used, so the monthly video processing units do not limit it. To add files
-from the studio's Drive:
+Portfolio films and stills play straight from the studio's Google Drive (ImageKit was dropped on
+12 Nov 2026). The studio's portfolio folder must stay shared "anyone with the link".
+
+1. Add the piece to the industry's `work.items` in `src/content/industry-details.ts` with its Drive
+   file id, category, `kind` and its frame size as `ratio` (read it with
+   `ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 "<drive download url>"`).
+2. Optional card frame (when Drive's thumbnail is a dark title card): save a JPG one second in to
+   `public/images/work/<industry>/<name>.jpg` and list it in `src/content/work-frames.ts`.
+3. A category card's looping clip lives in the site itself, `public/videos/<industry>/<name>.mp4`
+   plus a poster `.jpg`. Cut 12 seconds at 720p:
 
 ```bash
-npm run media:import -- --industry real-estate <drive file link> [<drive file link> ...]
-npm run media:import -- --industry d2c --loop-at 14 <drive file link>   # also cut a 12 s card loop
-npm run media:import -- --industry d2c --drive <drive link> ./downloaded-private-file.mp4
-npm run media:import -- --help
+ffmpeg -ss 3 -i film.mp4 -t 12 -an -vf "scale='if(gt(iw,ih),-2,min(720,iw))':'if(gt(iw,ih),min(720,ih),-2)'"   -c:v libx264 -preset slow -crf 23 -maxrate 2500k -bufsize 5000k -pix_fmt yuv420p -movflags +faststart loop.mp4
+ffmpeg -i loop.mp4 -frames:v 1 -q:v 3 loop.jpg
 ```
-
-It downloads each file (shared "anyone with the link"), warns when it is below 1080p, keeps the
-studio's encode where it fits ImageKit's 100 MB upload cap (re-encoding only what does not), saves the
-film's card frame to `public/images/work/<industry>/`, uploads to ImageKit and prints the lines for
-`src/content/hosted-work.ts` and `src/content/industry-details.ts`. Needs ffmpeg and ffprobe, and
-`NEXT_PUBLIC_MEDIA_URL` and `IMAGEKIT_PRIVATE_KEY` in `.env.local` (the private key stays local: never
-commit it or add it to Vercel). Upload under a new name rather than `--overwrite`: the CDN can keep
-serving the old file under an old name.
 
 ## Admin (separate deployment)
 

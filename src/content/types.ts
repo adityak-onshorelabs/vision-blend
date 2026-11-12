@@ -99,7 +99,7 @@ export type WorkItem = {
   /** The content category it belongs to, e.g. "Ads". The page's filters are built from these. */
   category: string;
   client?: string;
-  /** Drive file id. Plays from ImageKit when listed in hosted-work.ts; otherwise from Drive, which needs it shared "anyone with the link". */
+  /** Drive file id. Plays in Drive's own player, so the file must be shared "anyone with the link". */
   drive?: string;
   /** Instagram post or reel link */
   instagram?: string;
@@ -122,7 +122,7 @@ export type Offering = {
   text: string;
   subtitle?: string;
   image?: Photo;
-  /** Showcase film (muted loop), a public/ path or ImageKit URL via media(). Absent until the studio's edit is in. */
+  /** Showcase film (muted loop), a public/ path via media(). Absent until the studio's edit is in. */
   video?: string;
   /** Instagram post or reel shown in the card instead of a looping film (Instagram's own player) */
   instagram?: string;

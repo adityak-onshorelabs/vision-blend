@@ -3,28 +3,25 @@
 /*
   An industry's portfolio: every file from the studio's Drive folder, filterable by category, each
   opening in a lightbox.
-  - Everything comes from Drive or Instagram. Drive cards show Drive's own thumbnail of the file
-    (through the Next image optimiser, so visitors get a resized WebP from the site's cache, not
-    Drive); Instagram cards show the post's own embed, inert until opened. No loops and no hosted
-    media: this page is a contact sheet, not the showcase on the industry page.
+  - Everything comes from Drive or Instagram (final decision, 12 Nov 2026: no ImageKit). Drive cards
+    show a frame saved on the site where there is one (src/content/work-frames.ts), else Drive's own
+    thumbnail of the file (through the Next image optimiser, so visitors get a resized WebP from the
+    site's cache, not Drive); Instagram cards show the post's own embed, inert until opened. No
+    loops: this page is a contact sheet, not the showcase on the industry page.
   - Layout: a masonry of the pieces in their own shapes (a reel stays 9:16, a slide 4:5, a scope
     film 2.35:1), title and category over the image.
   - Lightbox: a native modal <dialog>, so focus is held inside, Esc closes and the page behind is
     inert. Films play in Drive's player (/file/d/<id>/preview), loaded only while open; stills show
     the full image. Prev/next (and the arrow keys) move through the pieces in the current filter.
   - "Open in Drive" (or "on Instagram") is offered for when the player is blocked.
-  - Hosted pieces (src/content/hosted-work.ts, keyed by Drive id) come from ImageKit instead: the card
-    shows a frame of the film (or the image), and the lightbox plays the full film in our
-    own player, streamed at up to 1080p and above (film-player.tsx). Nothing of them loads from
-    Drive, so the studio's folder can stay private, and there is no "Open in Drive" link.
+  - The studio's Drive folder must stay shared "anyone with the link", or the films stop playing.
 */
 import Image from "next/image";
 import type { KeyboardEvent as ReactKeyboardEvent, MouseEvent, ReactNode, Ref } from "react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { hostedOf } from "@/content/hosted-work";
 import type { WorkItem } from "@/content/types";
+import { cardFrameOf } from "@/content/work-frames";
 import { cn } from "@/lib/utils";
-import { FilmPlayer } from "./film-player";
 import { embedKindOf, embedRatioOf, InstagramMedia } from "./instagram-media";
 
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -36,11 +33,8 @@ const keyOf = (w: WorkItem) => w.drive ?? w.instagram ?? w.title;
 const thumb = (id: string, width: number) => `https://lh3.googleusercontent.com/d/${id}=w${width}`;
 const preview = (id: string) => `https://drive.google.com/file/d/${id}/preview`;
 const view = (id: string) => `https://drive.google.com/file/d/${id}/view`;
-/** The card image: a set poster, else the hosted film's frame (or the hosted image), else Drive's thumbnail */
-const imageOf = (w: WorkItem, width: number) => {
-  const h = hostedOf(w.drive);
-  return w.poster ?? (h ? (h.poster ?? h.src) : thumb(w.drive ?? "", width));
-};
+/** The card image: a set poster, else the frame saved on the site, else Drive's thumbnail */
+const imageOf = (w: WorkItem, width: number) => w.poster ?? cardFrameOf(w.drive) ?? thumb(w.drive ?? "", width);
 
 const ALL = "All";
 
@@ -240,8 +234,6 @@ export function WorkGallery({ items, variant = "portfolio" }: { items: WorkItem[
               <div className="relative bg-black" style={{ aspectRatio: String(r), width: `min(100%, calc((100dvh - 10.5rem) * ${r}))` }}>
                 {current.instagram ? (
                   <InstagramMedia key={current.instagram} url={current.instagram} kind={embedKindOf(current.instagram)} title={current.title} priority className="absolute inset-0 !aspect-auto h-full" />
-                ) : current.kind === "film" && hostedOf(current.drive) ? (
-                  <FilmPlayer key={current.drive} video={hostedOf(current.drive)!.src} poster={current.poster ?? hostedOf(current.drive)!.poster} title={current.title} />
                 ) : current.kind === "film" && current.drive ? (
                   <>
                     <span className="absolute inset-0 grid place-items-center text-[0.8rem] text-white/60" aria-hidden="true">
@@ -259,7 +251,7 @@ export function WorkGallery({ items, variant = "portfolio" }: { items: WorkItem[
                 ) : (
                   <Image
                     key={current.drive}
-                    src={hostedOf(current.drive)?.src ?? thumb(current.drive ?? "", 2000)}
+                    src={thumb(current.drive ?? "", 2000)}
                     alt={`${current.title}${current.client ? `, ${current.client}` : ""}`}
                     fill
                     sizes="(min-width: 768px) 70vh, 100vw"
@@ -277,7 +269,7 @@ export function WorkGallery({ items, variant = "portfolio" }: { items: WorkItem[
                 </span>
                 <span className="text-[clamp(1.15rem,1rem+0.6vw,1.6rem)] font-[340] tracking-[-0.02em]">{current.title}</span>
               </div>
-              {(current.instagram || !hostedOf(current.drive)) && (
+              {(current.instagram || current.drive) && (
                 <a
                   href={current.instagram ?? view(current.drive ?? "")}
                   target="_blank"

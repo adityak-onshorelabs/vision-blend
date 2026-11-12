@@ -11,14 +11,12 @@
     scope film 2.35:1. Nothing is cropped, letterboxed or padded with a blurred fill.
   - Instagram (`instagram`): Instagram's own player fills the slot instead, cropped to the media.
   - Nothing at all yet: a marked staging placeholder, so a missing asset is never mistaken for work.
-  - Served from ImageKit (NEXT_PUBLIC_MEDIA_URL): the clip plays as the uploaded file, not
-    ImageKit's re-compression (src/lib/stream.ts).
+  - Clips and posters are the site's own files (public/videos/<industry>/, see src/lib/media.ts).
 */
 import Image from "next/image";
 import { useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import type { Photo } from "@/content/types";
-import { sourceOf } from "@/lib/stream";
 import { cn } from "@/lib/utils";
 import { embedKindOf, InstagramMedia } from "./instagram-media";
 
@@ -78,7 +76,7 @@ function LoopMedia({ video, poster, ratio = [16, 9], sizes, className }: Props) 
       {hasVideo && (
         <video
           ref={ref}
-          src={sourceOf(video!)}
+          src={video}
           muted
           loop
           playsInline

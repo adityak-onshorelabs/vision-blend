@@ -5,12 +5,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   // 90 is for the hero's copper gradient, where 75 brings back banding in the dark areas
   // Project covers uploaded from the admin (its own deployment) live on Vercel Blob
-  // ik.imagekit.io serves the industry showcase posters when NEXT_PUBLIC_MEDIA_URL points there (src/lib/media.ts)
   images: {
     qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "*.public.blob.vercel-storage.com" },
-      { protocol: "https", hostname: "ik.imagekit.io" },
       // Drive thumbnails on the industry portfolio pages (src/components/site/work-gallery.tsx)
       { protocol: "https", hostname: "lh3.googleusercontent.com", pathname: "/d/**" },
     ],
