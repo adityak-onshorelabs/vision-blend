@@ -138,7 +138,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
                 <p className="text-[0.95rem] text-muted-foreground">{p.apply.openingsText}</p>
               </div>
             </div>
-            <div className="border-t-2 border-brand pt-6 sm:pt-8 lg:col-span-7 lg:col-start-6">
+            <div className="lg:col-span-8 lg:col-start-5">
               <CareersForm copy={c.forms} />
             </div>
           </div>

@@ -3,11 +3,13 @@ import { getContent } from "@/content";
 import { defaultLocale } from "@/i18n/config";
 import { CV_MAX_BYTES, CV_TYPES, enquirySchema, type Enquiry, type EnquiryKind } from "@/lib/enquiry";
 import { gateCookie, gateToken } from "@/lib/gate";
+import { saveToSheet, sheetsConfigured, type SheetFile } from "@/lib/sheets";
 
 /*
-  Every form on the site lands here (see src/lib/enquiry.ts for the kinds). The enquiry is emailed to
-  the studio through Resend; it counts as saved only once Resend accepts it, and only then does a
-  portfolio enquiry unlock that industry's work (src/lib/gate.ts).
+  Every form on the site lands here (see src/lib/enquiry.ts for the kinds). Each enquiry goes to the
+  studio's Google Sheet (src/lib/sheets.ts) and, when Resend is set up, by email as well. It counts as
+  saved once either accepts it, and only then does a portfolio enquiry unlock that industry's work
+  (src/lib/gate.ts).
 
   Recipients: ENQUIRY_TO, or per kind PORTFOLIO_TO, PARTNERS_TO, CAREERS_TO when set (the studio is
   still confirming which inbox each should reach).
@@ -155,45 +157,61 @@ export async function POST(request: Request) {
   }
 
   const attachments: Attachment[] = [];
+  let sheetFile: SheetFile | undefined;
   if (enquiry.kind === "careers") {
     const ext = cv && CV_TYPES[cv.type];
     if (!cv || !ext) return fail("Add a CV as a PDF or Word file", 422, { issues: ["cv"] });
     if (cv.size > CV_MAX_BYTES) return fail("The CV is too large", 413, { issues: ["cv"] });
     const safeName = enquiry.name.replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "") || "applicant";
-    attachments.push({ filename: `CV-${safeName}.${ext}`, content: Buffer.from(await cv.arrayBuffer()).toString("base64") });
+    const filename = `CV-${safeName}.${ext}`;
+    const content = Buffer.from(await cv.arrayBuffer()).toString("base64");
+    attachments.push({ filename, content });
+    sheetFile = { name: filename, type: cv.type, base64: content };
   }
 
+  const rows = rowsOf(enquiry, industry);
   const { RESEND_API_KEY, ENQUIRY_FROM } = process.env;
   const envKey = RECIPIENT_ENV[enquiry.kind];
   const to = (envKey && process.env[envKey]) || process.env.ENQUIRY_TO;
+  const emailConfigured = !!(RESEND_API_KEY && to && ENQUIRY_FROM);
 
-  if (!RESEND_API_KEY || !to || !ENQUIRY_FROM) {
+  if (!emailConfigured && !sheetsConfigured()) {
     if (process.env.NODE_ENV !== "production") {
-      console.log("[enquiry] email not configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
+      console.log("[enquiry] no sheet or email configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
       return unlock(NextResponse.json({ ok: true, delivered: false }), enquiry);
     }
-    console.error("[enquiry] RESEND_API_KEY, ENQUIRY_TO or ENQUIRY_FROM missing");
+    console.error("[enquiry] neither SHEETS_WEBHOOK_URL/SECRET nor RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM are set");
     return fail("Enquiries are not configured", 503);
   }
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-    body: JSON.stringify({
-      from: ENQUIRY_FROM,
-      to: to.split(",").map((s) => s.trim()),
-      reply_to: enquiry.email,
-      subject: subjectOf(enquiry, industry),
-      html: emailHtml(rowsOf(enquiry, industry)),
-      ...(attachments.length ? { attachments } : {}),
-    }),
-  });
+  const sendEmail = async () => {
+    if (!emailConfigured) return false;
+    try {
+      const res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          from: ENQUIRY_FROM,
+          to: to!.split(",").map((s) => s.trim()),
+          reply_to: enquiry.email,
+          subject: subjectOf(enquiry, industry),
+          html: emailHtml(rows),
+          ...(attachments.length ? { attachments } : {}),
+        }),
+      });
+      if (!res.ok) console.error("[enquiry] Resend failed", res.status, await res.text());
+      return res.ok;
+    } catch (err) {
+      console.error("[enquiry] Resend request failed", err);
+      return false;
+    }
+  };
 
-  if (!res.ok) {
-    console.error("[enquiry] Resend failed", res.status, await res.text());
-    return fail("Delivery failed", 502);
-  }
-  return unlock(NextResponse.json({ ok: true, delivered: true }), enquiry);
+  // The sheet keeps the CV as a Drive link rather than "Attached"
+  const sheetRows = rows.filter(([k]) => k !== "CV");
+  const [sheeted, emailed] = await Promise.all([saveToSheet(enquiry.kind, sheetRows, sheetFile), sendEmail()]);
+  if (!sheeted && !emailed) return fail("Delivery failed", 502);
+  return unlock(NextResponse.json({ ok: true, delivered: true, sheet: sheeted, email: emailed }), enquiry);
 }
 
 /** A delivered portfolio enquiry opens that industry's work for the rest of the session */

@@ -162,6 +162,12 @@ export const en: Content = {
       submit: "Send application",
       sentTitle: "Application received",
       sent: "Thank you for your interest in Vision Blend. We'll be in touch if there's a fit.",
+      steps: ["About you", "Discipline and opportunity", "Your work"],
+      cvDrop: "Drop your CV here, or",
+      cvBrowse: "browse",
+      cvReplace: "Replace",
+      cvRemove: "Remove",
+      portfolioOptional: "Optional for Studio Operations.",
     },
   },
   ui: {

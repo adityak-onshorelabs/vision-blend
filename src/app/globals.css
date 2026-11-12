@@ -385,6 +385,50 @@
   .chip[aria-pressed="true"]::before, .chip:has(input:checked)::before { background: var(--brand-soft); }
   .chip:has(input:focus-visible) { outline: 1.5px solid var(--brand); outline-offset: 3px; }
 
+  /* Choice cards: one pick from a set, a radio dot that fills when chosen */
+  .choice {
+    position: relative; display: flex; align-items: center; gap: 14px;
+    min-height: 56px; padding: 12px 16px;
+    background: var(--paper); border: 1px solid var(--rule); cursor: pointer;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .choice:hover { border-color: oklch(0.19 0.008 40 / 0.4); }
+  .choice-n { font-size: 0.75rem; font-weight: 500; color: var(--faint); font-variant-numeric: tabular-nums; transition: color 0.2s ease; }
+  .choice-label { flex: 1; font-size: 0.98rem; line-height: 1.3; }
+  .choice-mark {
+    flex: none; width: 18px; height: 18px; border-radius: 50%;
+    border: 1px solid oklch(0.19 0.008 40 / 0.35); transition: border-color 0.2s ease, box-shadow 0.25s var(--ease);
+  }
+  .choice:has(input:checked) { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+  .choice:has(input:checked) .choice-n { color: var(--brand); }
+  .choice:has(input:checked) .choice-mark { border-color: var(--brand); box-shadow: inset 0 0 0 4px var(--paper), inset 0 0 0 9px var(--brand); }
+  .choice:has(input:focus-visible) { outline: 1.5px solid var(--brand); outline-offset: 2px; }
+  fieldset[aria-invalid="true"] .choice { border-color: oklch(0.45 0.15 35 / 0.45); }
+
+  /* A long form on its own sheet, in numbered parts */
+  .form-sheet {
+    background: var(--paper); border: 1px solid var(--rule); border-top: 2px solid var(--brand);
+    box-shadow: 0 30px 60px -40px oklch(0.19 0.008 40 / 0.35);
+    padding: clamp(20px, 4vw, 48px);
+  }
+  /* The legend sits on the fieldset's top rule, so the title reads as "01 About you ———" */
+  .form-step + .form-step { border-top: 1px solid var(--rule); }
+  .form-step-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; padding-inline-end: 14px; }
+  .form-step-n { font-size: 0.78rem; font-weight: 500; color: var(--brand); font-variant-numeric: tabular-nums; }
+
+  /* File drop: a dashed well that takes a dragged file or opens the picker */
+  .dropzone {
+    display: flex; align-items: center; gap: 16px; min-height: 88px; padding: 16px 20px;
+    border: 1px dashed oklch(0.19 0.008 40 / 0.3); background: var(--tint); cursor: pointer;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .dropzone:hover, .dropzone[data-drag="true"] { border-color: var(--ink); background: var(--well); }
+  .dropzone:has(input:focus-visible) { outline: 1.5px solid var(--brand); outline-offset: 2px; }
+  .dropzone[aria-invalid="true"] { border-color: var(--error); }
+  .file-row { display: flex; align-items: center; gap: 14px; min-height: 72px; padding: 12px 16px; border: 1px solid var(--ink); background: var(--paper); }
+  .file-act { min-height: 44px; padding: 0 6px; font-size: 0.9rem; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .file-act:hover { color: var(--brand); }
+
   /* Human check (Turnstile runs invisibly): a hairline that ends in the full stop */
   .verify { display: flex; align-items: center; gap: 14px; max-width: 440px; font-size: 0.88rem; color: var(--muted); }
   .verify-line { position: relative; flex: 1; min-width: 48px; height: 1px; overflow: hidden; background: var(--rule); }

@@ -213,6 +213,45 @@ export function Chips({
   );
 }
 
+/** One choice from several, as a grid of cards (native radios inside, so arrow keys work) */
+export function Choices({
+  name, label, value, onChange, error, options, className, numbered, hideLegend,
+}: {
+  name: string; label: string; value: string; onChange: (v: string) => void; error?: string;
+  options: readonly string[]; className?: string; numbered?: boolean; hideLegend?: boolean;
+}) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return (
+    <fieldset className="grid min-w-0 gap-3" aria-describedby={error ? `${name}-err` : undefined} aria-invalid={error ? true : undefined}>
+      <legend className={cn("t-label mb-3", hideLegend && "sr-only")}>{label}</legend>
+      <div className={cn("grid gap-2", className)}>
+        {options.map((o, i) => (
+          <label key={o} className="choice">
+            <input type="radio" name={name} value={o} checked={value === o} onChange={() => onChange(o)} className="sr-only" />
+            {numbered && <span className="choice-n" aria-hidden="true">{pad(i + 1)}</span>}
+            <span className="choice-label">{o}</span>
+            <span className="choice-mark" aria-hidden="true" />
+          </label>
+        ))}
+      </div>
+      {error && <FieldError id={`${name}-err`}>{error}</FieldError>}
+    </fieldset>
+  );
+}
+
+/** A numbered part of a longer form */
+export function Step({ n, title, children }: { n: number; title: string; children: ReactNode }) {
+  return (
+    <fieldset className="form-step grid min-w-0 gap-7">
+      <legend className="form-step-head">
+        <span className="form-step-n">{String(n).padStart(2, "0")}</span>
+        <span className="t-label !text-ink">{title}</span>
+      </legend>
+      {children}
+    </fieldset>
+  );
+}
+
 export function FieldError({ id, children }: { id: string; children: ReactNode }) {
   return (
     <span id={id} className="text-[0.82rem] text-destructive">
@@ -273,5 +312,5 @@ export function Sent({ title, text, children }: { title: string; text: string; c
 
 /** Focus the first field with an error after a failed check */
 export function focusFirstError(form: HTMLFormElement | null) {
-  requestAnimationFrame(() => form?.querySelector<HTMLElement>('[aria-invalid="true"], fieldset[aria-describedby] input')?.focus());
+  requestAnimationFrame(() => form?.querySelector<HTMLElement>(':is(input, select, textarea)[aria-invalid="true"], fieldset[aria-describedby] input')?.focus());
 }

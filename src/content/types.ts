@@ -204,7 +204,18 @@ export type FormCopy = {
   project: { submit: string; sentTitle: string; sent: string };
   portfolio: { title: string; intro: string; submit: string; close: string; opening: string };
   partner: { submit: string; sentTitle: string; sent: string };
-  careers: { submit: string; sentTitle: string; sent: string };
+  careers: {
+    submit: string;
+    sentTitle: string;
+    sent: string;
+    /** The three parts of the application, in order */
+    steps: [string, string, string];
+    cvDrop: string;
+    cvBrowse: string;
+    cvReplace: string;
+    cvRemove: string;
+    portfolioOptional: string;
+  };
 };
 
 export type Content = {
