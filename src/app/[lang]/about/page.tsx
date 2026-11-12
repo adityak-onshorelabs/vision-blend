@@ -86,24 +86,34 @@ export default async function AboutPage({ params }: PageProps<"/[lang]/about">) 
 
   return (
     <>
-      {/* Opening */}
+      {/* Opening: headline with the lead beside it; then the key visual, uncropped, with the rest
+          of the copy aligned to its foot (final changes, 12 Nov 2026: clearer grouping, no tall
+          cropped block running past the text) */}
       <section className="band" aria-labelledby="about-title">
         <div className="frame">
-          <SectionHead as="h1" id="about-title" label="About" title={a.title} />
-          <div className="grid gap-10 lg:grid-cols-12 lg:gap-6">
-            <div className="grid content-start gap-6 lg:col-span-6">
-              <p className="t-lead">{a.paragraphs[0]}</p>
+          <div className="index-row">
+            <span className="t-label marker">About</span>
+          </div>
+          <div className="s-head">
+            <h1 id="about-title" className="t-h1">
+              {hl(a.title)}
+              <span className="stop">.</span>
+            </h1>
+            <p className="t-lead !text-ink">{a.paragraphs[0]}</p>
+          </div>
+          <div className="grid items-end gap-10 lg:grid-cols-12 lg:gap-6">
+            <figure className="lg:col-span-7">
+              <div className="relative aspect-[3/2] overflow-hidden bg-night">
+                <Image src="/images/key-visual.jpg" alt="Vision Blend wordmark on the copper key visual" fill sizes="(min-width: 1360px) 760px, (min-width: 1024px) 56vw, 100vw" className="object-cover" />
+              </div>
+            </figure>
+            <div className="grid content-end gap-5 border-t border-border pt-6 lg:col-span-4 lg:col-start-9">
               {a.paragraphs.slice(1).map((p) => (
-                <p key={p} className="max-w-[56ch] text-muted-foreground">
+                <p key={p} className="max-w-[46ch] text-muted-foreground">
                   {p}
                 </p>
               ))}
             </div>
-            <figure className="grid content-start lg:col-span-5 lg:col-start-8">
-              <div className="relative aspect-[4/5] overflow-hidden bg-night">
-                <Image src="/images/key-visual.jpg" alt="Vision Blend wordmark on the copper key visual" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-              </div>
-            </figure>
           </div>
         </div>
       </section>
