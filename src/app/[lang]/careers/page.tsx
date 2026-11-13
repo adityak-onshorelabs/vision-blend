@@ -19,7 +19,8 @@ import { siteUrl } from "@/lib/site";
     studio's enquiry line (final changes, 12 Nov 2026; CAREERS_CONTACT in src/lib/enquiry.ts).
   - Beyond the brief: a gallery of the team's behind-the-scenes and outing photos (13 Nov 2026,
     from the studio's Drive), then the A Week at Vision Blend reels.
-  - People in focus: one slot per feature until the studio sends names, dates, photos and captions.
+  - People in focus: edited in the admin; hidden until a feature has a name or a photo, and a feature
+    shows once it has a name or a photo.
 */
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/careers">): Promise<Metadata> {
@@ -39,6 +40,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
   const p = c.careersPage;
   const intro = c.episodes.filter((e) => e.ep === 0);
   const reels = c.episodes.filter((e) => e.ep > 0);
+  const focus = p.people.features.filter((f) => f.name || f.photo);
 
   return (
     <>
@@ -98,12 +100,13 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
         </div>
       </section>
 
-      {/* People in focus */}
+      {/* People in focus: shown once a feature has a name or photo (edited on the admin's People in focus screen) */}
+      {focus.length > 0 && (
       <section className="band" aria-labelledby="people-title">
         <div className="frame">
           <SectionHead id="people-title" label={p.people.label} title={p.people.title} text={p.people.text} />
           <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {p.people.features.map((f, i) => (
+            {focus.map((f, i) => (
               <li key={`${f.label}-${i}`} className="grid content-start gap-4">
                 <div className="relative grid aspect-[4/5] place-items-center overflow-hidden bg-[var(--well)]">
                   {f.photo ? (
@@ -124,6 +127,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
           </ul>
         </div>
       </section>
+      )}
 
       {/* Apply */}
       <section id="apply" className="band band-tint scroll-mt-20" aria-labelledby="apply-title">

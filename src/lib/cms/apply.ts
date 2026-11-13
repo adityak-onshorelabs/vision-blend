@@ -27,6 +27,7 @@ export function cmsDefaults(c: Content): Docs {
   return {
     studio: { email: c.company.email ?? "", emailCc: c.company.emailCc ?? undefined, phones: c.company.phones, location: c.company.location ?? undefined },
     team: c.about.team.members,
+    focus: c.careersPage.people.features,
     hero: { eyebrow: c.home.eyebrow, tagline: c.company.tagline.replace(/\.$/, ""), lead: c.home.lead },
     projects: c.projects.map((p) => ({
       slug: p.slug,
@@ -94,6 +95,8 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
 
   // Page copy first, so the team count below is swapped into the saved wording too
   if (docs.pages) applyPages(c, docs.pages);
+  // Careers' People in focus, edited on the admin's People in focus screen
+  if (docs.focus) c.careersPage.people.features = docs.focus;
 
   if (docs.industries) {
     // Industries in code set which pages exist and their order; saved ones replace their content

@@ -546,7 +546,7 @@ export const en: Content = {
       { src: "/images/careers/11-diwali-smiles.jpg", alt: "Teammates smiling over dinner at Diwali", w: 1600, h: 1068 },
       { src: "/images/careers/12-lonavala-cake.jpg", alt: "Cutting a cake on a night out in Lonavala", w: 1280, h: 720 },
     ],
-    // FROM SIMAR: recognition images, captions, names and dates
+    // Edited in the admin (People in focus screen): recognition photos, names, dates and captions
     people: {
       label: "People in focus",
       title: "People in *focus*",
