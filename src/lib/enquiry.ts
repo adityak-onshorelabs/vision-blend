@@ -84,7 +84,8 @@ const project = z.object({
   website: honeypot,
 });
 
-const portfolio = project.extend({ kind: z.literal("portfolio"), industry: slug });
+/** yourIndustry: the visitor's own industry (an industry slug, or "other"), asked in the popup */
+const portfolio = project.extend({ kind: z.literal("portfolio"), industry: slug, yourIndustry: slug.optional() });
 
 const partner = z.object({
   kind: z.literal("partner"),

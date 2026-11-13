@@ -21,7 +21,13 @@ function authorised(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   if (!authorised(request)) return new Response("Unauthorized", { status: 401 });
-  return Response.json(cmsDefaults(en));
+  // The deploy these defaults come from, so the admin's History can say which code change made them
+  const build = {
+    sha: process.env.VERCEL_GIT_COMMIT_SHA ?? "",
+    message: (process.env.VERCEL_GIT_COMMIT_MESSAGE ?? "").split("\n")[0].slice(0, 200),
+    author: process.env.VERCEL_GIT_COMMIT_AUTHOR_NAME || process.env.VERCEL_GIT_COMMIT_AUTHOR_LOGIN || "",
+  };
+  return Response.json(cmsDefaults(en), { headers: { "x-cms-build": encodeURIComponent(JSON.stringify(build)) } });
 }
 
 export async function POST(request: NextRequest) {

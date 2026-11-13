@@ -4,8 +4,9 @@
   The compact enquiry: Name, Email, Phone number, Your business, Your industry, and an optional note.
   - kind "project": "Start a project" on home and contact. The visitor picks their industry (or
     Other); on contact, ?industry=<slug> from an industry page picks it for them.
-  - kind "portfolio": the gate in front of an industry's work (portfolio-gate.tsx). The industry is
-    sent automatically; the studio must have the enquiry before the portfolio opens.
+  - kind "portfolio": the gate in front of an industry's work (portfolio-gate.tsx). The portfolio's
+    industry is sent automatically; the dropdown asks the visitor's own industry (preset to the
+    portfolio's) and sends it as yourIndustry. The studio must have the enquiry before it opens.
 */
 import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { FormEvent, ReactNode } from "react";
@@ -25,7 +26,7 @@ type Props = {
   kind?: "project" | "portfolio";
   /** The industry this enquiry is for (always set for a portfolio) */
   industry?: Industry;
-  /** The industries to choose from (project kind); ?industry=<slug> preselects one of them */
+  /** The industries to choose from; ?industry=<slug> (project) or the portfolio's industry presets one */
   industries?: Industry[];
   /** Runs once the studio has the enquiry (the gate opens the portfolio) */
   onSent?: () => void;
@@ -47,8 +48,9 @@ export function ProjectForm({ copy, kind = "project", industry, industries, onSe
   }, [search, industries]);
   // The visitor's pick; until they choose, the industry page they came from
   const [picked, setPicked] = useState<string | null>(null);
-  const choosing = kind === "project" && !!industries?.length;
-  const chosen = picked ?? fromUrl?.slug ?? "";
+  const choosing = !!industries?.length;
+  const chosen = picked ?? (kind === "portfolio" ? industry?.slug : fromUrl?.slug) ?? "";
+  // The industry the enquiry is about: the portfolio's, or (project) the visitor's pick
   const forIndustry = industry ?? (choosing ? industries.find((s) => s.slug === chosen) : fromUrl);
   const otherLabel = copy.project.industryOther;
   const industryLabel = (slug: string) => (slug === OTHER_INDUSTRY ? otherLabel : industries?.find((s) => s.slug === slug)?.name ?? "");
@@ -72,7 +74,7 @@ export function ProjectForm({ copy, kind = "project", industry, industries, onSe
     setErrors(e);
     if (Object.keys(e).length) return focusFirstError(form.current);
     const slug = forIndustry?.slug ?? (chosen === OTHER_INDUSTRY ? OTHER_INDUSTRY : "");
-    send({ fields: { ...data, ...(slug ? { industry: slug } : {}) } });
+    send({ fields: { ...data, ...(slug ? { industry: slug } : {}), ...(kind === "portfolio" && chosen ? { yourIndustry: chosen } : {}) } });
   };
 
   if (status === "sent") {

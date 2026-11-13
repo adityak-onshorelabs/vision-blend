@@ -13,12 +13,13 @@ import { saveToSheet, sheetsConfigured, type SheetFile } from "@/lib/sheets";
   browser (src/lib/gate.ts).
 */
 
-function rowsOf(e: Enquiry, industry?: string): [string, string][] {
+function rowsOf(e: Enquiry, industry?: string, yourIndustry?: string): [string, string][] {
   switch (e.kind) {
     case "project":
     case "portfolio":
       return [
         ["Industry", industry ?? ""],
+        ...(e.kind === "portfolio" ? ([["Their industry", yourIndustry ?? ""]] as [string, string][]) : []),
         ["Name", e.name],
         ["Business", e.business],
         ["Email", e.email],
@@ -116,8 +117,12 @@ export async function POST(request: Request) {
 
   // The industry's name for the email, and a check that the portfolio exists
   let industry: string | undefined;
+  let yourIndustry: string | undefined;
   if ((enquiry.kind === "project" || enquiry.kind === "portfolio") && enquiry.industry) {
-    const found = (await getContent(defaultLocale)).industries.find((s) => s.slug === enquiry.industry);
+    const { industries } = await getContent(defaultLocale);
+    const nameOf = (slug: string) => (slug === "other" ? "Other / not sure yet" : industries.find((s) => s.slug === slug)?.name);
+    if (enquiry.kind === "portfolio" && enquiry.yourIndustry) yourIndustry = nameOf(enquiry.yourIndustry);
+    const found = industries.find((s) => s.slug === enquiry.industry);
     if (enquiry.kind === "portfolio" && !found?.detail?.work) return fail("Unknown portfolio", 422, { issues: ["industry"] });
     industry = found?.name ?? (enquiry.industry === "other" ? "Other / not sure yet" : undefined);
   }
@@ -133,7 +138,7 @@ export async function POST(request: Request) {
     sheetFile = { name: filename, type: cv.type, base64: content };
   }
 
-  const rows = rowsOf(enquiry, industry);
+  const rows = rowsOf(enquiry, industry, yourIndustry);
 
   // Until the sheet's web app is connected (SHEETS_WEBHOOK_URL/SECRET), the enquiry is only logged
   // (Vercel function logs in production) and the visitor sees it as sent.

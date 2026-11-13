@@ -21,6 +21,8 @@ import { ProjectForm } from "./project-form";
 type Props = {
   copy: FormCopy;
   industry: { slug: string; name: string };
+  /** For the "Your industry" dropdown, preset to this page's industry */
+  industries?: { slug: string; name: string }[];
   href: string;
   className?: string;
   children: ReactNode;
@@ -35,7 +37,7 @@ const forget = () => {
 /** "real estate", but "D2C" stays as it is */
 const inSentence = (name: string) => (name === name.toUpperCase() ? name : name.toLowerCase());
 
-export function PortfolioGate({ copy, industry, href, className, children, autoOpen }: Props) {
+export function PortfolioGate({ copy, industry, industries, href, className, children, autoOpen }: Props) {
   const dialog = useRef<HTMLDialogElement>(null);
   const id = useId().replace(/[^a-zA-Z0-9]/g, "");
 
@@ -103,6 +105,7 @@ export function PortfolioGate({ copy, industry, href, className, children, autoO
             copy={copy}
             kind="portfolio"
             industry={industry}
+            industries={industries}
             idPrefix={id}
             onSent={() => {
               markVisit(industry.slug);

@@ -128,6 +128,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
   // The portfolio subpage, when the industry has one. Every way in goes through the enquiry form.
   const work = detail?.work ? `/${lang}/industries/${s.slug}/work` : null;
   const gateFor = { slug: s.slug, name: s.name };
+  const allIndustries = c.industries.map(({ slug, name }) => ({ slug, name }));
 
   return (
     <>
@@ -168,7 +169,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                       {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                     </Link>
                     {work && (
-                      <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line" autoOpen>
+                      <PortfolioGate copy={c.forms} industry={gateFor} industries={allIndustries} href={work} className="cta cta-line" autoOpen>
                         See our work <span className="arr" aria-hidden="true">&rarr;</span>
                       </PortfolioGate>
                     )}
@@ -213,7 +214,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
                   {c.ui.startProject} <span className="arr" aria-hidden="true">&rarr;</span>
                 </Link>
                 {work && (
-                  <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line" autoOpen>
+                  <PortfolioGate copy={c.forms} industry={gateFor} industries={allIndustries} href={work} className="cta cta-line" autoOpen>
                     See our work <span className="arr" aria-hidden="true">&rarr;</span>
                   </PortfolioGate>
                 )}
@@ -356,7 +357,7 @@ export default async function IndustryPage({ params }: PageProps<"/[lang]/indust
           {work && detail?.work && (
             <div className="mt-14 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6">
               <span className="t-label">{pad(detail.work.items.length)} pieces, played in full</span>
-              <PortfolioGate copy={c.forms} industry={gateFor} href={work} className="cta cta-line">
+              <PortfolioGate copy={c.forms} industry={gateFor} industries={allIndustries} href={work} className="cta cta-line">
                 See our work <span className="arr" aria-hidden="true">&rarr;</span>
               </PortfolioGate>
             </div>
