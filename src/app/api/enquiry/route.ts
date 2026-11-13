@@ -1,26 +1,17 @@
 import { NextResponse } from "next/server";
 import { getContent } from "@/content";
 import { defaultLocale } from "@/i18n/config";
-import { CAREERS_CONTACT, CV_MAX_BYTES, CV_TYPES, enquirySchema, type Enquiry, type EnquiryKind } from "@/lib/enquiry";
+import { CV_MAX_BYTES, CV_TYPES, enquirySchema, type Enquiry } from "@/lib/enquiry";
 import { KNOWN_COOKIE, LEAD_COOKIE, LEAD_MAX_AGE, leadToken } from "@/lib/gate";
 import { saveToSheet, sheetsConfigured, type SheetFile } from "@/lib/sheets";
 
 /*
-  Every form on the site lands here (see src/lib/enquiry.ts for the kinds). Each enquiry goes to the
-  studio's Google Sheet (src/lib/sheets.ts) and, when Resend is set up, by email as well. Until then,
-  Careers applications are emailed to HR by the sheet itself (with the CV attached). It counts as
-  saved once either accepts it, and only then is a business enquiry (project or portfolio)
-  remembered as a lead, which opens every industry's portfolio in this browser (src/lib/gate.ts).
-
-  Recipients: ENQUIRY_TO, or per kind PORTFOLIO_TO, PARTNERS_TO, CAREERS_TO when set. Careers
-  applications, with the CV attached, always go to HR (CAREERS_CONTACT in src/lib/enquiry.ts), plus CAREERS_TO when set
-  (final changes, 12 Nov 2026).
+  Every form on the site lands here (see src/lib/enquiry.ts for the kinds) and goes to the studio's
+  Google Sheet only (src/lib/sheets.ts), one tab per form, with a careers CV filed in Drive and
+  linked in its row. No email is sent. Only once the sheet has saved it is a business enquiry
+  (project or portfolio) remembered as a lead, which opens every industry's portfolio in this
+  browser (src/lib/gate.ts).
 */
-
-const escape = (s: string) =>
-  s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c] as string);
-
-type Attachment = { filename: string; content: string };
 
 function rowsOf(e: Enquiry, industry?: string): [string, string][] {
   switch (e.kind) {
@@ -52,36 +43,9 @@ function rowsOf(e: Enquiry, industry?: string): [string, string][] {
         ["Email", e.email],
         ["Phone", e.phone],
         ["Portfolio", e.portfolio],
-        ["CV", "Attached"],
       ];
   }
 }
-
-function subjectOf(e: Enquiry, industry?: string) {
-  switch (e.kind) {
-    case "project":
-      return `New enquiry: ${e.business}${industry ? `, ${industry}` : ""}`;
-    case "portfolio":
-      return `Portfolio enquiry (${industry}): ${e.business}`;
-    case "partner":
-      return `Partnership enquiry (${e.type}): ${e.company}`;
-    case "careers":
-      return `Application (${e.discipline}, ${e.opportunity}): ${e.name}`;
-  }
-}
-
-const emailHtml = (rows: [string, string][]) =>
-  `<table cellpadding="6" style="font-family:sans-serif;font-size:14px">${rows
-    .filter(([, v]) => v)
-    .map(([k, v]) => `<tr><td style="color:#6f6a66;vertical-align:top">${k}</td><td>${escape(v).replace(/\n/g, "<br>")}</td></tr>`)
-    .join("")}</table>`;
-
-const RECIPIENT_ENV: Record<EnquiryKind, string | undefined> = {
-  project: undefined,
-  portfolio: "PORTFOLIO_TO",
-  partner: "PARTNERS_TO",
-  careers: "CAREERS_TO",
-};
 
 // Development falls back to Cloudflare's always-pass test secret. Without a secret the check is
 // skipped and the honeypot and timing checks carry on alone.
@@ -158,7 +122,6 @@ export async function POST(request: Request) {
     industry = found?.name;
   }
 
-  const attachments: Attachment[] = [];
   let sheetFile: SheetFile | undefined;
   if (enquiry.kind === "careers") {
     const ext = cv && CV_TYPES[cv.type];
@@ -167,55 +130,20 @@ export async function POST(request: Request) {
     const safeName = enquiry.name.replace(/[^\p{L}\p{N}]+/gu, "-").replace(/^-|-$/g, "") || "applicant";
     const filename = `CV-${safeName}.${ext}`;
     const content = Buffer.from(await cv.arrayBuffer()).toString("base64");
-    attachments.push({ filename, content });
     sheetFile = { name: filename, type: cv.type, base64: content };
   }
 
   const rows = rowsOf(enquiry, industry);
-  const { RESEND_API_KEY, ENQUIRY_FROM } = process.env;
-  const envKey = RECIPIENT_ENV[enquiry.kind];
-  const kindTo = envKey ? process.env[envKey] : undefined;
-  // Careers always reaches HR; CAREERS_TO can only add inboxes
-  const to = enquiry.kind === "careers" ? [CAREERS_CONTACT.email, kindTo].filter(Boolean).join(",") : kindTo || process.env.ENQUIRY_TO;
-  const emailConfigured = !!(RESEND_API_KEY && to && ENQUIRY_FROM);
 
-  // Delivery is bypassed until the studio's sheet or Resend is set up: the enquiry is logged (Vercel
-  // function logs in production) and the visitor sees it as sent.
-  if (!emailConfigured && !sheetsConfigured()) {
-    console.warn("[enquiry] no sheet or email configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
+  // Until the sheet's web app is connected (SHEETS_WEBHOOK_URL/SECRET), the enquiry is only logged
+  // (Vercel function logs in production) and the visitor sees it as sent.
+  if (!sheetsConfigured()) {
+    console.warn("[enquiry] sheet not configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
     return unlock(NextResponse.json({ ok: true, delivered: false }), enquiry);
   }
 
-  const sendEmail = async () => {
-    if (!emailConfigured) return false;
-    try {
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: { Authorization: `Bearer ${RESEND_API_KEY}`, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          from: ENQUIRY_FROM,
-          to: to!.split(",").map((s) => s.trim()),
-          reply_to: enquiry.email,
-          subject: subjectOf(enquiry, industry),
-          html: emailHtml(rows),
-          ...(attachments.length ? { attachments } : {}),
-        }),
-      });
-      if (!res.ok) console.error("[enquiry] Resend failed", res.status, await res.text());
-      return res.ok;
-    } catch (err) {
-      console.error("[enquiry] Resend request failed", err);
-      return false;
-    }
-  };
-
-  // The sheet keeps the CV as a Drive link rather than "Attached"
-  const sheetRows = rows.filter(([k]) => k !== "CV");
-  // Without Resend, the sheet emails HR the application itself (with the CV attached)
-  const notify = enquiry.kind === "careers" && !emailConfigured ? { to: to!, subject: subjectOf(enquiry), replyTo: enquiry.email } : undefined;
-  const [sheeted, emailed] = await Promise.all([saveToSheet(enquiry.kind, sheetRows, sheetFile, notify), sendEmail()]);
-  if (!sheeted && !emailed) return fail("Delivery failed", 502);
-  return unlock(NextResponse.json({ ok: true, delivered: true, sheet: sheeted, email: emailed }), enquiry);
+  if (!(await saveToSheet(enquiry.kind, rows, sheetFile))) return fail("Delivery failed", 502);
+  return unlock(NextResponse.json({ ok: true, delivered: true }), enquiry);
 }
 
 /** A saved business enquiry makes the visitor a known lead in this browser (src/lib/gate.ts) */
