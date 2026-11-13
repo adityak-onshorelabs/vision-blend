@@ -434,7 +434,7 @@ export const en: Content = {
         {
           name: "Gursimar Anand",
           role: "Co-founder & Creative Director",
-          photo: "/images/team/gursimar-anand.jpg",
+          photo: "/images/team/gursimar-anand-portrait.jpg",
           bio: [
             "Gursimar leads creative strategy, storytelling, and content at Vision Blend.",
             "His experience includes work with CarWale and Mercedes-Benz, alongside building his own content presence. His approach combines a creator’s instinct with a brand’s perspective: work that captures attention and gives people a reason to remember.",

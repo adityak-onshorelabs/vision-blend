@@ -6,15 +6,15 @@
   client logos on Home. The figures live in industriesPage.stats (src/content/en.ts).
 
   Updated changes (13 Nov 2026): the old three-up row of brown numbers read as bland, above all on
-  phones where it stacked into three tall, near-empty blocks. Now one panel on the copper key
-  visual under a dark veil, sharp-cornered like the rest of the site:
+  phones where it stacked into three tall, near-empty blocks. Client feedback the same day: no
+  boxed panel, it has to blend into the page. So the figures sit on the page's own background
+  with a soft copper glow that fades out on every side, between hairline rules:
   - the first figure leads, large, across the panel on phones; the other two pair up beside it;
     from md all three sit in one row, ruled between;
   - each figure counts up once as the panel comes into view (Motion), then rests on the exact
     figure from the copy. Server render and reduced motion show the final figure, never a zero;
   - the brand's full stop marks each label, as it marks section labels elsewhere.
 */
-import Image from "next/image";
 import { animate, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -89,38 +89,42 @@ export function StatsPanel({ stats, className, headingId }: Props) {
   const Cell = headingId ? "span" : "li";
 
   return (
-    <div ref={ref} className={cn("relative isolate overflow-hidden bg-[var(--night)] text-[var(--on-night)]", className)}>
-      <Image src="/images/hero-copper.jpg" alt="" fill sizes="100vw" className="-z-20 object-cover opacity-90" />
-      <span aria-hidden="true" className="absolute inset-0 -z-10 bg-[linear-gradient(115deg,oklch(0.17_0.006_40/0.82)_0%,oklch(0.17_0.006_40/0.5)_55%,oklch(0.17_0.006_40/0.22)_100%)]" />
+    <div ref={ref} className={cn("relative isolate", className)}>
+      {/* A soft copper glow behind the figures, fading into the page on every side: no edge to see */}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 -inset-y-[30%] -z-10 bg-[radial-gradient(60%_55%_at_30%_50%,oklch(0.74_0.07_55/0.22),transparent_70%),radial-gradient(45%_50%_at_80%_60%,oklch(0.7_0.08_45/0.14),transparent_70%)] blur-2xl"
+      />
 
       <Cells
         id={headingId}
         aria-label={headingId ? undefined : "Vision Blend in numbers"}
-        className="grid grid-cols-2 md:grid-cols-3"
+        className="grid grid-cols-2 border-y border-border md:grid-cols-3"
       >
         {items.map((s, i) => (
           <Cell
             key={s.figure}
             className={cn(
-              "grid content-between gap-6 border-[oklch(0.95_0.004_60/0.16)] p-[clamp(20px,4vw,40px)]",
-              i === 0 ? "col-span-2 border-b md:col-span-1 md:border-b-0" : "",
-              i === 2 ? "border-s" : "",
+              "grid content-between gap-6 border-border py-[clamp(24px,4vw,44px)]",
+              i === 0 ? "col-span-2 border-b md:col-span-1 md:border-b-0 md:pe-6" : "",
+              i === 1 ? "pe-4 md:ps-6 md:pe-6" : "",
+              i === 2 ? "border-s ps-4 md:ps-6" : "",
               i > 0 ? "md:border-s" : "",
             )}
           >
-            <span aria-hidden="true" className="text-[0.78rem] font-medium tracking-[0.14em] text-[oklch(0.95_0.004_60/0.55)]">{String(i + 1).padStart(2, "0")}</span>
+            <span aria-hidden="true" className="text-[0.78rem] font-medium tracking-[0.14em] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
             <span className="grid gap-2">
               <span
                 className={cn(
-                  "font-[300] leading-[0.95] tracking-[-0.04em] text-[var(--on-night)]",
+                  "font-[300] leading-[0.95] tracking-[-0.04em] text-brand",
                   i === 0 ? "text-[clamp(3.2rem,13vw,5.5rem)] md:text-[clamp(2.8rem,5.4vw,5.5rem)]" : "text-[clamp(2.1rem,9vw,3.4rem)] md:text-[clamp(2.8rem,5.4vw,5.5rem)]",
                 )}
               >
                 <Figure figure={s.figure} start={armed && inView} delay={i * 0.15} />
               </span>
               {s.label && (
-                <span className="flex items-center gap-2 text-[clamp(0.92rem,1.2vw,1.1rem)] text-[oklch(0.95_0.004_60/0.78)]">
-                  <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-[var(--brand-soft)]" />
+                <span className="flex items-center gap-2 text-[clamp(0.92rem,1.2vw,1.1rem)] text-ink">
+                  <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
                   {s.label}
                 </span>
               )}
