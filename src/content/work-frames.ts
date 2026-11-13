@@ -23,6 +23,7 @@ const WORK_FRAMES: Record<string, string> = {
   "1PtF_MHTFZXERtyzO2KjttZXBylp77I2T": frame("real-estate", "upper-kharghar-growth-area-1080"),
   "1eN3qZK8FqwKQZ_eS6-mHay9owxDsQlO_": frame("real-estate", "presidence-one-launch"),
   "10M-G_p2H5NBL6GNhvoyau2id5M5DCqkQ": frame("real-estate", "site-supervisor"),
+  "1RF5iK-SKUm9dG63vSVAggjn56uMilnbw": frame("real-estate", "delta-site-supervisor"),
   // Hospitality & Services
   "1-aG_ztgcatNJeVBXj-5DVcgS106NZFiN": frame("hospitality-services", "one-above-gym-borivali-cinematic"),
   "1Mb_0Zagi7SznhjTvm1Tf7fOnHg7t6ku6": frame("hospitality-services", "one-above-reel-2-ad-group-classes-one-above-kharghar"),

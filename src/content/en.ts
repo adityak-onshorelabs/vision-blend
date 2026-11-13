@@ -258,13 +258,12 @@ export const en: Content = {
       label: "Brand films",
       title: "Selected *films*",
       text: "One at a time. Swipe through, then press play.",
-      // The studio's brand films folder (13 Nov 2026), in its upload order. Its files are private
-      // copies, so the picks are the identical public files already on the Real Estate work page
-      // (FIFA x Paradise, Presidence event highlight, Meghna brand film). The fourth, Delta Palm
-      // Beach "Hands Behind the Brand: Site Supervisor" (1RF5iK-SKUm9dG63vSVAggjn56uMilnbw), joins
-      // once the studio shares it "anyone with the link".
+      // The studio's brand films folder (13 Nov 2026), in its upload order. FIFA, Presidence and
+      // Meghna point at the same films already on the Real Estate work page; Delta Palm Beach is
+      // the folder's own file (shared anyone-with-the-link), added to that page too.
       picks: [
         "1gZlwDXM3aOM0yA8PuwWBA6Q0l7chFQEs",
+        "1RF5iK-SKUm9dG63vSVAggjn56uMilnbw",
         "1eN3qZK8FqwKQZ_eS6-mHay9owxDsQlO_",
         "1KMTPWlexhYShufdPGsr1nWFMvBDZ4LNN",
       ],

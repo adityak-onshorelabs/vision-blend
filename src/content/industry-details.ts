@@ -283,6 +283,8 @@ const details: Record<string, Extra> = {
             ratio: [16, 9],
             poster: media("/videos/real-estate/campaign-film.jpg"),
           },
+          // From the studio's brand films folder (13 Nov 2026), 4K
+          { title: "Hands Behind the Brand: Site Supervisor", category: "Campaign Film", client: "Delta", drive: "1RF5iK-SKUm9dG63vSVAggjn56uMilnbw", kind: "film", ratio: [16, 9] },
           { title: "What Home Means to Me", category: "Testimonials", client: "Paradise Group", drive: "1DsE2gCe-hPG4Y7NM5BRfaLh-FEm89WY_", kind: "film", ratio: [1682, 720] },
           { title: "Upper Kharghar Growth Area", category: "Social Media", drive: "1PtF_MHTFZXERtyzO2KjttZXBylp77I2T", kind: "film", ratio: [9, 16] },
           { title: "Prime Business Address", category: "Statics & Carousels", client: "Meghna Realty", drive: "1OPcuhfV8kOCfRkNVke8jQ2_FGcztnciM", kind: "still", ratio: [4, 5] },
