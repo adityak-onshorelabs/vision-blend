@@ -12,7 +12,7 @@ import { STANDARD_PROCESS, withDetails } from "./industry-details";
     industries and the services under each.
 
   Still to come (tracked in README "Before launch")
-  - Sharjeel's photo (the others came from the studio's Team folder, 13 Nov 2026).
+  - Team photos came from the studio's Team folder, 13 Nov 2026.
   - Real project stills (project images are copper crops until then; reel previews load from Instagram).
 */
 import { gmailCompose } from "@/lib/mail";
@@ -31,9 +31,8 @@ const MEMBERS: Member[] = [
   { name: "Sheena Dave", role: "Design and post-production head", photo: "/images/team/sheena-dave.jpg" },
   { name: "Rohit Pathania", role: "Head of production", photo: "/images/team/rohit-pathania.jpg" },
   { name: "Rupesh Bhawar", role: "Head of cinematography", photo: "/images/team/rupesh-bhawar.jpg" },
-  // 13 Nov 2026 (studio's updated changes): Shazia Shaikh removed from the roster, Sharjeel added,
-  // in the doc's order. FROM SIMAR: Sharjeel's surname and role
-  { name: "Sharjeel", role: "Team member" },
+  // 13 Nov 2026: Shazia Shaikh removed from the roster (studio's updated changes). The doc also
+  // listed a Sharjeel; there is no such member, so he is not on the site.
   // Photo from the studio's Team folder (13 Nov 2026), filed as "Aditya Suryavanshi": CONFIRM the surname
   { name: "Aditya Rajput", role: "Senior editor", photo: "/images/team/aditya.jpg" },
 ];

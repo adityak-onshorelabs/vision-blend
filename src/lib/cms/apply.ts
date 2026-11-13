@@ -109,7 +109,7 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
   if (docs.team) {
     /*
       The roster in code is the studio's approved list (updated changes, 13 Nov 2026: Shazia
-      removed, Sharjeel added, portraits from public/images/team/). It leads, in its order; a
+      removed, portraits from public/images/team/). It leads, in its order; a
       member the admin also saved takes the admin's name and role, keeping the code's portrait if
       the admin has none (matched by full name, else first name). Anyone only in the admin's list
       follows. To remove someone, take them out of src/content/en.ts as well as the admin.
