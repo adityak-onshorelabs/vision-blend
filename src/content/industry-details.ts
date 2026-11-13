@@ -545,6 +545,14 @@ const details: Record<string, Extra> = {
           hsLogo("shred-x-fitnest", "Shred X Fitnest", 899, 220),
           hsLogo("up-dentist", "Up Dentist", 330, 220, 1.05),
           hsLogo("wedding-destination", "Wedding Destination", 221, 220, 0.85),
+          // Added 13 Nov 2026 from the studio's files (public/logos). Fast&Up and Health & Hustle came
+          // small (300 and 135 px wide), so they are soft; ask for larger files.
+          hsLogo("one8-commune", "One8 Commune", 534, 220),
+          hsLogo("tiger-yaki", "Tiger Yaki", 219, 220, 0.95),
+          hsLogo("earth-soul-cafe", "Earth Soul Cafe", 221, 220, 1.15),
+          hsLogo("snackible", "Snackible", 397, 187),
+          hsLogo("health-and-hustle", "Health & Hustle", 135, 96),
+          hsLogo("fast-and-up", "Fast&Up", 295, 86, 0.9),
         ],
       },
       servicesTitle: "What we make for *hospitality & service brands*",
