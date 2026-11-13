@@ -258,14 +258,15 @@ export const en: Content = {
       label: "Brand films",
       title: "Selected *films*",
       text: "One at a time. Swipe through, then press play.",
-      // INTERIM until Simar supplies the 3 to 4 horizontal films and their order: the Real Estate
-      // portfolio's horizontal films (Meghna One, FIFA at Sai World Empire, What Home Means to Me,
-      // the Presidence One walkthrough).
+      // The studio's brand films folder (13 Nov 2026), in its upload order. Its files are private
+      // copies, so the picks are the identical public files already on the Real Estate work page
+      // (FIFA x Paradise, Presidence event highlight, Meghna brand film). The fourth, Delta Palm
+      // Beach "Hands Behind the Brand: Site Supervisor" (1RF5iK-SKUm9dG63vSVAggjn56uMilnbw), joins
+      // once the studio shares it "anyone with the link".
       picks: [
-        "1KMTPWlexhYShufdPGsr1nWFMvBDZ4LNN",
         "1gZlwDXM3aOM0yA8PuwWBA6Q0l7chFQEs",
-        "1DsE2gCe-hPG4Y7NM5BRfaLh-FEm89WY_",
-        "1nCQyqf2hQBEkQpAToOk7hSUWX14-UuWA",
+        "1eN3qZK8FqwKQZ_eS6-mHay9owxDsQlO_",
+        "1KMTPWlexhYShufdPGsr1nWFMvBDZ4LNN",
       ],
     },
   },

@@ -287,7 +287,7 @@ export type Content = {
     clients: { label: string; title: string };
     /**
      * Brand films after the client logos: horizontal films only. `picks` are Drive ids of portfolio
-     * pieces (any industry's work), in order. INTERIM picks until the studio supplies its 3 to 4 films.
+     * pieces (any industry's work), in order: the studio's brand films (13 Nov 2026).
      */
     films: { label: string; title: string; text: string; picks: string[] };
   };
