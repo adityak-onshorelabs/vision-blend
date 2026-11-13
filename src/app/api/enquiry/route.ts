@@ -179,13 +179,11 @@ export async function POST(request: Request) {
   const to = enquiry.kind === "careers" ? [CAREERS_CONTACT.email, kindTo].filter(Boolean).join(",") : kindTo || process.env.ENQUIRY_TO;
   const emailConfigured = !!(RESEND_API_KEY && to && ENQUIRY_FROM);
 
+  // Delivery is bypassed until the studio's sheet or Resend is set up: the enquiry is logged (Vercel
+  // function logs in production) and the visitor sees it as sent.
   if (!emailConfigured && !sheetsConfigured()) {
-    if (process.env.NODE_ENV !== "production") {
-      console.log("[enquiry] no sheet or email configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
-      return unlock(NextResponse.json({ ok: true, delivered: false }), enquiry);
-    }
-    console.error("[enquiry] neither SHEETS_WEBHOOK_URL/SECRET nor RESEND_API_KEY, ENQUIRY_TO, ENQUIRY_FROM are set");
-    return fail("Enquiries are not configured", 503);
+    console.warn("[enquiry] no sheet or email configured, logging instead:", JSON.stringify({ ...enquiry, cv: cv?.name }));
+    return unlock(NextResponse.json({ ok: true, delivered: false }), enquiry);
   }
 
   const sendEmail = async () => {
