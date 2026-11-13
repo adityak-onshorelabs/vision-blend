@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { Portrait } from "@/components/site/portrait";
 import { SectionHead } from "@/components/site/section-head";
 import { TeamList } from "@/components/site/team-list";
 import { getContent } from "@/content";
@@ -16,9 +17,10 @@ import { cn } from "@/lib/utils";
   advisory, the connected approach. Then the studio team, kept apart from founders, partners and
   advisors, and the way to Careers and Partner with us.
   Final changes (12 Nov 2026): clearer structure, no cutouts. Every person (founders, DigiNerd,
-  advisory) has the same profile: a rule, a square avatar (their photo from public/images/team/,
-  else initials), name, roles on their own lines, then the bio. No large empty portrait frames
-  while photos are pending.
+  advisory) has the same profile: a portrait (their photo from public/images/team/, else
+  initials), name, roles on their own lines, then the bio.
+  Updated changes (13 Nov 2026): portraits for leadership and the core team are vertical 4:5
+  frames, reel style, instead of round avatars.
 */
 
 export async function generateMetadata({ params }: PageProps<"/[lang]/about">): Promise<Metadata> {
@@ -28,49 +30,19 @@ export async function generateMetadata({ params }: PageProps<"/[lang]/about">): 
   return { title: c.about.metaTitle, description: c.aboutCopy.paragraphs[0], alternates: { canonical: `${siteUrl}/${lang}/about` } };
 }
 
-const initials = (name: string) =>
-  name
-    .split(" ")
-    .filter((w) => /^[A-Z]/.test(w) && !/^(Mr|Mrs|Ms|Dr)\.?$/.test(w))
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join("");
-
 /**
- * The person's portrait, round like the brand's full stop: their photo when the studio has supplied
- * one, else their initials on a warm tint. The same size either way, so a team where only some
- * photos are in still lines up. A hairline ring in the brand brown sits just outside it.
- */
-function Avatar({ person, size = "md" }: { person: Person; size?: "md" | "lg" }) {
-  const box = size === "lg" ? "size-28 sm:size-32" : "size-24";
-  return (
-    <span className={cn("relative block shrink-0 rounded-full p-1 ring-1 ring-[var(--brand)]/25", box)}>
-      {person.photo ? (
-        <span className="relative block size-full overflow-hidden rounded-full bg-[var(--well)]">
-          <Image src={person.photo} alt={`Portrait of ${person.name}`} fill sizes="128px" className="object-cover object-top" />
-        </span>
-      ) : (
-        <span
-          aria-hidden="true"
-          className="grid size-full place-items-center rounded-full bg-[radial-gradient(circle_at_30%_25%,oklch(0.93_0.03_60),oklch(0.86_0.05_50))] text-[1.35rem] font-[360] tracking-[0.04em] text-[var(--brand)]"
-        >
-          {initials(person.name)}
-        </span>
-      )}
-    </span>
-  );
-}
-
-/**
- * One person, set like a contributor note: the round portrait, then name and role(s) in sentence
- * case, then the bio flowing beside the portrait on wider screens. No boxes or rules around it.
+ * One person, set like a contributor note: the 4:5 portrait, then name and role(s) in sentence
+ * case, then the bio beside the portrait on wider screens. No boxes or rules around it.
  */
 function PersonCard({ person, size }: { person: Person; size?: "md" | "lg" }) {
   const roles = person.role.split(" | ");
+  const col = size === "lg" ? "sm:grid-cols-[clamp(160px,18vw,220px)_minmax(0,1fr)]" : "sm:grid-cols-[clamp(140px,15vw,190px)_minmax(0,1fr)]";
   return (
-    <li className="grid content-start gap-5 sm:grid-cols-[auto_minmax(0,1fr)] sm:gap-x-7">
-      <Avatar person={person} size={size} />
-      <div className="grid content-start gap-4 sm:pt-2">
+    <li className={cn("grid content-start gap-5 sm:gap-x-7", col)}>
+      <span className="block w-full max-w-[220px] sm:max-w-none">
+        <Portrait name={person.name} photo={person.photo} sizes="(min-width: 640px) 220px, 60vw" />
+      </span>
+      <div className="grid content-start gap-4 sm:pt-1">
         <div className="grid gap-1">
           <h3 className="t-h3">{person.name}</h3>
           {roles.map((role, i) => (

@@ -37,6 +37,7 @@ const WORK_FRAMES: Record<string, string> = {
   "1BCoShUXKCZmd_xBivVuyEzmO1sROvSCn": frame("hospitality-services", "myrrah-7-a-home-that-grows-with-you-d2"),
   "1PPtk37URN6RMKR-yqglLnrG1494tbnTc": frame("hospitality-services", "myrrah-spaces-that-inspire"),
   "1jIuG0OREseTVdq_M0dF-YFE54llv-atC": frame("hospitality-services", "wedding-destination-ai-video-7-a-south-indian-dream-1"),
+  "132ZU2Y-4OVP1txX01vmgBsakOX5S-Q2l": frame("hospitality-services", "itc-punjab-postcard"),
   // Automobile
   "1bwnDGnzAkycwWOJdQB7G3wmVrqEM91gc": frame("automobile", "the-wait-is-over-the-all-new-skoda-kodiaq-has-officially-lan"),
   "1oS_RcDIHKmeKNZc-wH7rFVNPvRH4YqVP": frame("automobile", "this-festive-season-bring-home-new-beginnings-and-a-brand-ne"),

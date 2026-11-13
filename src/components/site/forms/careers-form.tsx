@@ -37,7 +37,7 @@ export function CareersForm({ copy }: { copy: FormCopy }) {
     setData((d) => ({ ...d, [key]: value }));
     if (errors[key as Key]) setErrors((e) => ({ ...e, [key]: undefined }));
   };
-  const portfolioRequired = data.discipline !== PORTFOLIO_OPTIONAL;
+  const portfolioRequired = !PORTFOLIO_OPTIONAL.includes(data.discipline);
 
   const cvError = (f: File | null) => (!f || !CV_TYPES[f.type] ? copy.errors.cv : f.size > CV_MAX_BYTES ? copy.errors.cvSize : undefined);
 

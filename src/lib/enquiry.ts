@@ -50,10 +50,18 @@ export const CAREERS_CONTACT = {
 } as const;
 
 export const PARTNER_TYPES = ["Refer a client", "Collaborate as an agency"] as const;
-export const DISCIPLINES = ["Strategy & Ideation", "Film & Production", "Post-production", "Design", "Social Media", "Studio Operations"] as const;
+export const DISCIPLINES = [
+  "Strategy & Ideation",
+  "Film & Production",
+  "Post-production",
+  "Design",
+  "Social Media",
+  "Sales & Business Development",
+  "Studio Operations",
+] as const;
 export const OPPORTUNITIES = ["Full-time", "Internship"] as const;
-/** Operations applicants may apply without a portfolio (brief, 11 Nov 2026) */
-export const PORTFOLIO_OPTIONAL: (typeof DISCIPLINES)[number] = "Studio Operations";
+/** Operations (brief, 11 Nov 2026) and Sales & Business Development (13 Nov 2026) applicants may apply without a portfolio */
+export const PORTFOLIO_OPTIONAL: readonly string[] = ["Studio Operations", "Sales & Business Development"];
 
 /** CV upload: PDF or Word, up to 3 MB (Vercel caps a function's request body at 4.5 MB) */
 export const CV_MAX_BYTES = 3 * 1024 * 1024;
@@ -111,7 +119,7 @@ const careers = z
     portfolio: z.union([z.url().max(500), z.literal("")]).optional().default(""),
     website: honeypot,
   })
-  .refine((a) => a.discipline === PORTFOLIO_OPTIONAL || !!a.portfolio, { path: ["portfolio"] });
+  .refine((a) => PORTFOLIO_OPTIONAL.includes(a.discipline) || !!a.portfolio, { path: ["portfolio"] });
 
 export const enquirySchema = z.discriminatedUnion("kind", [project, portfolio, partner, careers]);
 

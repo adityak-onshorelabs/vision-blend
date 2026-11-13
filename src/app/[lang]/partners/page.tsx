@@ -87,10 +87,9 @@ export default async function PartnersPage({ params }: PageProps<"/[lang]/partne
               </h2>
               <p className="t-lead max-w-[38ch] text-muted-foreground">{p.bring.text}</p>
             </div>
-            <figure className="lg:col-span-5 lg:col-start-8">
-              <div className="relative aspect-[4/3] overflow-hidden bg-night">
-                <Image src="/images/key-visual.jpg" alt="Vision Blend wordmark on the copper key visual" fill sizes="(min-width: 1024px) 40vw, 100vw" className="object-cover" />
-              </div>
+            {/* The wordmark alone on the dark band, transparent (13 Nov 2026: no copper/brown ground) */}
+            <figure className="flex lg:col-span-5 lg:col-start-8 lg:justify-end">
+              <Image src="/images/logo-white.png" alt="Vision Blend" width={900} height={180} sizes="(min-width: 1024px) 34vw, 80vw" className="h-auto w-full max-w-[460px]" />
             </figure>
           </div>
         </div>

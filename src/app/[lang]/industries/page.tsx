@@ -5,7 +5,7 @@ import { IndustryCard } from "@/components/site/industry-card";
 import { ProcessReel } from "@/components/site/process-reel";
 import { Reveal } from "@/components/site/reveal";
 import { SectionHead } from "@/components/site/section-head";
-import { StatFigure, statCell } from "@/components/site/stats";
+import { StatsPanel } from "@/components/site/stats";
 import { getContent } from "@/content";
 import { STANDARD_PROCESS } from "@/content/industry-details";
 import { hasLocale } from "@/i18n/config";
@@ -37,16 +37,9 @@ export default async function IndustriesPage({ params }: PageProps<"/[lang]/indu
             </span>
           </div>
 
-          {/* The headline is the studio's three figures (brief, 11 Nov 2026), one per line on phones */}
+          {/* The headline is the studio's three figures (brief, 11 Nov 2026), on the figures panel (13 Nov 2026) */}
           <div className="mb-[clamp(40px,5vw,72px)] grid gap-8">
-            <h1 id="industries-title" className="grid border-t border-border md:grid-cols-3">
-              {c.industriesPage.stats.map((s, i) => (
-                <span key={s} className={statCell}>
-                  <StatFigure text={s} />
-                  {i < c.industriesPage.stats.length - 1 && <span className="sr-only">,</span>}
-                </span>
-              ))}
-            </h1>
+            <StatsPanel stats={c.industriesPage.stats} headingId="industries-title" />
             <p className="t-lead max-w-[40ch] text-muted-foreground">{c.industriesPage.lead}</p>
           </div>
 

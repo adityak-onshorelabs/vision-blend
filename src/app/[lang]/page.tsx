@@ -4,7 +4,7 @@ import { ProjectForm } from "@/components/site/forms/project-form";
 import { Hero } from "@/components/site/hero";
 import { SectionHead } from "@/components/site/section-head";
 import { SeriesLinks } from "@/components/site/series-links";
-import { StatsRow } from "@/components/site/stats";
+import { StatsPanel } from "@/components/site/stats";
 import { WorkGallery } from "@/components/site/work-gallery";
 import { getContent } from "@/content";
 import type { ClientLogo, Content, WorkItem } from "@/content/types";
@@ -64,8 +64,8 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
           <div className="frame">
             <SectionHead id="clients-title" label={h.clients.label} index={1} total={TOTAL} title={h.clients.title} />
             <ClientLogos logos={logos} />
-            {/* The studio's figures, under the logos (12 Nov 2026); same as the Industries headline */}
-            <StatsRow stats={c.industriesPage.stats} className="mt-[clamp(40px,5vw,72px)]" />
+            {/* The studio's figures, under the logos (12 Nov 2026); same panel as the Industries headline */}
+            <StatsPanel stats={c.industriesPage.stats} className="mt-[clamp(40px,5vw,72px)]" />
           </div>
         </section>
       )}

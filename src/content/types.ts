@@ -341,6 +341,8 @@ export type Content = {
     model: string;
     disciplines: { title: string; text: string }[];
     culture: { label: string; title: string; text: string };
+    /** Behind-the-scenes photos of the team away from work (public/images/careers/), with their pixel size */
+    gallery: { src: string; alt: string; w: number; h: number }[];
     people: { label: string; title: string; text: string; features: { label: string; name?: string; date?: string; caption?: string; photo?: string }[] };
     apply: { label: string; title: string; text: string; openings: string; openingsText: string };
   };

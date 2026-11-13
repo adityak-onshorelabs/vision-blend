@@ -7,8 +7,8 @@
   were (their keep/remove/rewrite decision is still open with the studio). Titles drop a final full
   stop because the page adds the brand one; *stars* mark the highlighted key word. The hero photo
   (public/images/real-estate-hero-glass.jpg, 1536x1024, a cleaner version of the glass-corner shot
-  the team picked) was chosen by the team and carries no placeholder tag; the
-  Branding still (Unsplash, public/placeholder/) is a stand-in, tagged as a placeholder.
+  the team picked) was chosen by the team and carries no placeholder tag. Branding plays the
+  studio's own boards since 13 Nov 2026 (was an Unsplash stand-in).
 
   D2C, Hospitality & Services, Automobile: see the note above their entries below.
 
@@ -30,7 +30,6 @@ import type { Industry, IndustryDetail } from "./types";
 
 type Extra = { summary: string; detail: IndustryDetail };
 
-const reImg = (name: string, alt: string) => ({ src: `/placeholder/real-estate/${name}.jpg`, alt, placeholder: true });
 // Showcase clips: 12-second muted loops cut from the studio's Drive files, with their first frame as the poster
 const clip = (name: string) => media(`/videos/real-estate/${name}.mp4`);
 const reClip = (name: string, alt: string) => ({ src: media(`/videos/real-estate/${name}.jpg`), alt });
@@ -129,15 +128,16 @@ const details: Record<string, Extra> = {
       // Ten content categories, in the approved order. Public text is the title and subtitle only.
       // `assets` is the studio's Drive folder for each one (internal, never shown on the page).
       // Clips live in public/videos/real-estate/ (see the README there). `ratio` is each clip's own
-      // frame (from the file), so reels stay vertical. Branding has no assets yet, so it keeps a
-      // stock still marked as a placeholder.
+      // frame (from the file), so reels stay vertical. Branding swipes through
+      // the studio's brand boards (13 Nov 2026).
       offerings: [
         {
           title: "Testimonials",
           subtitle: "Stories from your customers",
           text: "",
-          image: reClip("testimonials", "Two residents on a garden bench, talking about their new home"),
-          ratio: [1682, 720],
+          // Recut 13 Nov 2026 from the 1080 master (letterbox cropped), opening on the resident's name card
+          image: reClip("testimonials", "A resident and his daughter on a garden bench, talking about their new home"),
+          ratio: [1920, 816],
           video: clip("testimonials"),
           assets: "https://drive.google.com/drive/folders/1BGLnz80ZUdN1jyWVM9T1cGYt2Ov9UQ1S",
         },
@@ -160,12 +160,13 @@ const details: Record<string, Extra> = {
           assets: "https://drive.google.com/drive/folders/1Uri1hR5l8YbHf4yK8Hr79OYjuZcCP_HM",
         },
         {
-          // Awaiting assets from the studio
+          // 13 Nov 2026: the studio's Branding folder (overall, print, grid boards) swiping one to the next
           title: "Branding",
           subtitle: "The visual identity of place",
           text: "",
-          image: reImg("branding", "Looking up at the balconies of a dark-clad apartment block against a blue sky"),
+          image: reClip("branding", "A real estate brand identity board: logo, type and stationery in black and gold"),
           ratio: [3, 4],
+          video: clip("branding"),
           assets: "https://drive.google.com/drive/folders/10J2cs9gUg6v7pTyJ5LMXjk4wtsuS91Ua",
         },
         {
@@ -190,7 +191,8 @@ const details: Record<string, Extra> = {
           title: "Construction Updates",
           subtitle: "A chronicle of progress",
           text: "",
-          image: reClip("construction-updates", "A site engineer reading plans beside rising concrete columns"),
+          // Recut 13 Nov 2026 from Platinum Corp's 1080 file (was 480p)
+          image: reClip("construction-updates", "A site supervisor in a hard hat reading plans among rising steel bars"),
           ratio: [16, 9],
           video: clip("construction-updates"),
           assets: "https://drive.google.com/drive/folders/1TxOvuLDke0N3T_aSLbOhMllsKHymoK9f",
@@ -258,7 +260,7 @@ const details: Record<string, Extra> = {
       },
       /*
         Portfolio subpage: every file in the studio's REAL ESTATE Drive folder (shared 5 Nov 2026,
-        15 files across the category folders, AV/Ai included; Branding is empty). Each file is one
+        15 files across the category folders, AV/Ai included; Branding's 11 boards added 13 Nov 2026). Each file is one
         piece: Drive's thumbnail on the card, Drive's player in the lightbox. Ratios are measured
         from the files. FIFA and the Meghna film open on dark title cards, so they use the showcase
         posters instead. Titles and clients come from the file names and the slides' own headlines:
@@ -300,6 +302,18 @@ const details: Record<string, Extra> = {
           { title: "A Smoother Start to Every Workday", category: "Statics & Carousels", client: "Meghna Realty", drive: "1OlhEiTcdKJGAt5_NEKBxzWcXcAMMg2TX", kind: "still", ratio: [4, 5] },
           { title: "Wellness Beyond the Workplace", category: "Statics & Carousels", client: "Meghna Realty", drive: "18ffMNJCo-xpfWW5VIXYEHD_vWQHbyi4a", kind: "still", ratio: [4, 5] },
           { title: "Your Own Personal Rainforest", category: "Statics & Carousels", client: "Meghna Realty", drive: "1NPcP56ChH6UOrCUdJoFsKsud0-zoiPu5", kind: "still", ratio: [4, 5] },
+          // Branding (studio's Branding folder, 13 Nov 2026)
+          { title: "Timeless luxury residence", category: "Branding", drive: "1s23o_HuDl1cha8HHrU7UetjWyYJE08_T", kind: "still", ratio: [1086, 1448] },
+          { title: "Brand identity board", category: "Branding", drive: "1O1LIvSalEuWzS4X7B5UwsGeqJK_MBBsc", kind: "still", ratio: [736, 1104] },
+          { title: "Brand story spreads", category: "Branding", drive: "1lxk6vcLKE5JacDPJCnSYejfmpMLIvogF", kind: "still", ratio: [736, 1308] },
+          { title: "Stationery and print", category: "Branding", drive: "1g-YwsnWao-tqtwH8yxFlIvGDagH99_pH", kind: "still", ratio: [736, 1104] },
+          { title: "Print brochure", category: "Branding", drive: "1TPrOB9cTYW3l1ZWMGHnkVtVNbkLrefIt", kind: "still", ratio: [1200, 2400] },
+          { title: "Brochure mock-up", category: "Branding", drive: "1dAmCnd7Yzs6og-sKm-5xOj4Yw2vn0QeK", kind: "still", ratio: [1200, 1200] },
+          { title: "Feed grid, refined brand", category: "Branding", drive: "16dyfK9XtF6Vw9NAt76QlSpq-13lAuJwL", kind: "still", ratio: [736, 920] },
+          { title: "Feed grid, wellness", category: "Branding", drive: "1uEyJb9x4yYSa-gqMNYw--6LSOFW88mRC", kind: "still", ratio: [736, 1227] },
+          { title: "Feed grid, residences", category: "Branding", drive: "1vdDb3sC1ENqvL0PXbWI0x9a2W_I1ensu", kind: "still", ratio: [2694, 1672] },
+          { title: "Feed grid, launch", category: "Branding", drive: "1SF9vfLAUOHndm8kJnSWrFb0qPwrgCf1-", kind: "still", ratio: [2446, 2210] },
+          { title: "Feed grid, new address", category: "Branding", drive: "1yuL2Bovd_xxHCG1clW5RXTiFTNIBocAf", kind: "still", ratio: [1973, 1633] },
         ],
       },
     },
@@ -315,11 +329,11 @@ const details: Record<string, Extra> = {
     D2C media (final content, 12 Nov 2026): the studio's category folders replace the Instagram
     reels. Product & AI, Cinematic / Event, Vox Pop, Founder-led and Festive lead with a 12-second
     loop cut from the first film in each folder; every film is on the work page, playing from
-    Drive. Informative Carousels and Product Creatives keep their Instagram posts (no Drive files
-    yet). Earlier note, still true for Model-led: it leads with
+    Drive. Informative Carousels keeps its Instagram post; Product Creatives plays the studio's
+    statics (13 Nov 2026), and the Creatives folder's statics and carousels are on the work page. Earlier note, still true for Model-led: it leads with
     a 12-second loop (public/videos/d2c/, 6-18 s of the centre Drive file, 1uWBG_iXqgcrGezrzCefu5I6DF70HGB-p,
     a private file shared with the team); the left file is the one the doc flags as the wrong
-    film, so it is not used. Offer Creatives has no link yet. Heroes: see the note above the hero
+    film, so it is not used. Offer Creatives (placeholder) was removed 13 Nov 2026. Heroes: see the note above the hero
     constants.
 
     Final content (studio's portfolio Drive, 12 Nov 2026): Hospitality & Services and Automobile get
@@ -417,8 +431,15 @@ const details: Record<string, Extra> = {
           video: media("/videos/d2c/tvc-1-ajmal-bucket-3-storytelling-tvc-full-scripts-2.mp4"),
         },
         { title: "Informative Carousels", subtitle: "Product knowledge, in sequence", text: "", instagram: `${ig}p/DQwf1RMki7a/` },
-        { title: "Product Creatives", subtitle: "Form, benefit and detail in composition", text: "", instagram: `${ig}p/DTLUTregizO/` },
-        { title: "Offer Creatives", subtitle: "Promotions, clearly composed", text: "", ratio: [4, 5] },
+        {
+          // 13 Nov 2026: the studio's statics and carousel covers swiping one to the next, replacing the Instagram post
+          title: "Product Creatives",
+          subtitle: "Form, benefit and detail in composition",
+          text: "",
+          image: { src: media("/videos/d2c/product-creatives.jpg"), alt: "A product static for a red leather work tote, the first of a set of D2C creatives" },
+          ratio: [4, 5],
+          video: media("/videos/d2c/product-creatives.mp4"),
+        },
       ],
       value: designedToDo("Establish a distinct presence for your brand and its products.", "Turn product interest into purchases."),
       challenges: [],
@@ -477,6 +498,25 @@ const details: Record<string, Extra> = {
           { title: "Does this smell expensive?", category: "Vox Pop Content", drive: "1FQM_LHpXd1DxJsUMSF8VoR-gZ2nmnaOM", kind: "film", ratio: [9, 16] },
           { title: "Brand film, part two", category: "Cinematic / Event Content", drive: "1h-SYunBHTuHehtjUyR2TMj_Y2liltn1R", kind: "film", ratio: [9, 16] },
           { title: "Product carousel", category: "Informative Carousels", instagram: `${ig}p/DPjAosrCAsc/`, kind: "still", ratio: [4, 5] },
+          // Statics and carousels from the studio's Creatives folder (13 Nov 2026)
+          { title: "Built for your 9 to 5", category: "Product Creatives", drive: "1upjRIFi1FTDMlXut452joP-7T96uNILT", kind: "still", ratio: [2160, 2700] },
+          { title: "Chicken breast or thigh", category: "Product Creatives", drive: "13htniDh-s7cZyQopoDU5C9-cf8Potckc", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts", category: "Informative Carousels", drive: "1CxOrWYkuS9YpryhLgV0IAvZz4nps4T1S", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts, slide 2", category: "Informative Carousels", drive: "1CtbK2GYn5zLxO4S9s3aLEyiX3k9WAW-V", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts, slide 3", category: "Informative Carousels", drive: "1Qi4ElpysePN5i8WPwtgm_a45Vxcc93pK", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts, slide 4", category: "Informative Carousels", drive: "1WozcFVTj8I-LO5Fl_paFwgDKiSbirftw", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts, slide 5", category: "Informative Carousels", drive: "13yKLRwwPRpNADQ4EqGilqPtRajzvY2f8", kind: "still", ratio: [2160, 2700] },
+          { title: "Know your chicken cuts, slide 6", category: "Informative Carousels", drive: "1c6M6DtEsCLax0df2MOxwzu6Kwy7mA45T", kind: "still", ratio: [2160, 2700] },
+          { title: "Is your pet drinking enough", category: "Informative Carousels", drive: "1muW5vQzP7zjz-nAlbjwO1u0X7o96P48i", kind: "still", ratio: [2160, 2700] },
+          { title: "Is your pet drinking enough, slide 2", category: "Informative Carousels", drive: "1swoQ4mM6hMPVVb-Fsh59eOQ7RpQEzU01", kind: "still", ratio: [2160, 2700] },
+          { title: "Is your pet drinking enough, slide 3", category: "Informative Carousels", drive: "10uY9TtR1nzqn1K-Zkw2pRxhnwznsGjCC", kind: "still", ratio: [2160, 2700] },
+          { title: "Is your pet drinking enough, slide 4", category: "Informative Carousels", drive: "11OWpc5MP5nenZOCwyZpzBqpNconAzTLy", kind: "still", ratio: [2160, 2700] },
+          { title: "Is your pet drinking enough, slide 5", category: "Informative Carousels", drive: "1OTaqArsBh5HYwkzh-U4JtTmx3iHoTbKN", kind: "still", ratio: [2160, 2700] },
+          { title: "Would you use a dirty toilet", category: "Informative Carousels", drive: "1oLLrfNjFyJh9p91KTFIem5s600mgNAn0", kind: "still", ratio: [2160, 2700] },
+          { title: "Would you use a dirty toilet, slide 2", category: "Informative Carousels", drive: "1KCe7DIDJ-uBuDGz3I8Tx-hvlXzB6nxZm", kind: "still", ratio: [2160, 2700] },
+          { title: "Would you use a dirty toilet, slide 3", category: "Informative Carousels", drive: "17JKhLGTrJbNh8nvrD2fiMvRwi_-Fx6Qa", kind: "still", ratio: [2160, 2700] },
+          { title: "Would you use a dirty toilet, slide 4", category: "Informative Carousels", drive: "1u9Ms3MEuO3SePts535EZwQwUdljjRvBj", kind: "still", ratio: [2160, 2700] },
+          { title: "Would you use a dirty toilet, slide 5", category: "Informative Carousels", drive: "18JjXR3hdh5V6t4--p120_qKxX1bou5yV", kind: "still", ratio: [2160, 2700] },
         ],
       },
     },
@@ -523,8 +563,17 @@ const details: Record<string, Extra> = {
           ratio: [1080, 1920],
           video: media("/videos/hospitality-services/one-above-reel-2-ad-group-classes-one-above-kharghar.mp4"),
         },
-        { title: "Brand Films", subtitle: "The people, places and thinking behind your brand", text: "", ratio: [16, 9] },
-        { title: "Events & Launches", subtitle: "Key moments in your brand's story", text: "", ratio: [16, 9] },
+        {
+          // 13 Nov 2026: the ITC film, kept square as delivered
+          title: "Brand Films",
+          subtitle: "The people, places and thinking behind your brand",
+          text: "",
+          image: { src: media("/videos/hospitality-services/itc-punjab-postcard.jpg"), alt: "A host in a red shirt and black turban on a palace lawn, from a square travel film" },
+          ratio: [1, 1],
+          video: media("/videos/hospitality-services/itc-punjab-postcard.mp4"),
+        },
+        // 13 Nov 2026: the studio's event reel, in Instagram's own player
+        { title: "Events & Launches", subtitle: "Key moments in your brand's story", text: "", instagram: `${ig}reel/DJjyA8Fz8kw/` },
         { title: "Branding", subtitle: "A visual identity for your brand", text: "", ratio: [3, 4] },
         {
           title: "AI Videos",
@@ -534,12 +583,41 @@ const details: Record<string, Extra> = {
           ratio: [1080, 1920],
           video: media("/videos/hospitality-services/wedding-destination-ai-video-9-a-rose-tinted-wedding-dream.mp4"),
         },
-        { title: "Statics & Carousels", subtitle: "Narratives in composition", text: "", ratio: [4, 5] },
+        {
+          // 13 Nov 2026: the studio's carousels swiping one to the next
+          title: "Statics & Carousels",
+          subtitle: "Narratives in composition",
+          text: "",
+          image: { src: media("/videos/hospitality-services/statics-carousels.jpg"), alt: "A gym carousel cover asking what your training time says about you" },
+          ratio: [4, 5],
+          video: media("/videos/hospitality-services/statics-carousels.mp4"),
+        },
       ],
       work: {
         title: "Work for *hospitality & services*",
-        lead: "Films, reels, ads and AI videos made for venues and service businesses, each one in full.",
+        lead: "Films, reels, ads, AI videos, statics and carousels made for venues and service businesses, each one in full.",
         items: [
+          // 13 Nov 2026: the ITC film, the event reel, and the studio's statics and carousels
+          { title: "A Punjab postcard", category: "Brand Films", drive: "132ZU2Y-4OVP1txX01vmgBsakOX5S-Q2l", kind: "film", ratio: [1, 1] },
+          { title: "Launch night", category: "Events & Launches", instagram: `${ig}reel/DJjyA8Fz8kw/`, kind: "film", ratio: [9, 16] },
+          { title: "What your gym time says about you", category: "Statics & Carousels", drive: "1fcGGdC4pKiIiSRP2a-wrG9M5X8oGlEOp", kind: "still", ratio: [2160, 2700] },
+          { title: "What your gym time says about you, slide 2", category: "Statics & Carousels", drive: "1JSKJqM5JScwO-5bVtCWo5LWjpn6P2n4e", kind: "still", ratio: [2160, 2700] },
+          { title: "What your gym time says about you, slide 3", category: "Statics & Carousels", drive: "1Xk-AqP7EXCKmRPCnDwPts_8mw3Zcp947", kind: "still", ratio: [2160, 2700] },
+          { title: "What your gym time says about you, slide 4", category: "Statics & Carousels", drive: "1N3f9FeniAk_1f0Eiv_ljU46c0GZl8q8i", kind: "still", ratio: [2160, 2700] },
+          { title: "What your gym time says about you, slide 5", category: "Statics & Carousels", drive: "1L9zpyIKZDkRX1ps0mySwjbm7kensGdNn", kind: "still", ratio: [2160, 2700] },
+          { title: "What your gym time says about you, slide 6", category: "Statics & Carousels", drive: "1iEfWWJeWAMEOAVaHb4i9N8c2np43zRKU", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends", category: "Statics & Carousels", drive: "1I38PgDWdOSrJNpl39PzyYBNF4CDwtwSe", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 2", category: "Statics & Carousels", drive: "10S96Uh-tnVC6Jw6tG8CJ1DtTJdmgeLK4", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 3", category: "Statics & Carousels", drive: "1VBYMfdsPPvsoDIqJXNOj_oJDoLmWr5Fo", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 4", category: "Statics & Carousels", drive: "1ELE_6ij4NYBpdAKQGw1jL_gfB_8XlsiA", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 5", category: "Statics & Carousels", drive: "1UxA7ZOkRB5NwO1oMbdvJGvudbJPguUcE", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 6", category: "Statics & Carousels", drive: "13fzuR35I2_NvELTkjj9fcK-gjjxcz9HZ", kind: "still", ratio: [2160, 2700] },
+          { title: "Wedding décor trends, slide 7", category: "Statics & Carousels", drive: "1NzkWh_WuDPdNo1cNRxba_z_mFrZZ0TtT", kind: "still", ratio: [2160, 2700] },
+          { title: "The best gift for your bride", category: "Statics & Carousels", drive: "1R_X9nHL762O4MO29mEonEwviD4H8fQoq", kind: "still", ratio: [1080, 1350] },
+          { title: "It's just a few minutes", category: "Statics & Carousels", drive: "194TrgQHZtKrUX_g-XbAMNe_KdQln9j1v", kind: "still", ratio: [2160, 2700] },
+          { title: "It's just a few minutes, slide 2", category: "Statics & Carousels", drive: "11U_uTaMZvysPemG35_I_iugFf0K6JSiB", kind: "still", ratio: [2160, 2700] },
+          { title: "It's just a few minutes, slide 3", category: "Statics & Carousels", drive: "1EpjIWSzIkxilwtoN2etUa6JqLLdxVv27", kind: "still", ratio: [2160, 2700] },
+          { title: "It's just a few minutes, slide 4", category: "Statics & Carousels", drive: "1f5P-i2n-Y8cnclpRw_AcjLmX37t3x9hR", kind: "still", ratio: [2160, 2700] },
           { title: "Inside the gym", category: "Social Media", drive: "1-aG_ztgcatNJeVBXj-5DVcgS106NZFiN", kind: "film", ratio: [1080, 1920] },
           { title: "What you see inside", category: "Social Media", drive: "1uvJxTVWt5OVjTBZH-aC_Wj5jnQwTqNBR", kind: "film", ratio: [1080, 1920] },
           { title: "The art of bespoke", category: "Social Media", drive: "1GY961oxLTh4HKbv-ueiEWzNJJgAKYXuj", kind: "film", ratio: [720, 1280] },
@@ -597,7 +675,8 @@ const details: Record<string, Extra> = {
           video: media("/videos/automobile/the-wait-is-over-the-all-new-skoda-kodiaq-has-officially-lan.mp4"),
         },
         {
-          title: "Social Media",
+          // Renamed 13 Nov 2026 (studio's updated changes)
+          title: "Social Media & Ads",
           subtitle: "Your brand's digital presence",
           text: "",
           image: { src: media("/videos/automobile/this-festive-season-bring-home-new-beginnings-and-a-brand-ne.jpg"), alt: "A man in a yellow kurta beside a new car outside a showroom, from a festive reel" },
@@ -613,21 +692,63 @@ const details: Record<string, Extra> = {
           ratio: [1080, 1920],
           video: media("/videos/automobile/scratchgard-reel-3-before-it-becomes-ppf-it-becomes-data.mp4"),
         },
-        { title: "Ads", subtitle: "To bring you enquiries and sales", text: "", ratio: [16, 9] },
-        { title: "Statics & Carousels", subtitle: "Design and detail in composition", text: "", ratio: [4, 5] },
+        // The separate Ads card (an empty placeholder) is folded into Social Media & Ads
+        {
+          // 13 Nov 2026: the studio's statics and carousels swiping one to the next
+          title: "Statics & Carousels",
+          subtitle: "Design and detail in composition",
+          text: "",
+          image: { src: media("/videos/automobile/statics-carousels.jpg"), alt: "A carousel cover for a new saloon, the car in pale blue under the line 'explained'" },
+          ratio: [4, 5],
+          video: media("/videos/automobile/statics-carousels.mp4"),
+        },
       ],
       work: {
         title: "Work for *automotive brands*",
-        lead: "Launch films, festive reels and AI videos made for automotive brands, each one in full.",
+        lead: "Launch films, festive reels, AI videos, statics and carousels made for automotive brands, each one in full.",
         items: [
           { title: "The new Kodiaq arrives", category: "Events", drive: "1bwnDGnzAkycwWOJdQB7G3wmVrqEM91gc", kind: "film", ratio: [360, 640] },
           { title: "A showroom relaunch", category: "Events", drive: "1TwIf9X5ztN44CopWl4nxKVpK52tXPDlF", kind: "film", ratio: [360, 640] },
-          { title: "Festive season", category: "Social Media", drive: "1oS_RcDIHKmeKNZc-wH7rFVNPvRH4YqVP", kind: "film", ratio: [720, 1280] },
-          { title: "Raksha Bandhan", category: "Social Media", drive: "1J1qAgcieK8Z1Ftwve7nIHloRm4ASzq99", kind: "film", ratio: [720, 1280] },
+          { title: "Festive season", category: "Social Media & Ads", drive: "1oS_RcDIHKmeKNZc-wH7rFVNPvRH4YqVP", kind: "film", ratio: [720, 1280] },
+          { title: "Raksha Bandhan", category: "Social Media & Ads", drive: "1J1qAgcieK8Z1Ftwve7nIHloRm4ASzq99", kind: "film", ratio: [720, 1280] },
           { title: "Before it becomes PPF", category: "AI Videos", drive: "1vC40P7WuoPap8OiYskLZOgy95J7sVQzN", kind: "film", ratio: [1080, 1920] },
           { title: "A closer look at the topcoat", category: "AI Videos", drive: "14ncPnjU2LUcTkOF4Cgp2vdUCbQItVlnS", kind: "film", ratio: [720, 1280] },
           { title: "Low mileage is not enough", category: "AI Videos", drive: "1tYduhOJSt3NtFKL839xJO75cKuGk9WQT", kind: "film", ratio: [1080, 1920] },
           { title: "Your shortlist starts with your day", category: "AI Videos", drive: "16jsdb0EgsKl8_mMn8TmhmK6ZMcZE8iRZ", kind: "film", ratio: [1080, 1920] },
+          // Statics and carousels from the studio's Drive (13 Nov 2026)
+          { title: "Your search ends here", category: "Statics & Carousels", drive: "1CpRJJFChpY02ZjbuFykIJS3wOiviL1vr", kind: "still", ratio: [2160, 2700] },
+          { title: "Two clutches, no clutch pedal", category: "Statics & Carousels", drive: "14uAFC1dS_BMEjVjsudAbNc5-fscSoNQp", kind: "still", ratio: [2160, 2700] },
+          { title: "Same car, two different finishes", category: "Statics & Carousels", drive: "1HaT0QreUFf1tGvkwVAQDakE2tEEE0CZC", kind: "still", ratio: [2160, 2700] },
+          { title: "Daily driven, daily protected", category: "Statics & Carousels", drive: "14tuSssidl-ryG7WRJZEVkO80LJNKOhY2", kind: "still", ratio: [1080, 1350] },
+          { title: "You parked carefully", category: "Statics & Carousels", drive: "1mak1KCO1PlrHNBP8mIicb6_y3qdCXTUt", kind: "still", ratio: [1080, 1350] },
+          { title: "The new saloon, explained", category: "Statics & Carousels", drive: "1TW_CLFtM8s3pdMqDgBOXEE_pKR7oQ0Mi", kind: "still", ratio: [2160, 2700] },
+          { title: "The new saloon, explained, slide 2", category: "Statics & Carousels", drive: "176Vy4QxDOYqegArGxYEIMS4elI9Sh3Zw", kind: "still", ratio: [2160, 2700] },
+          { title: "The new saloon, explained, slide 3", category: "Statics & Carousels", drive: "1h8kRrC8xjUb7p0IxGNVfKK7OQGeVc986", kind: "still", ratio: [2160, 2700] },
+          { title: "The new saloon, explained, slide 4", category: "Statics & Carousels", drive: "1FV_F20Pw1oFLdTORLkVZB_qsEbLRC77J", kind: "still", ratio: [2160, 2700] },
+          { title: "The new saloon, explained, slide 5", category: "Statics & Carousels", drive: "1nAeMsSGuPO0pVuYon-eMZbMTPH7VrgRD", kind: "still", ratio: [2160, 2700] },
+          { title: "The new saloon, explained, slide 6", category: "Statics & Carousels", drive: "1ffIWiCqZNMZAnAWFANiaWxq-Mg9SHqa-", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see", category: "Statics & Carousels", drive: "195D1dIYxa3PbUcsTqaMZz9m1EBvVRKW8", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see, slide 2", category: "Statics & Carousels", drive: "1O-o_lJt64cmiJbgpUmf1HE9-IETQg_Ma", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see, slide 3", category: "Statics & Carousels", drive: "1H9Jm4wcX3X6KjzXg8y7NZvZyhNii9tME", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see, slide 4", category: "Statics & Carousels", drive: "1fJriyabwWvUnNwjo3vXkvCDjERdlVKOc", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see, slide 5", category: "Statics & Carousels", drive: "1GGwv6ockGrI0uTDxKNwNZEf9KjKRu-0z", kind: "still", ratio: [2160, 2700] },
+          { title: "What about what you don't see, slide 6", category: "Statics & Carousels", drive: "18_wnR6eEAWZxRo9F9AIp82qG3YQR0KEc", kind: "still", ratio: [2160, 2700] },
+          { title: "Premium, or just big", category: "Statics & Carousels", drive: "1uh0iQg7aW8E4we1NQFctMEvRGWokbuZd", kind: "still", ratio: [2160, 2700] },
+          { title: "Premium, or just big, slide 2", category: "Statics & Carousels", drive: "1vh_joIbQh0lkRwzCaCumKGXy4LPW2_rC", kind: "still", ratio: [2160, 2700] },
+          { title: "Premium, or just big, slide 3", category: "Statics & Carousels", drive: "14XKWmPaG7sfpDmvw4ipom4Zy_pn-sW3b", kind: "still", ratio: [2160, 2700] },
+          { title: "Premium, or just big, slide 4", category: "Statics & Carousels", drive: "1ADBuhGT-Lpjs42jg43Mq088bs-eKxQuJ", kind: "still", ratio: [2160, 2700] },
+          { title: "Premium, or just big, slide 5", category: "Statics & Carousels", drive: "1zdr2aLTvEqhqGTA0i9pp7o5ZZYWwe6c5", kind: "still", ratio: [2160, 2700] },
+          { title: "Getting PPF? Ask these first", category: "Statics & Carousels", drive: "1lMmZFdN_JT4jnX-P7AN3a0oTkWKj2zom", kind: "still", ratio: [2160, 2700] },
+          { title: "Getting PPF? Ask these first, slide 2", category: "Statics & Carousels", drive: "1MxYjBTDMwKzvu8GNvoTceKR43bS33gKI", kind: "still", ratio: [2160, 2700] },
+          { title: "Getting PPF? Ask these first, slide 3", category: "Statics & Carousels", drive: "1TtjIvV1PABZ_nGZkse6mTdJYQrXwbnIz", kind: "still", ratio: [2160, 2700] },
+          { title: "Getting PPF? Ask these first, slide 4", category: "Statics & Carousels", drive: "1aHBFvEOrCnXTN5-1BB8_yUltts69OpDf", kind: "still", ratio: [2160, 2700] },
+          { title: "Getting PPF? Ask these first, slide 5", category: "Statics & Carousels", drive: "1hT-IXK5XBjx2J-2-S1-bx2l5P_6bszz1", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk", category: "Statics & Carousels", drive: "1fBCI30o5KOY4-LCPprKK2-hq1stEAE3N", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk, slide 2", category: "Statics & Carousels", drive: "1UPh6K8O8uv-kUYjotxA_NYFJ9rnhFzdw", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk, slide 3", category: "Statics & Carousels", drive: "1fykneCWFhyNtvma_IBzIG6z-Q2VjHmB4", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk, slide 4", category: "Statics & Carousels", drive: "17_0viL__98k0Fs_DB9lUlRISzdoFt366", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk, slide 5", category: "Statics & Carousels", drive: "1hd-fTOHiHsV_-0iLkVWrS2tJST7uZLr2", kind: "still", ratio: [2160, 2700] },
+          { title: "Not every panel faces the same risk, slide 6", category: "Statics & Carousels", drive: "1YeED7s2_J7Q5AKSZ_P49EV_11p8ACKkK", kind: "still", ratio: [2160, 2700] },
         ],
       },
       value: designedToDo("Establish a distinct presence for your brand and its vehicles.", "Turn vehicle interest into test-drive enquiries and sales opportunities."),

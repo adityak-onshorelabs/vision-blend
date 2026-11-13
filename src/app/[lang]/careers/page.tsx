@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CareersForm } from "@/components/site/forms/careers-form";
+import { PhotoGallery } from "@/components/site/photo-gallery";
 import { SectionHead, Tbc } from "@/components/site/section-head";
 import { SeriesLinks } from "@/components/site/series-links";
 import { getContent } from "@/content";
@@ -16,8 +17,8 @@ import { siteUrl } from "@/lib/site";
     confirms live vacancies; no timelines or benefits are stated.
   - Applications and CVs go to HR; the phone and WhatsApp here reach the CRM number, not the
     studio's enquiry line (final changes, 12 Nov 2026; CAREERS_CONTACT in src/lib/enquiry.ts).
-  - Beyond the brief: the studio's own A Week at Vision Blend reels stand in until Gursimar's
-    montage of outings and celebrations is in.
+  - Beyond the brief: a gallery of the team's behind-the-scenes and outing photos (13 Nov 2026,
+    from the studio's Drive), then the A Week at Vision Blend reels.
   - People in focus: one slot per feature until the studio sends names, dates, photos and captions.
 */
 
@@ -91,7 +92,9 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
       <section className="band band-dark" aria-labelledby="culture-title">
         <div className="frame">
           <SectionHead id="culture-title" label={p.culture.label} title={p.culture.title} text={p.culture.text} />
-          <SeriesLinks episodes={reels} openLabel="Watch on Instagram" />
+          {/* The team away from work (13 Nov 2026), then the A Week at Vision Blend reels */}
+          {p.gallery.length > 0 && <PhotoGallery photos={p.gallery} />}
+          <SeriesLinks episodes={reels} openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
         </div>
       </section>
 

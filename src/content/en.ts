@@ -12,7 +12,7 @@ import { STANDARD_PROCESS, withDetails } from "./industry-details";
     industries and the services under each.
 
   Still to come (tracked in README "Before launch")
-  - Team photos (added in the admin; they show once everyone has one).
+  - Sharjeel's photo (the others came from the studio's Team folder, 13 Nov 2026).
   - Real project stills (project images are copper crops until then; reel previews load from Instagram).
 */
 import { gmailCompose } from "@/lib/mail";
@@ -28,11 +28,14 @@ const EMAIL_CC = "gursimar@visionblend.com";
 const MEMBERS: Member[] = [
   { name: "Aquib Shaikh", role: "CEO and co-founder" },
   { name: "Gursimar Anand", role: "Creative director and co-founder" },
-  { name: "Sheena Dave", role: "Design and post-production head" },
-  { name: "Rohit Pathania", role: "Head of production" },
-  { name: "Rupesh Bhawar", role: "Head of cinematography" },
-  { name: "Aditya Rajput", role: "Senior editor" },
-  { name: "Shazia Shaikh", role: "Head of CRM and operations" },
+  { name: "Sheena Dave", role: "Design and post-production head", photo: "/images/team/sheena-dave.jpg" },
+  { name: "Rohit Pathania", role: "Head of production", photo: "/images/team/rohit-pathania.jpg" },
+  { name: "Rupesh Bhawar", role: "Head of cinematography", photo: "/images/team/rupesh-bhawar.jpg" },
+  // 13 Nov 2026 (studio's updated changes): Shazia Shaikh removed from the roster, Sharjeel added,
+  // in the doc's order. FROM SIMAR: Sharjeel's surname and role
+  { name: "Sharjeel", role: "Team member" },
+  // Photo from the studio's Team folder (13 Nov 2026), filed as "Aditya Suryavanshi": CONFIRM the surname
+  { name: "Aditya Rajput", role: "Senior editor", photo: "/images/team/aditya.jpg" },
 ];
 /** "Seven people": the count follows the team list (the admin swaps it wherever it appears) */
 const TEAM = teamLine(MEMBERS.length);
@@ -173,7 +176,7 @@ export const en: Content = {
       cvBrowse: "browse",
       cvReplace: "Replace",
       cvRemove: "Remove",
-      portfolioOptional: "Optional for Studio Operations.",
+      portfolioOptional: "Optional for Sales & Business Development and Studio Operations.",
     },
   },
   ui: {
@@ -423,7 +426,7 @@ export const en: Content = {
         {
           name: "Aquib Shaikh",
           role: "Founder & CEO",
-          photo: "/images/team/aquib-shaikh.jpg",
+          photo: "/images/team/aquib-shaikh-portrait.jpg",
           bio: [
             "Aquib leads business strategy, sales, and operations at Vision Blend.",
             "Previously Chief Business Officer at Brego Business, formerly Savage & Palmer, he built and scaled its marketing vertical. He brings a commercial perspective to the studio, connecting creative ambition with business priorities.",
@@ -432,6 +435,7 @@ export const en: Content = {
         {
           name: "Gursimar Anand",
           role: "Co-founder & Creative Director",
+          photo: "/images/team/gursimar-anand.jpg",
           bio: [
             "Gursimar leads creative strategy, storytelling, and content at Vision Blend.",
             "His experience includes work with CarWale and Mercedes-Benz, alongside building his own content presence. His approach combines a creator’s instinct with a brand’s perspective: work that captures attention and gives people a reason to remember.",
@@ -448,12 +452,13 @@ export const en: Content = {
         {
           name: "Abhilash Gaur",
           role: "Co-founder, DigiNerd",
-          photo: "/images/team/abhilash-gaur.jpg",
+          photo: "/images/team/abhilash-gaur-portrait.jpg",
           bio: ["Abhilash brings expertise in growth strategy, performance marketing, and business development, helping align campaigns with broader commercial objectives."],
         },
         {
           name: "Dilip Gehlot",
           role: "Co-founder, DigiNerd",
+          photo: "/images/team/dilip-gehlot.jpg",
           bio: ["Dilip specialises in campaign execution, optimisation, and analytics, with a focus on improving advertising efficiency and returns."],
         },
       ],
@@ -465,6 +470,7 @@ export const en: Content = {
           // Approved correction (final changes, 12 Nov 2026): full name, roles in this order, revised bio
           name: "Mr. Abdul Gani Abdul Rehman Dadan",
           role: "Director, Dadan Enterprises | Strategic Investor, Vision Blend",
+          photo: "/images/team/abdul-gani-dadan.jpg",
           bio: [
             "A Navi Mumbai-based real estate entrepreneur, Mr Dadan brings expertise in development, land acquisition, and business expansion.",
             "He also serves as a Director at Space Realty, specialising in plan sanctions and legal operations. At Vision Blend, he contributes industry insight and a long-term commercial perspective.",
@@ -473,6 +479,7 @@ export const en: Content = {
         {
           name: "Inderpal Anand",
           role: "Strategic Advisor",
+          photo: "/images/team/inderpal-anand.jpg",
           bio: [
             "With approximately three decades of business leadership across automotive, petroleum, and other industries, Mr Anand advises Vision Blend on growth, sales, marketing, and operations.",
             "As CEO of Garnet Motors, he brings practical experience in building businesses and strengthening their market presence.",
@@ -488,7 +495,12 @@ export const en: Content = {
       ],
     },
     // FROM SIMAR: confirm the current team names and roles, and supply portraits
-    team: { label: "Studio team", title: "The *studio*", text: "The people who make the work, day to day." },
+    // 13 Nov 2026 (studio's updated changes): heading and subtitle as given
+    team: {
+      label: "Core team",
+      title: "Meet Our *Core Team*",
+      text: "The people leading the work, backed by 30+ execution team members who bring it to life.",
+    },
     more: {
       title: "Work *with us*",
       links: [
@@ -497,7 +509,7 @@ export const en: Content = {
       ],
     },
   },
-  // WORKING COPY (brief, 11 Nov 2026): full-time roles, internships, in-studio work and the six disciplines are confirmed
+  // WORKING COPY (brief, 11 Nov 2026): full-time roles, internships, in-studio work and the disciplines are confirmed
   careersPage: {
     metaTitle: "Careers",
     metaDescription: "Full-time roles and internships at Vision Blend, in the studio in Mumbai.",
@@ -505,13 +517,14 @@ export const en: Content = {
     line: "For people with a point of view, and the craft to express it.",
     lead: "Explore opportunities at Vision Blend.",
     model: "Full-time roles and internships · In-studio",
-    // The six disciplines and their descriptions, as confirmed in the brief
+    // The disciplines as confirmed in the brief; Sales & Business Development added 13 Nov 2026
     disciplines: [
       { title: "Strategy & Ideation", text: "Content strategy, concepts and ideation." },
       { title: "Film & Production", text: "Cinematographer and cinematography assistant." },
       { title: "Post-production", text: "Video editor." },
       { title: "Design", text: "Designer." },
       { title: "Social Media", text: "Social media manager." },
+      { title: "Sales & Business Development", text: "Client acquisition, partnerships and account growth." },
       { title: "Studio Operations", text: "Operations and coordination." },
     ],
     culture: {
@@ -519,6 +532,21 @@ export const en: Content = {
       title: "Beyond the *brief*",
       text: "Studio days, shared milestones, and time away from the desk. A glimpse of the people and moments that make Vision Blend.",
     },
+    // Beyond the brief: the team away from work, from the studio's Drive (13 Nov 2026)
+    gallery: [
+      { src: "/images/careers/01-villa-team-photo.jpg", alt: "The team together on a villa terrace by the pool", w: 1280, h: 720 },
+      { src: "/images/careers/02-villa-poolside.jpg", alt: "Three of the team laughing on poolside loungers", w: 1280, h: 720 },
+      { src: "/images/careers/03-villa-pool-fun.jpg", alt: "The team splashing about in a villa pool", w: 1280, h: 720 },
+      { src: "/images/careers/04-villa-dj.jpg", alt: "A teammate in sunglasses at the DJ decks", w: 1280, h: 720 },
+      { src: "/images/careers/05-villa-candid.jpg", alt: "Teammates chatting on a sunny terrace", w: 1280, h: 720 },
+      { src: "/images/careers/06-creative-meeting.jpg", alt: "A creative meeting around the studio table", w: 1280, h: 720 },
+      { src: "/images/careers/07-lighting-crew.jpg", alt: "The crew rigging lights on set in an empty apartment", w: 900, h: 1600 },
+      { src: "/images/careers/08-gimbal-bts.jpg", alt: "Filming on a gimbal among the trees, behind the scenes", w: 1600, h: 1068 },
+      { src: "/images/careers/09-casual-group.jpg", alt: "Five of the team squeezed onto a sofa for a photo", w: 1280, h: 720 },
+      { src: "/images/careers/10-festival-dinner.jpg", alt: "The team at a long festive dinner table", w: 1600, h: 1068 },
+      { src: "/images/careers/11-diwali-smiles.jpg", alt: "Teammates smiling over dinner at Diwali", w: 1600, h: 1068 },
+      { src: "/images/careers/12-lonavala-cake.jpg", alt: "Cutting a cake on a night out in Lonavala", w: 1280, h: 720 },
+    ],
     // FROM SIMAR: recognition images, captions, names and dates
     people: {
       label: "People in focus",
