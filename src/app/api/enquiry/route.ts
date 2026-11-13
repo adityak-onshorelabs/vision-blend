@@ -119,7 +119,7 @@ export async function POST(request: Request) {
   if ((enquiry.kind === "project" || enquiry.kind === "portfolio") && enquiry.industry) {
     const found = (await getContent(defaultLocale)).industries.find((s) => s.slug === enquiry.industry);
     if (enquiry.kind === "portfolio" && !found?.detail?.work) return fail("Unknown portfolio", 422, { issues: ["industry"] });
-    industry = found?.name;
+    industry = found?.name ?? (enquiry.industry === "other" ? "Other / not sure yet" : undefined);
   }
 
   let sheetFile: SheetFile | undefined;

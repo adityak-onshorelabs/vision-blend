@@ -1,9 +1,9 @@
 "use client";
 
 /*
-  The compact enquiry: Name, Email, Phone number, Your business, and an optional note.
-  - kind "project": "Start a project" on home and contact. On contact it picks up ?industry=<slug>
-    from an industry page, names the industry, and sends it with the enquiry.
+  The compact enquiry: Name, Email, Phone number, Your business, Your industry, and an optional note.
+  - kind "project": "Start a project" on home and contact. The visitor picks their industry (or
+    Other); on contact, ?industry=<slug> from an industry page picks it for them.
   - kind "portfolio": the gate in front of an industry's work (portfolio-gate.tsx). The industry is
     sent automatically; the studio must have the enquiry before the portfolio opens.
 */
@@ -11,20 +11,22 @@ import { useMemo, useRef, useState, useSyncExternalStore } from "react";
 import type { FormEvent, ReactNode } from "react";
 import type { FormCopy } from "@/content/types";
 import { isBusinessEmail, isPhone } from "@/lib/enquiry";
-import { Check, Field, Honeypot, Sent, Submit, TextArea, focusFirstError, useSubmit } from "./kit";
+import { Check, Field, Honeypot, Select, Sent, Submit, TextArea, focusFirstError, useSubmit } from "./kit";
 
 type Industry = { slug: string; name: string };
 const noSubscribe = () => () => {};
+/** The value sent for "Other / not sure yet" */
+export const OTHER_INDUSTRY = "other";
 type Data = { name: string; email: string; phone: string; business: string; about: string; website: string };
-type Errors = Partial<Record<"name" | "email" | "phone" | "business", string>>;
+type Errors = Partial<Record<"name" | "email" | "phone" | "business" | "industry", string>>;
 
 type Props = {
   copy: FormCopy;
   kind?: "project" | "portfolio";
   /** The industry this enquiry is for (always set for a portfolio) */
   industry?: Industry;
-  /** Contact page: take the industry from ?industry=<slug> when it is one of these */
-  industriesFromUrl?: Industry[];
+  /** The industries to choose from (project kind); ?industry=<slug> preselects one of them */
+  industries?: Industry[];
   /** Runs once the studio has the enquiry (the gate opens the portfolio) */
   onSent?: () => void;
   /** Shown under the thank-you (project kind) */
@@ -32,7 +34,7 @@ type Props = {
   idPrefix?: string;
 };
 
-export function ProjectForm({ copy, kind = "project", industry, industriesFromUrl, onSent, sentExtra, idPrefix = "p" }: Props) {
+export function ProjectForm({ copy, kind = "project", industry, industries, onSent, sentExtra, idPrefix = "p" }: Props) {
   const [data, setData] = useState<Data>({ name: "", email: "", phone: "", business: "", about: "", website: "" });
   const [errors, setErrors] = useState<Errors>({});
   const form = useRef<HTMLFormElement>(null);
@@ -41,9 +43,15 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
   const search = useSyncExternalStore(noSubscribe, () => window.location.search, () => "");
   const fromUrl = useMemo(() => {
     const slug = new URLSearchParams(search).get("industry");
-    return industriesFromUrl?.find((s) => s.slug === slug);
-  }, [search, industriesFromUrl]);
-  const forIndustry = industry ?? fromUrl;
+    return industries?.find((s) => s.slug === slug);
+  }, [search, industries]);
+  // The visitor's pick; until they choose, the industry page they came from
+  const [picked, setPicked] = useState<string | null>(null);
+  const choosing = kind === "project" && !!industries?.length;
+  const chosen = picked ?? fromUrl?.slug ?? "";
+  const forIndustry = industry ?? (choosing ? industries.find((s) => s.slug === chosen) : fromUrl);
+  const otherLabel = copy.project.industryOther;
+  const industryLabel = (slug: string) => (slug === OTHER_INDUSTRY ? otherLabel : industries?.find((s) => s.slug === slug)?.name ?? "");
 
   const set = <K extends keyof Data>(key: K, value: Data[K]) => setData((d) => ({ ...d, [key]: value }));
 
@@ -53,6 +61,7 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
     if (!isBusinessEmail(data.email)) e.email = copy.errors.businessEmail;
     if (!isPhone(data.phone)) e.phone = copy.errors.phone;
     if (!data.business.trim()) e.business = copy.errors.business;
+    if (choosing && !chosen) e.industry = copy.errors.industry;
     return e;
   };
 
@@ -62,7 +71,8 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
     const e = validate();
     setErrors(e);
     if (Object.keys(e).length) return focusFirstError(form.current);
-    send({ fields: { ...data, ...(forIndustry ? { industry: forIndustry.slug } : {}) } });
+    const slug = forIndustry?.slug ?? (chosen === OTHER_INDUSTRY ? OTHER_INDUSTRY : "");
+    send({ fields: { ...data, ...(slug ? { industry: slug } : {}) } });
   };
 
   if (status === "sent") {
@@ -85,7 +95,7 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
 
   return (
     <form ref={form} onSubmit={submit} noValidate className="relative grid gap-8">
-      {kind === "project" && forIndustry && (
+      {kind === "project" && !choosing && forIndustry && (
         <p className="t-label marker !text-ink">
           {forIndustry.name}
         </p>
@@ -95,6 +105,18 @@ export function ProjectForm({ copy, kind = "project", industry, industriesFromUr
         <Field id={id("email")} required label={copy.labels.email} error={errors.email} value={data.email} onChange={(v) => set("email", v)} autoComplete="email" type="email" inputMode="email" />
         <Field id={id("phone")} required label={copy.labels.phone} error={errors.phone} value={data.phone} onChange={(v) => set("phone", v)} autoComplete="tel" type="tel" inputMode="tel" />
         <Field id={id("business")} required label={copy.labels.business} error={errors.business} value={data.business} onChange={(v) => set("business", v)} autoComplete="organization" />
+        {choosing && (
+          <Select
+            id={id("industry")}
+            className="sm:col-span-2"
+            label={copy.labels.industry}
+            placeholder={copy.placeholders.industry}
+            error={errors.industry}
+            options={[...industries.map((s) => s.name), otherLabel]}
+            value={industryLabel(chosen)}
+            onChange={(name) => setPicked(name === otherLabel ? OTHER_INDUSTRY : industries.find((s) => s.name === name)?.slug ?? "")}
+          />
+        )}
         <TextArea
           id={id("about")}
           className="sm:col-span-2"

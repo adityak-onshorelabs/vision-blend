@@ -174,6 +174,7 @@ export type FormCopy = {
     email: string;
     phone: string;
     business: string;
+    industry: string;
     about: string;
     company: string;
     partnerType: string;
@@ -184,7 +185,7 @@ export type FormCopy = {
     portfolio: string;
     cv: string;
   };
-  placeholders: { about: string; portfolio: string };
+  placeholders: { about: string; portfolio: string; industry: string };
   cvHint: string;
   errors: {
     name: string;
@@ -193,6 +194,7 @@ export type FormCopy = {
     businessEmail: string;
     phone: string;
     business: string;
+    industry: string;
     company: string;
     partnerType: string;
     opportunityAbout: string;
@@ -203,7 +205,8 @@ export type FormCopy = {
     cv: string;
     cvSize: string;
   };
-  project: { submit: string; sentTitle: string; sent: string };
+  /** industryOther: the industry choice for anything not listed */
+  project: { submit: string; sentTitle: string; sent: string; industryOther: string };
   portfolio: { title: string; intro: string; submit: string; close: string; opening: string };
   partner: { submit: string; sentTitle: string; sent: string };
   careers: {

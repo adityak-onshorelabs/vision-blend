@@ -116,6 +116,7 @@ export const en: Content = {
       email: "Email",
       phone: "Phone number",
       business: "Your business",
+      industry: "Your industry",
       about: "Tell us about your project",
       company: "Company / agency",
       partnerType: "Partnership type",
@@ -126,7 +127,7 @@ export const en: Content = {
       portfolio: "Portfolio or work-sample link",
       cv: "CV",
     },
-    placeholders: { about: "What you need, and when.", portfolio: "https://" },
+    placeholders: { about: "What you need, and when.", portfolio: "https://", industry: "Choose one" },
     cvHint: "PDF or Word, up to 3 MB.",
     errors: {
       name: "Add your name.",
@@ -134,6 +135,7 @@ export const en: Content = {
       businessEmail: "Please use your business email address, e.g. name@company.com.",
       phone: "Add a phone number with at least 7 digits.",
       business: "Add your business or brand name.",
+      industry: "Choose your industry, or Other.",
       company: "Add your company or agency.",
       partnerType: "Choose how you'd like to partner.",
       opportunityAbout: "Tell us a little about the opportunity.",
@@ -148,6 +150,7 @@ export const en: Content = {
       submit: "Send enquiry",
       sentTitle: "Enquiry received",
       sent: "Thank you. Your enquiry is with the studio, and we'll be in touch.",
+      industryOther: "Other / not sure yet",
     },
     portfolio: {
       title: "See our work",

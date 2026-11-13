@@ -97,7 +97,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
         <div className="frame">
           <SectionHead id="contact-title" label={h.contact.label} index={4} total={TOTAL} title={h.contact.title} text={h.contact.text} />
           <div className="max-w-[860px]">
-            <ProjectForm copy={c.forms} idPrefix="home" />
+            <ProjectForm copy={c.forms} industries={c.industries.map(({ slug, name }) => ({ slug, name }))} idPrefix="home" />
           </div>
         </div>
       </section>

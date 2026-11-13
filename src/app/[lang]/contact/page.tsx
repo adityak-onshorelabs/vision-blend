@@ -43,7 +43,7 @@ export default async function ContactPage({ params }: PageProps<"/[lang]/contact
               <p className="t-lead max-w-[30ch] text-muted-foreground">{cp.lead}</p>
             </div>
             <div className="border-t-2 border-brand pt-6 sm:pt-8 lg:col-span-7 lg:col-start-6">
-              <ProjectForm copy={c.forms} industriesFromUrl={c.industries.map(({ slug, name }) => ({ slug, name }))} idPrefix="contact" />
+              <ProjectForm copy={c.forms} industries={c.industries.map(({ slug, name }) => ({ slug, name }))} idPrefix="contact" />
             </div>
           </div>
         </div>
