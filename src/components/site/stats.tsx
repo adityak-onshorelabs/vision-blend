@@ -8,8 +8,8 @@
   Updated changes (13 Nov 2026): the old three-up row of brown numbers read as bland, above all on
   phones where it stacked into three tall, near-empty blocks, and the client asked for it to blend
   into the page with no boxed or square look. So there is no container at all:
-  - the figures are set large in a copper gradient (the key visual's colours, .stat-figure in
-    globals.css) straight on the page, over a soft copper glow that fades out on every side;
+  - the figures are set very large and filled with the copper key visual itself (.stat-figure in
+    globals.css), straight on the page, over a soft copper glow that fades out on every side;
   - dividers are hairlines that fade out at both ends, so nothing meets a hard edge;
   - phones: one compact row per figure, figure and label side by side; md+: three columns;
   - each figure counts up once as it comes into view (Motion), then rests on the exact figure from
@@ -17,7 +17,7 @@
   - labels use the site's section-label style with the brand's full stop.
 */
 import { animate, useInView, useReducedMotion } from "motion/react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 /** "*₹50 Cr+* revenue generated" -> figure "₹50 Cr+", label "revenue generated" */
@@ -109,7 +109,10 @@ export function StatsPanel({ stats, className, headingId }: Props) {
                 "before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-[linear-gradient(90deg,transparent,var(--rule)_15%,var(--rule)_85%,transparent)] md:before:inset-x-auto md:before:inset-y-0 md:before:start-0 md:before:h-auto md:before:w-px md:before:bg-[linear-gradient(180deg,transparent,var(--rule)_20%,var(--rule)_80%,transparent)]",
             )}
           >
-            <span className="stat-figure font-[300] leading-[0.9] tracking-[-0.045em] text-[clamp(2.7rem,12vw,3.8rem)] md:text-[clamp(3.2rem,6.6vw,6.75rem)]">
+            <span
+              className="stat-figure font-[400] leading-[0.9] tracking-[-0.05em] text-[clamp(3rem,14vw,4.4rem)] md:text-[clamp(3.6rem,7.6vw,7.75rem)]"
+              style={{ "--stat-x": ["18%", "52%", "86%"][i % 3] } as CSSProperties}
+            >
               <Figure figure={s.figure} start={armed && inView} delay={i * 0.15} />
             </span>
             {s.label && <span className="t-label marker text-[0.74rem] leading-snug sm:text-[0.78rem]">{s.label}</span>}
