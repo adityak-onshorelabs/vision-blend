@@ -159,7 +159,10 @@
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
-    padding-block: 0.06em;
+    /* Room past the last glyph: with tight tracking the + overhangs the box the image fills */
+    display: inline-block;
+    padding: 0.06em 0.14em 0.06em 0.02em;
+    margin-inline-end: -0.12em;
   }
 
   .tbc {

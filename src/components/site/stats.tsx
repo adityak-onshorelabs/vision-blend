@@ -110,7 +110,7 @@ export function StatsPanel({ stats, className, headingId }: Props) {
             )}
           >
             <span
-              className="stat-figure font-[400] leading-[0.9] tracking-[-0.05em] text-[clamp(3rem,14vw,4.4rem)] md:text-[clamp(3.6rem,7.6vw,7.75rem)]"
+              className="stat-figure whitespace-nowrap font-[400] leading-[0.9] tracking-[-0.05em] text-[clamp(2.8rem,13vw,4.4rem)] md:text-[clamp(2.9rem,6vw,7.25rem)]"
               style={{ "--stat-x": ["18%", "52%", "86%"][i % 3] } as CSSProperties}
             >
               <Figure figure={s.figure} start={armed && inView} delay={i * 0.15} />
