@@ -107,7 +107,26 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
   }
 
   if (docs.team) {
-    const teamSize = docs.team.length;
+    /*
+      The roster in code is the studio's approved list (updated changes, 13 Nov 2026: Shazia
+      removed, Sharjeel added, portraits from public/images/team/). It leads, in its order; a
+      member the admin also saved takes the admin's name and role, keeping the code's portrait if
+      the admin has none (matched by full name, else first name). Anyone only in the admin's list
+      follows. To remove someone, take them out of src/content/en.ts as well as the admin.
+    */
+    const key = (n: string) => n.trim().toLowerCase();
+    const first = (n: string) => key(n).split(/\s+/)[0];
+    const saved = docs.team;
+    const match = (name: string) => saved.find((m) => key(m.name) === key(name)) ?? saved.find((m) => first(m.name) === first(name));
+    const used = new Set<(typeof saved)[number]>();
+    const roster = base.about.team.members.map((m) => {
+      const s = match(m.name);
+      if (!s) return m;
+      used.add(s);
+      return { ...s, photo: s.photo ?? m.photo };
+    });
+    const team = [...roster, ...saved.filter((m) => !used.has(m))];
+    const teamSize = team.length;
     // Swap the team count wherever the copy states it ("Seven people", "seven people")
     const from = WORDS[base.company.teamSize] ?? String(base.company.teamSize);
     const [word, noun] = teamLine(teamSize).split(" ");
@@ -118,7 +137,7 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
     c.home.facts = c.home.facts.map((f) => ({ ...f, value: swap(f.value) }));
     c.about.metaDescription = swap(c.about.metaDescription);
     c.about.team.title = swap(c.about.team.title);
-    c.about.team.members = docs.team;
+    c.about.team.members = team;
     c.contactPage.explore.links = c.contactPage.explore.links.map((l) => ({ ...l, text: swap(l.text) }));
   }
 
