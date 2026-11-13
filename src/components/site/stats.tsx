@@ -6,14 +6,15 @@
   client logos on Home. The figures live in industriesPage.stats (src/content/en.ts).
 
   Updated changes (13 Nov 2026): the old three-up row of brown numbers read as bland, above all on
-  phones where it stacked into three tall, near-empty blocks. Client feedback the same day: no
-  boxed panel, it has to blend into the page. So the figures sit on the page's own background
-  with a soft copper glow that fades out on every side, between hairline rules:
-  - the first figure leads, large, across the panel on phones; the other two pair up beside it;
-    from md all three sit in one row, ruled between;
-  - each figure counts up once as the panel comes into view (Motion), then rests on the exact
-    figure from the copy. Server render and reduced motion show the final figure, never a zero;
-  - the brand's full stop marks each label, as it marks section labels elsewhere.
+  phones where it stacked into three tall, near-empty blocks, and the client asked for it to blend
+  into the page with no boxed or square look. So there is no container at all:
+  - the figures are set large in a copper gradient (the key visual's colours, .stat-figure in
+    globals.css) straight on the page, over a soft copper glow that fades out on every side;
+  - dividers are hairlines that fade out at both ends, so nothing meets a hard edge;
+  - phones: one compact row per figure, figure and label side by side; md+: three columns;
+  - each figure counts up once as it comes into view (Motion), then rests on the exact figure from
+    the copy. Server render and reduced motion show the final figure, never a zero;
+  - labels use the site's section-label style with the brand's full stop.
 */
 import { animate, useInView, useReducedMotion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
@@ -93,42 +94,25 @@ export function StatsPanel({ stats, className, headingId }: Props) {
       {/* A soft copper glow behind the figures, fading into the page on every side: no edge to see */}
       <span
         aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 -inset-y-[30%] -z-10 bg-[radial-gradient(60%_55%_at_30%_50%,oklch(0.74_0.07_55/0.22),transparent_70%),radial-gradient(45%_50%_at_80%_60%,oklch(0.7_0.08_45/0.14),transparent_70%)] blur-2xl"
+        className="pointer-events-none absolute inset-x-0 -inset-y-[35%] -z-10 bg-[radial-gradient(55%_60%_at_22%_50%,oklch(0.78_0.07_58/0.28),transparent_72%),radial-gradient(40%_55%_at_78%_55%,oklch(0.72_0.08_48/0.16),transparent_72%)] blur-2xl"
       />
 
-      <Cells
-        id={headingId}
-        aria-label={headingId ? undefined : "Vision Blend in numbers"}
-        className="grid grid-cols-2 border-y border-border md:grid-cols-3"
-      >
+      <Cells id={headingId} aria-label={headingId ? undefined : "Vision Blend in numbers"} className="grid grid-cols-[auto_minmax(0,1fr)] md:grid-cols-3">
         {items.map((s, i) => (
           <Cell
             key={s.figure}
             className={cn(
-              "grid content-between gap-6 border-border py-[clamp(24px,4vw,44px)]",
-              i === 0 ? "col-span-2 border-b md:col-span-1 md:border-b-0 md:pe-6" : "",
-              i === 1 ? "pe-4 md:ps-6 md:pe-6" : "",
-              i === 2 ? "border-s ps-4 md:ps-6" : "",
-              i > 0 ? "md:border-s" : "",
+              // Phones: one row per figure, figure and label side by side. md+: three columns.
+              "relative col-span-2 grid grid-cols-subgrid items-baseline gap-x-5 md:col-span-1 py-[clamp(18px,4vw,26px)] md:grid-cols-1 md:content-start md:gap-y-4 md:px-[clamp(20px,3vw,44px)] md:py-2 md:first:ps-0",
+              // Dividers that fade out at both ends instead of meeting a box edge
+              i > 0 &&
+                "before:absolute before:inset-x-0 before:top-0 before:h-px before:bg-[linear-gradient(90deg,transparent,var(--rule)_15%,var(--rule)_85%,transparent)] md:before:inset-x-auto md:before:inset-y-0 md:before:start-0 md:before:h-auto md:before:w-px md:before:bg-[linear-gradient(180deg,transparent,var(--rule)_20%,var(--rule)_80%,transparent)]",
             )}
           >
-            <span aria-hidden="true" className="text-[0.78rem] font-medium tracking-[0.14em] text-[var(--faint)]">{String(i + 1).padStart(2, "0")}</span>
-            <span className="grid gap-2">
-              <span
-                className={cn(
-                  "font-[300] leading-[0.95] tracking-[-0.04em] text-brand",
-                  i === 0 ? "text-[clamp(3.2rem,13vw,5.5rem)] md:text-[clamp(2.8rem,5.4vw,5.5rem)]" : "text-[clamp(2.1rem,9vw,3.4rem)] md:text-[clamp(2.8rem,5.4vw,5.5rem)]",
-                )}
-              >
-                <Figure figure={s.figure} start={armed && inView} delay={i * 0.15} />
-              </span>
-              {s.label && (
-                <span className="flex items-center gap-2 text-[clamp(0.92rem,1.2vw,1.1rem)] text-ink">
-                  <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-brand" />
-                  {s.label}
-                </span>
-              )}
+            <span className="stat-figure font-[300] leading-[0.9] tracking-[-0.045em] text-[clamp(2.7rem,12vw,3.8rem)] md:text-[clamp(3.2rem,6.6vw,6.75rem)]">
+              <Figure figure={s.figure} start={armed && inView} delay={i * 0.15} />
             </span>
+            {s.label && <span className="t-label marker text-[0.74rem] leading-snug sm:text-[0.78rem]">{s.label}</span>}
             {headingId && i < items.length - 1 && <span className="sr-only">,</span>}
           </Cell>
         ))}

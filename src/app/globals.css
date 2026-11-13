@@ -149,6 +149,15 @@
      the logo brown (brand-soft on dark bands, via the band's --brand) */
   .marker { display: inline-flex; align-items: center; gap: 10px; color: var(--brand); }
   .marker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--brand); flex: none; }
+  /* The headline figures (StatsPanel): the copper key visual's colours, set in the type itself */
+  .stat-figure {
+    color: var(--brand);
+    background: linear-gradient(120deg, oklch(0.34 0.09 40) 0%, oklch(0.5 0.12 45) 45%, oklch(0.62 0.11 58) 75%, oklch(0.42 0.1 42) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding-block: 0.06em;
+  }
 
   .tbc {
     display: inline-block; vertical-align: 0.2em; margin-inline-start: 0.4em;
