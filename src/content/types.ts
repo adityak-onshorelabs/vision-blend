@@ -345,6 +345,8 @@ export type Content = {
     culture: { label: string; title: string; text: string };
     /** Behind-the-scenes photos of the team away from work (public/images/careers/), with their pixel size */
     gallery: { src: string; alt: string; w: number; h: number }[];
+    /** Instagram reels and posts of the team, under the gallery (ep 0: no episode badge, shown in this order) */
+    reels: Episode[];
     people: { label: string; title: string; text: string; features: { label: string; name?: string; date?: string; caption?: string; photo?: string }[] };
     apply: { label: string; title: string; text: string; openings: string; openingsText: string };
   };

@@ -170,10 +170,9 @@ export function applyCms(base: Content, docs: Partial<Docs>): Content {
   }
 
   if (docs.episodes) {
-    const withCrop = docs.episodes.map((e): Episode => {
-      const b = base.episodes.find((x) => x.url === e.url);
-      return { ...e, crop: b?.crop ?? { ...DEFAULT_CROP, bw: true }, embed: b?.embed };
-    });
+    const withCrop = docs.episodes.map(
+      (e): Episode => ({ ...e, crop: base.episodes.find((b) => b.url === e.url)?.crop ?? { ...DEFAULT_CROP, bw: true } }),
+    );
     // The intro reel (ep 0, used on About) stays from code; numbered episodes come from the admin
     c.episodes = [...base.episodes.filter((e) => e.ep === 0), ...withCrop];
   }
