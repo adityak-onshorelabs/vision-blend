@@ -362,10 +362,11 @@ export const en: Content = {
   process: STANDARD_PROCESS.steps,
   episodes: [
     { ep: 0, title: "Meet the core team", date: "", url: `${ig}reel/DbvYEMToEz0/`, crop: { pos: "50% 50%", sz: "220%", bw: true } },
-    { ep: 1, title: "A week at Vision Blend", date: "30 Aug 2026", url: `${ig}reel/Dcqo2EsIWcu/`, crop: { pos: "85% 88%", sz: "260%", bw: true } },
-    { ep: 2, title: "Branding, reviews and client alignments", date: "13 Sep 2026", url: `${ig}reel/DdOXUn6yVjF/`, crop: { pos: "62% 80%", sz: "300%", bw: true } },
-    { ep: 3, title: "A little rewind of our week", date: "9 Oct 2026", url: `${ig}reel/DeRnifryRlh/`, crop: { pos: "98% 52%", sz: "280%", bw: true } },
-    { ep: 4, title: "Hiring & Hyrox", date: "23 Oct 2026", url: `${ig}reel/De12XERTfZF/`, by: "@si__mar", crop: { pos: "74% 98%", sz: "240%", bw: true } },
+    // Replaced 16 Nov 2026; numbered so the newest number (shown first) is the first in the studio's list.
+    // All three are 16:9 videos, so the cards crop them as landscape.
+    { ep: 1, title: "To more team trips", date: "15 Nov 2025", url: `${ig}reel/DREpW59iIfc/`, by: "@si__mar", embed: "landscape", crop: { pos: "74% 60%", sz: "260%", bw: true } },
+    { ep: 2, title: "Hands Behind The Brand", date: "6 Sep 2026", url: `${ig}p/Dc8S6nAiLmp/`, embed: "landscape", crop: { pos: "92% 45%", sz: "280%", bw: true } },
+    { ep: 3, title: "Sunday funday", date: "19 Jun 2026", url: `${ig}reel/DZxGyWuKcLe/`, by: "@si__mar", embed: "landscape", crop: { pos: "50% 50%", sz: "240%", bw: true } },
   ],
   seriesUrl: `${ig}vision.blend/reels/`,
   about: {
@@ -545,12 +546,6 @@ export const en: Content = {
       { src: "/images/careers/10-festival-dinner.jpg", alt: "The team at a long festive dinner table", w: 1600, h: 1068 },
       { src: "/images/careers/11-diwali-smiles.jpg", alt: "Teammates smiling over dinner at Diwali", w: 1600, h: 1068 },
       { src: "/images/careers/12-lonavala-cake.jpg", alt: "Cutting a cake on a night out in Lonavala", w: 1280, h: 720 },
-    ],
-    // Under the gallery, in place of the A Week at Vision Blend reels (16 Nov 2026)
-    reels: [
-      { ep: 0, title: "Sunday funday", date: "19 Jun 2026", url: `${ig}reel/DZxGyWuKcLe/`, embed: "landscape", by: "@si__mar", crop: { pos: "50% 50%", sz: "240%", bw: true } },
-      { ep: 0, title: "Hands Behind The Brand", date: "6 Sep 2026", url: `${ig}p/Dc8S6nAiLmp/`, embed: "landscape", crop: { pos: "92% 45%", sz: "280%", bw: true } },
-      { ep: 0, title: "To more team trips", date: "15 Nov 2025", url: `${ig}reel/DREpW59iIfc/`, embed: "landscape", by: "@si__mar", crop: { pos: "74% 60%", sz: "260%", bw: true } },
     ],
     // Edited in the admin (People in focus screen): recognition photos, names, dates and captions
     people: {
