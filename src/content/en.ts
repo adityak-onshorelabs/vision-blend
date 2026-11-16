@@ -546,6 +546,12 @@ export const en: Content = {
       { src: "/images/careers/11-diwali-smiles.jpg", alt: "Teammates smiling over dinner at Diwali", w: 1600, h: 1068 },
       { src: "/images/careers/12-lonavala-cake.jpg", alt: "Cutting a cake on a night out in Lonavala", w: 1280, h: 720 },
     ],
+    // Under the gallery, in place of the A Week at Vision Blend reels (16 Nov 2026)
+    reels: [
+      { ep: 0, title: "Sunday funday", date: "19 Jun 2026", url: `${ig}reel/DZxGyWuKcLe/`, embed: "landscape", by: "@si__mar", crop: { pos: "50% 50%", sz: "240%", bw: true } },
+      { ep: 0, title: "Hands Behind The Brand", date: "6 Sep 2026", url: `${ig}p/Dc8S6nAiLmp/`, embed: "landscape", crop: { pos: "92% 45%", sz: "280%", bw: true } },
+      { ep: 0, title: "To more team trips", date: "15 Nov 2025", url: `${ig}reel/DREpW59iIfc/`, embed: "landscape", by: "@si__mar", crop: { pos: "74% 60%", sz: "260%", bw: true } },
+    ],
     // Edited in the admin (People in focus screen): recognition photos, names, dates and captions
     people: {
       label: "People in focus",

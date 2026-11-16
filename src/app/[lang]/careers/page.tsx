@@ -18,7 +18,7 @@ import { siteUrl } from "@/lib/site";
   - Applications and CVs go to HR; the phone and WhatsApp here reach the CRM number, not the
     studio's enquiry line (final changes, 12 Nov 2026; CAREERS_CONTACT in src/lib/enquiry.ts).
   - Beyond the brief: a gallery of the team's behind-the-scenes and outing photos (13 Nov 2026,
-    from the studio's Drive), then the A Week at Vision Blend reels.
+    from the studio's Drive), then the team's own reels (careersPage.reels, 16 Nov 2026).
   - People in focus: edited in the admin; hidden until a feature has a name or a photo, and a feature
     shows once it has a name or a photo.
 */
@@ -39,7 +39,6 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
   const c = await getContent(lang);
   const p = c.careersPage;
   const intro = c.episodes.filter((e) => e.ep === 0);
-  const reels = c.episodes.filter((e) => e.ep > 0);
   const focus = p.people.features.filter((f) => f.name || f.photo);
 
   return (
@@ -94,9 +93,9 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
       <section className="band band-dark" aria-labelledby="culture-title">
         <div className="frame">
           <SectionHead id="culture-title" label={p.culture.label} title={p.culture.title} text={p.culture.text} />
-          {/* The team away from work (13 Nov 2026), then the A Week at Vision Blend reels */}
+          {/* The team away from work (13 Nov 2026), then the team's reels */}
           {p.gallery.length > 0 && <PhotoGallery photos={p.gallery} />}
-          <SeriesLinks episodes={reels} openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
+          <SeriesLinks episodes={p.reels} openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
         </div>
       </section>
 
