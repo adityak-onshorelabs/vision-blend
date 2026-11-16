@@ -95,7 +95,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
           <SectionHead id="culture-title" label={p.culture.label} title={p.culture.title} text={p.culture.text} />
           {/* The team away from work (13 Nov 2026), then the team's reels */}
           {p.gallery.length > 0 && <PhotoGallery photos={p.gallery} />}
-          <SeriesLinks episodes={p.reels} openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
+          <SeriesLinks episodes={p.reels} center openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
         </div>
       </section>
 

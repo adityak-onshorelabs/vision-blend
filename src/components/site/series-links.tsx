@@ -26,15 +26,31 @@ const geometry = {
 /** Up to four episodes sit in a grid row; from five on they become a horizontal scroll. Newest first. */
 const GRID_MAX = 4;
 
-export function SeriesLinks({ episodes, openLabel, className }: { episodes: Episode[]; openLabel: string; className?: string }) {
+export function SeriesLinks({
+  episodes,
+  openLabel,
+  className,
+  center = false,
+}: {
+  episodes: Episode[];
+  openLabel: string;
+  className?: string;
+  /** A short row (fewer than four) sits in the middle, cards the same width as in a full row */
+  center?: boolean;
+}) {
   const sorted = [...episodes].sort((a, b) => b.ep - a.ep);
   const scroll = sorted.length > GRID_MAX;
+  const centred = center && !scroll && sorted.length < GRID_MAX;
   const cards = sorted.map((e) => {
     const g = geometry[e.embed ?? "reel"];
     return (
     <li
       key={e.url}
-      className={cn("group relative grid content-start gap-3", scroll && "w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[calc((100%-48px)/4.3)]")}
+      className={cn(
+        "group relative grid content-start gap-3",
+        scroll && "w-[70%] shrink-0 snap-start sm:w-[40%] lg:w-[calc((100%-48px)/4.3)]",
+        centred && "w-[calc((100%-16px)/2)] lg:w-[calc((100%-48px)/4)]",
+      )}
     >
       <div className="relative aspect-[7/10] overflow-hidden bg-[var(--well)]">
         <span
@@ -76,5 +92,6 @@ export function SeriesLinks({ episodes, openLabel, className }: { episodes: Epis
   });
 
   if (scroll) return <SeriesScroller label="A Week at Vision Blend episodes">{cards}</SeriesScroller>;
+  if (centred) return <ul className={cn("flex flex-wrap justify-center gap-4", className)}>{cards}</ul>;
   return <ul className={cn("grid grid-cols-2 gap-4 lg:grid-cols-4", className)}>{cards}</ul>;
 }
