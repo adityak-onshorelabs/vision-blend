@@ -550,7 +550,7 @@ export const en: Content = {
     reels: [
       { ep: 0, title: "Sunday funday", date: "19 Jun 2026", url: `${ig}reel/DZxGyWuKcLe/`, embed: "landscape", by: "@si__mar", crop: { pos: "50% 50%", sz: "240%", bw: true } },
       { ep: 0, title: "Hands Behind The Brand", date: "6 Sep 2026", url: `${ig}p/Dc8S6nAiLmp/`, embed: "landscape", crop: { pos: "92% 45%", sz: "280%", bw: true } },
-      { ep: 0, title: "To more team trips", date: "15 Nov 2025", url: `${ig}reel/DREpW59iIfc/`, embed: "landscape", by: "@si__mar", crop: { pos: "74% 60%", sz: "260%", bw: true } },
+      { ep: 0, title: "To more team trips", date: "15 Nov 2025", url: `${ig}reel/DREpW59iIfc/`, embed: "pillarbox", by: "@si__mar", crop: { pos: "74% 60%", sz: "260%", bw: true } },
     ],
     // Edited in the admin (People in focus screen): recognition photos, names, dates and captions
     people: {

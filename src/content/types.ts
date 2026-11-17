@@ -154,8 +154,11 @@ export type Episode = {
   url: string;
   by?: string;
   crop: Crop;
-  /** Shape of the Instagram media; a reel unless set (a 16:9 video post is "landscape") */
-  embed?: "landscape" | "reel";
+  /**
+   * Shape of the Instagram media; a reel unless set (a 16:9 video post is "landscape"; a vertical
+   * video Instagram shows in a 16:9 box, black either side, is "pillarbox")
+   */
+  embed?: "landscape" | "pillarbox" | "reel";
 };
 
 export type NavItem = { href: string; label: string; /** One line under the link in a dropdown */ text?: string };
