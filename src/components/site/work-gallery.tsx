@@ -287,7 +287,7 @@ export function WorkGallery({ items, variant = "portfolio" }: { items: WorkItem[
   );
 }
 
-function IconButton({
+export function IconButton({
   label, onClick, ref, children, tone = "white",
 }: { label: string; onClick: () => void; ref?: Ref<HTMLButtonElement>; children: ReactNode; tone?: "white" | "ink" }) {
   return (

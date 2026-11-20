@@ -82,7 +82,7 @@ export default async function Home({ params }: PageProps<"/[lang]">) {
       <section className="band band-dark" aria-labelledby="series-title">
         <div className="frame">
           <SectionHead id="series-title" label={h.series.label} index={3} total={TOTAL} title={h.series.title} text={h.series.text} />
-          <SeriesLinks episodes={c.episodes.filter((e) => e.ep > 0)} openLabel="Watch on Instagram" />
+          <SeriesLinks episodes={c.episodes.filter((e) => e.ep > 0)} openLabel="play video" />
           <div className="mt-6 flex flex-wrap justify-between gap-3 text-[0.88rem] text-muted-foreground">
             <span>Previews load from Instagram</span>
             <span className="flex flex-wrap gap-6">

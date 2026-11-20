@@ -64,7 +64,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
             </div>
             {intro.length > 0 && (
               <div className="max-w-[360px] lg:col-span-4 lg:col-start-9">
-                <SeriesLinks className="!grid-cols-1" episodes={intro} openLabel="Watch on Instagram" />
+                <SeriesLinks className="!grid-cols-1" episodes={intro} openLabel="play video" />
               </div>
             )}
           </div>
@@ -95,7 +95,7 @@ export default async function CareersPage({ params }: PageProps<"/[lang]/careers
           <SectionHead id="culture-title" label={p.culture.label} title={p.culture.title} text={p.culture.text} />
           {/* The team away from work (13 Nov 2026), then the team's reels */}
           {p.gallery.length > 0 && <PhotoGallery photos={p.gallery} />}
-          <SeriesLinks episodes={p.reels} wide openLabel="Watch on Instagram" className="mt-[clamp(40px,5vw,72px)]" />
+          <SeriesLinks episodes={p.reels} wide openLabel="play video" className="mt-[clamp(40px,5vw,72px)]" />
         </div>
       </section>
 
