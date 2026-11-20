@@ -4,7 +4,7 @@ import { locales } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 
 // Industry portfolios are gated behind an enquiry, so they are not listed
-const paths = ["", "/industries", "/about", "/contact", "/careers", "/partners"];
+const paths = ["", "/industries", "/about", "/contact", "/careers", "/partners", "/testimonials"];
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const perLocale = await Promise.all(

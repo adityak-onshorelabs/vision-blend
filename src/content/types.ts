@@ -161,6 +161,28 @@ export type Episode = {
   embed?: "landscape" | "pillarbox" | "reel";
 };
 
+/** A client on camera ("Behind the Blend"): a square film in the studio's Drive, played in Drive's player */
+export type Testimonial = {
+  ep: number;
+  name: string;
+  role?: string;
+  company: string;
+  industry: string;
+  /** Short facts from the film's own name card */
+  facts: string[];
+  /** A line the film itself puts on screen */
+  quote: string;
+  /** A figure the film shows, with its caption */
+  stat?: { value: string; text: string };
+  /** The film's chapter cards, in order */
+  chapters: string[];
+  drive: string;
+  /** Frame saved on the site (public/images/testimonials/) */
+  poster: string;
+  /** Running time, m:ss */
+  duration: string;
+};
+
 export type NavItem = { href: string; label: string; /** One line under the link in a dropdown */ text?: string };
 
 /** A person on About (founders, partners, advisors). No photo: an initials tile stands in. */
@@ -352,6 +374,16 @@ export type Content = {
     reels: Episode[];
     people: { label: string; title: string; text: string; features: { label: string; name?: string; date?: string; caption?: string; photo?: string }[] };
     apply: { label: string; title: string; text: string; openings: string; openingsText: string };
+  };
+  testimonialsPage: {
+    metaTitle: string;
+    metaDescription: string;
+    label: string;
+    title: string;
+    lead: string;
+    /** The "Behind the Blend" films, in episode order */
+    films: Testimonial[];
+    cta: { title: string; text: string; label: string };
   };
   partnersPage: {
     metaTitle: string;

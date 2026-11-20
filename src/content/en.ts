@@ -87,11 +87,12 @@ export const en: Content = {
       cta: "Message on WhatsApp",
     },
   },
-  // Four primary pages; the standalone Work page was removed (brief, 11 Nov 2026)
+  // Primary pages; the standalone Work page was removed (brief, 11 Nov 2026), Testimonials added 20 Nov 2026
   nav: [
     { href: "", label: "Home" },
     { href: "/industries", label: "Industries" },
     { href: "/about", label: "About" },
+    { href: "/testimonials", label: "Testimonials" },
     { href: "/contact", label: "Contact" },
   ],
   // "Work with us" in the top bar, next to Industries (final changes, 12 Nov 2026), and in the footer
@@ -565,6 +566,48 @@ export const en: Content = {
       text: "Share your experience, your interests, and a selection of your work.",
       openings: "Open applications",
       openingsText: "We hire across these areas through the year. Apply, and we'll be in touch when there's a fit.",
+    },
+  },
+  // Client testimonials (studio's Drive folder, 20 Nov 2026): the two "Behind the Blend" films.
+  // Names, roles, lines and figures are as the films show them on screen; nothing added.
+  testimonialsPage: {
+    metaTitle: "Testimonials",
+    metaDescription: "Behind the Blend: the business leaders Vision Blend works with, on camera, on working with the studio.",
+    label: "Behind the Blend",
+    title: "In their *own words*",
+    lead: "Behind the Blend is our series of conversations with the people we make work for, on what it is like to build a brand with Vision Blend.",
+    films: [
+      {
+        ep: 1,
+        name: "Vinitraj Kapupara",
+        company: "Hitech Infra",
+        industry: "Real Estate",
+        facts: ["31 years in real estate", "Second generation"],
+        quote: "Nobody's content looks the *same*",
+        chapters: ["The Vision Blend experience", "What sets Vision Blend apart"],
+        drive: "18-Q3bxQJXeMHwuc3a1mzMudr2CXMq_Rk",
+        poster: "/images/testimonials/vinitraj-kapupara.jpg",
+        duration: "1:29",
+      },
+      {
+        ep: 2,
+        name: "Inderpal Singh Anand",
+        role: "Group CEO",
+        company: "Garnet Motors",
+        industry: "Automobile",
+        facts: ["Group CEO", "Škoda, Mercedes-Benz, BYD"],
+        quote: "Young blood, new ideas, from different *sectors*",
+        stat: { value: "8/10", text: "times, our targets are met" },
+        chapters: ["Content in automobiles", "The Vision Blend experience"],
+        drive: "15IirYXf1AQBNSKjmoRPpQkJuKsNOSYQu",
+        poster: "/images/testimonials/inderpal-singh-anand.jpg",
+        duration: "1:41",
+      },
+    ],
+    cta: {
+      title: "Your story *next*",
+      text: "Tell us about your brand, and we'll show you what we'd make.",
+      label: "Start a project",
     },
   },
   // WORKING COPY (brief, 11 Nov 2026): client referrals, agency partnerships, individually agreed terms
